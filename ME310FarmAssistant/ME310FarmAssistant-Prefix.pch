@@ -1,0 +1,22 @@
+//
+//  ME310FarmAssistant-Prefix.pch
+//  ME310FarmAssistant
+//
+//  Created by Tom Hu on 4/4/15.
+//  Copyright (c) 2015 Tom Hu. All rights reserved.
+//
+
+#ifndef ME310FarmAssistant_ME310FarmAssistant_Prefix_pch
+#define ME310FarmAssistant_ME310FarmAssistant_Prefix_pch
+
+// Include any system framework and library headers here that should be included in all compilation units.
+// You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import <GoogleMaps/GoogleMaps.h>
+    #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+#endif
+
+#endif
