@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "PopupInfoView.h"
 
 @interface ViewController ()
 
@@ -31,11 +32,23 @@
     marker.title = @"Sydney";
     marker.snippet = @"Australia";
     marker.map = self.mapView;
+    
+    // Set Delegate
+    self.mapView.delegate = self;
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark -
+#pragma mark GMSMapViewDelegate
+
+- (UIView *)mapView:(GMSMapView *)mapView markerInfoWindow:(GMSMarker *)marker {
+    PopupInfoView *view =  [[[NSBundle mainBundle] loadNibNamed:@"PopupInfoView" owner:self options:nil] objectAtIndex:0];
+    
+    return view;
 }
 
 @end
