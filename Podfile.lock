@@ -21,13 +21,16 @@ PODS:
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
   - Google-Maps-iOS-SDK (1.9.2)
+  - LFHeatMap (1.0.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
   - Google-Maps-iOS-SDK (~> 1.9.2)
+  - LFHeatMap
 
 SPEC CHECKSUMS:
   AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
   Google-Maps-iOS-SDK: 4c008abdb68e03ae125c7f674be841d369e2b3de
+  LFHeatMap: b4c6a796f6a116fa9a9e331eb313cc165a790f04
 
 COCOAPODS: 0.35.0

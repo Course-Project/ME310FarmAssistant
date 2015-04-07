@@ -9,6 +9,7 @@
 #import "ViewController.h"
 #import "PopupInfoView.h"
 #import "DetailViewController.h"
+#import "AssistantClient.h"
 
 @interface ViewController ()
 
@@ -79,6 +80,13 @@
         [self.locationManager startUpdatingLocation];
     }
 }
+
+- (void)addHeatMap:(NSArray *)dataPoints {
+    
+}
+
+#pragma -
+#pragma mark Memory Warning
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

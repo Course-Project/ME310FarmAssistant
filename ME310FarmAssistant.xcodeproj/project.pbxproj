@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		2008DD511AD3B08F002C13E5 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2008DD501AD3B08F002C13E5 /* CoreLocation.framework */; };
+		2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2008DD541AD3C437002C13E5 /* AssistantClient.m */; };
+		2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 2008DD571AD3C71A002C13E5 /* DataPoint.m */; };
 		2074E6461AD2AFA100C992B6 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2074E6451AD2AFA100C992B6 /* DetailViewController.m */; };
 		2079FE781AD262C000193190 /* PopupInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2079FE771AD262C000193190 /* PopupInfoView.m */; };
 		2079FE7A1AD262E700193190 /* PopupInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2079FE791AD262E700193190 /* PopupInfoView.xib */; };
@@ -35,6 +37,10 @@
 		03E5A902E9D6F750EDD95FE9 /* Pods-ME310FarmAssistant.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ME310FarmAssistant.release.xcconfig"; path = "Pods/Target Support Files/Pods-ME310FarmAssistant/Pods-ME310FarmAssistant.release.xcconfig"; sourceTree = "<group>"; };
 		130AF8342476709697BABBB3 /* Pods-ME310FarmAssistant.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ME310FarmAssistant.debug.xcconfig"; path = "Pods/Target Support Files/Pods-ME310FarmAssistant/Pods-ME310FarmAssistant.debug.xcconfig"; sourceTree = "<group>"; };
 		2008DD501AD3B08F002C13E5 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		2008DD531AD3C437002C13E5 /* AssistantClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AssistantClient.h; sourceTree = "<group>"; };
+		2008DD541AD3C437002C13E5 /* AssistantClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssistantClient.m; sourceTree = "<group>"; };
+		2008DD561AD3C71A002C13E5 /* DataPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPoint.h; sourceTree = "<group>"; };
+		2008DD571AD3C71A002C13E5 /* DataPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPoint.m; sourceTree = "<group>"; };
 		2074E6441AD2AFA100C992B6 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		2074E6451AD2AFA100C992B6 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
 		2079FE761AD262C000193190 /* PopupInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupInfoView.h; sourceTree = "<group>"; };
@@ -77,6 +83,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2008DD521AD3C3FA002C13E5 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				2008DD531AD3C437002C13E5 /* AssistantClient.h */,
+				2008DD541AD3C437002C13E5 /* AssistantClient.m */,
+				2008DD561AD3C71A002C13E5 /* DataPoint.h */,
+				2008DD571AD3C71A002C13E5 /* DataPoint.m */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		2074E6431AD2AF6D00C992B6 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -121,6 +138,7 @@
 		20CFBE8B1ACFE2EC00289A17 /* ME310FarmAssistant */ = {
 			isa = PBXGroup;
 			children = (
+				2008DD521AD3C3FA002C13E5 /* Model */,
 				2074E6431AD2AF6D00C992B6 /* ViewControllers */,
 				2079FE731AD2620D00193190 /* Views */,
 				20CFBE901ACFE2EC00289A17 /* AppDelegate.h */,
@@ -321,6 +339,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				2074E6461AD2AFA100C992B6 /* DetailViewController.m in Sources */,
+				2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */,
+				2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */,
 				20CFBE951ACFE2EC00289A17 /* ViewController.m in Sources */,
 				2079FE781AD262C000193190 /* PopupInfoView.m in Sources */,
 				20CFBE921ACFE2EC00289A17 /* AppDelegate.m in Sources */,
