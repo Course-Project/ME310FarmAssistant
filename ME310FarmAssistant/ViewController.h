@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController <GMSMapViewDelegate>
+@interface ViewController : UIViewController <GMSMapViewDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic, strong) GMSMapView *mapView;
+@property (nonatomic, strong) CLLocationManager *locationManager;
 
 @end
 

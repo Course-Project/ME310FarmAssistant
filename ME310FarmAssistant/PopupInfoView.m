@@ -10,6 +10,12 @@
 
 @implementation PopupInfoView
 
+#pragma mark Setters
+
+- (void)setRadius:(CGFloat)radius {
+    self.layer.cornerRadius = radius;
+}
+
 /*
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.

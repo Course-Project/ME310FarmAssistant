@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+IB_DESIGNABLE
 @interface PopupInfoView : UIView
+
+@property (nonatomic) IBInspectable CGFloat radius;
+@property (nonatomic, weak) IBOutlet UILabel *label;
 
 @end
