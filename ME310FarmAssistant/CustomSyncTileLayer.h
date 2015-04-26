@@ -10,4 +10,8 @@
 
 @interface CustomSyncTileLayer : GMSSyncTileLayer
 
+@property (nonatomic, strong) UIImage *heatMapImage;
+
+- (instancetype)initWithHeatMapImage:(UIImage *)heatMapImage zoom:(float)zoom;;
+
 @end

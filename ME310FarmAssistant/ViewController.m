@@ -10,6 +10,12 @@
 #import "PopupInfoView.h"
 #import "DetailViewController.h"
 #import "AssistantClient.h"
+#import <LFHeatMap/LFHeatMap.h>
+#import "CustomSyncTileLayer.h"
+
+static NSString *const kLatitude = @"latitude";
+static NSString *const kLongitude = @"longitude";
+static NSString *const kMagnitude = @"magnitude";
 
 @interface ViewController ()
 
@@ -25,6 +31,9 @@
     
     // Configure Map View
     [self configureMapView];
+    
+    // Add Heat Map
+    [self configureTestPoint];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -34,14 +43,14 @@
 }
 
 #pragma mark -
-#pragma mark Configure
+#pragma mark UI Methods
 
 - (void)configureMapView {
     CLLocation *location = self.locationManager.location;
     
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:location.coordinate.latitude
                                                             longitude:location.coordinate.longitude
-                                                                 zoom:16];
+                                                                 zoom:0];
     self.mapView = [GMSMapView mapWithFrame:CGRectZero camera:camera];
     self.mapView.settings.compassButton = YES;
     self.mapView.settings.myLocationButton = YES;
@@ -81,8 +90,29 @@
     }
 }
 
-- (void)addHeatMap:(NSArray *)dataPoints {
+- (void)configureTestPoint {
+    // get data
+    NSString *dataFile = [[NSBundle mainBundle] pathForResource:@"quake" ofType:@"plist"];
+    NSArray *quakeData = [[NSArray alloc] initWithContentsOfFile:dataFile];
     
+    NSMutableArray *weights = [[NSMutableArray alloc] initWithCapacity:[quakeData count]];
+    NSMutableArray *points = [[NSMutableArray alloc] initWithCapacity:[quakeData count]];
+    for (NSDictionary *reading in quakeData) {
+        CLLocationDegrees latitude = [[reading objectForKey:kLatitude] doubleValue];
+        CLLocationDegrees longitude = [[reading objectForKey:kLongitude] doubleValue];
+        double magnitude = [[reading objectForKey:kMagnitude] doubleValue];
+        
+//        CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+        CGPoint point = [_mapView convertPoint:CGPointMake(latitude, longitude) toCoordinateSpace:_mapView];
+        [points addObject:[NSValue valueWithCGPoint:point]];
+        
+        [weights addObject:[NSNumber numberWithInteger:(magnitude * 10)]];
+    }
+    
+    UIImage *heatMapImage = [LFHeatMap heatMapWithRect:[UIScreen mainScreen].bounds boost:3 points:points weights:weights];
+    
+    CustomSyncTileLayer *customSyncTileLayer = [[CustomSyncTileLayer alloc] initWithHeatMapImage:heatMapImage zoom:3];
+    customSyncTileLayer.map = _mapView;
 }
 
 #pragma -
@@ -123,7 +153,7 @@
     CLLocation *location = [locations firstObject];
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:location.coordinate.latitude
                                                             longitude:location.coordinate.longitude
-                                                                 zoom:12];
+                                                                 zoom:0];
     [self.mapView animateToCameraPosition:camera];
 }
 

@@ -7,16 +7,29 @@
 //
 
 #import "MapViewController.h"
+#import <LFHeatMap/LFHeatMap.h>
+
+static NSString *const kLatitude = @"latitude";
+static NSString *const kLongitude = @"longitude";
+static NSString *const kMagnitude = @"magnitude";
 
 @interface MapViewController ()
+
+@property (nonatomic, strong) NSMutableArray *locations;
+@property (nonatomic, strong) NSMutableArray *weights;
+@property (nonatomic, strong) UIImageView *imageView;
 
 @end
 
 @implementation MapViewController
 
+#pragma mark Life Circle
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
+    
+    // Configure Heat Map
+    [self configureHeatMap];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -24,14 +37,54 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
+#pragma mark -
+#pragma mark UI Methods
 
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+- (void)configureHeatMap {
+    // get data
+    NSString *dataFile = [[NSBundle mainBundle] pathForResource:@"quake" ofType:@"plist"];
+    NSArray *quakeData = [[NSArray alloc] initWithContentsOfFile:dataFile];
+    
+    self.locations = [[NSMutableArray alloc] initWithCapacity:[quakeData count]];
+    self.weights = [[NSMutableArray alloc] initWithCapacity:[quakeData count]];
+    for (NSDictionary *reading in quakeData) {
+        CLLocationDegrees latitude = [[reading objectForKey:kLatitude] doubleValue];
+        CLLocationDegrees longitude = [[reading objectForKey:kLongitude] doubleValue];
+        double magnitude = [[reading objectForKey:kMagnitude] doubleValue];
+        
+        CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
+        [self.locations addObject:location];
+        
+        [self.weights addObject:[NSNumber numberWithInteger:(magnitude * 10)]];
+    }
+    
+    // set map region
+    MKCoordinateSpan span = MKCoordinateSpanMake(10.0, 13.0);
+    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(39.0, -77.0);
+    self.mapView.region = MKCoordinateRegionMake(center, span);
+    
+    // create overlay view for the heatmap image
+    self.imageView = [[UIImageView alloc] initWithFrame:self.view.frame];
+    self.imageView.contentMode = UIViewContentModeCenter;
+    [self.view addSubview:self.imageView];
+    
+    float boost = 0.4f;
+    UIImage *heatmap = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.weights];
+    self.imageView.image = heatmap;
 }
-*/
+
+#pragma mark -
+#pragma mark MKMapViewDelegate
+
+- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
+    NSLog(@"Region will change");
+}
+
+- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+    NSLog(@"Region did change");
+    float boost = 0.4f;
+    UIImage *heatmap = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.weights];
+    self.imageView.image = heatmap;
+}
 
 @end

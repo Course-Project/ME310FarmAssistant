@@ -11,6 +11,8 @@
 
 @implementation AssistantClient
 
+#pragma mark Singleton
+
 + (AssistantClient *)sharedClient {
     static AssistantClient *sharedClient = nil;
     static dispatch_once_t token;
@@ -20,9 +22,16 @@
     return sharedClient;
 }
 
+# pragma mark alloc
+
 + (instancetype)allocWithZone:(struct _NSZone *)zone {
     return [self sharedClient];
 }
+
+#pragma mark -
+#pragma mark Basic HTTP Method
+
+
 
 #pragma mark -
 #pragma mark Network
