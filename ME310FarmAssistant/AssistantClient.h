@@ -20,23 +20,20 @@
  */
 + (AssistantClient *)sharedClient;
 
-#pragma mark -
-#pragma mark Network
-
+#pragma mark - Network
 /**
  *  Fetch data points collected within xxx hours
  *
- *  @return an array with general information about each data points
+ *  @param success callback block
  */
-- (NSArray *)getDataPoints;
+- (void)getDataPointsWithSuccessBlock:(void (^)(NSArray *dataPoints))success;
 
 /**
  *  Fetch detail information of a specific data point
  *
  *  @param dataPointID each data points have different ID
- *
- *  @return a 'DataPoint' object
+ *  @param success     callback block
  */
-- (DataPoint *)getDetailIndoWithDataPointID:(NSUInteger)dataPointID;
+- (void)getDetailIndoWithDataPointID:(NSUInteger)dataPointID success:(void (^)(NSDictionary *dataDict))success;
 
 @end

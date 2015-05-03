@@ -8,28 +8,48 @@
 
 #import "MapViewController.h"
 #import <LFHeatMap/LFHeatMap.h>
+#import "DataPointAnnotation.h"
+#import "DetailViewController.h"
 
 static NSString *const kLatitude = @"latitude";
 static NSString *const kLongitude = @"longitude";
 static NSString *const kMagnitude = @"magnitude";
 
-@interface MapViewController ()
+@interface MapViewController () <CLLocationManagerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *locations;
 @property (nonatomic, strong) NSMutableArray *weights;
 @property (nonatomic, strong) UIImageView *imageView;
+@property (nonatomic, strong) CLLocationManager *locationManager;
 
 @end
 
 @implementation MapViewController
 
 #pragma mark Life Circle
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Configure Status Bar
+    [self configureStatusBar];
+    
+    // Configure Location Manager
+    [self configureLocationManager];
+    
+    // Configure Map
+    [self configureMap];
+    
     // Configure Heat Map
     [self configureHeatMap];
+    
+    // Add Annotations
+    [self addAnnotations];
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    
+    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -37,8 +57,41 @@ static NSString *const kMagnitude = @"magnitude";
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark -
-#pragma mark UI Methods
+#pragma mark - UI Methods
+- (void)configureStatusBar {
+    //Status Bar
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+}
+
+- (void)configureMap {
+    // Show user location
+    self.mapView.showsUserLocation = YES;
+    
+    [self.mapView setCenterCoordinate:self.mapView.userLocation.coordinate animated:YES];
+}
+
+- (void)configureLocationManager {
+    // init Location Manager
+    self.locationManager = [[CLLocationManager alloc] init];
+    
+    if (![CLLocationManager locationServicesEnabled]) {
+        NSLog(@"定位服务当前可能尚未打开，请设置打开！");
+        return;
+    }
+    
+    // Authorization
+    if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusNotDetermined) {
+        [self.locationManager requestWhenInUseAuthorization];
+    } else if ([CLLocationManager authorizationStatus] == kCLAuthorizationStatusAuthorizedWhenInUse) {
+        self.locationManager.delegate = self;
+        self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+        CLLocationDistance distance = 10.0; // 10m
+        self.locationManager.distanceFilter = distance;
+        
+        // Start
+        [self.locationManager startUpdatingLocation];
+    }
+}
 
 - (void)configureHeatMap {
     // get data
@@ -73,9 +126,36 @@ static NSString *const kMagnitude = @"magnitude";
     self.imageView.image = heatmap;
 }
 
-#pragma mark -
-#pragma mark MKMapViewDelegate
+- (void)addAnnotations {
+//    AssistantClient *client = [AssistantClient sharedClient];
+//    WEAKSELF_T weakSelf = self;
+//    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+//    [client getDataPointsWithSuccessBlock:^(NSArray *points) {
+//        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//        NSMutableArray *annotations = [NSMutableArray new];
+//        for (id obj in points) {
+//            NSUInteger pointID = [[obj valueForKey:@"id"] unsignedIntegerValue];
+//            CLLocationDegrees latitude = [[obj valueForKey:@"latitude"] doubleValue];
+//            CLLocationDegrees longtitude = [[obj valueForKey:@"longtitude"] doubleValue];
+//            
+//            DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:pointID
+//                                                                             Location:CLLocationCoordinate2DMake(latitude, longtitude)];
+//            [annotations addObject:annotation];
+//        }
+//        [weakSelf.mapView showAnnotations:annotations animated:YES];
+//    }];
+    
+    // Testing
+    NSMutableArray *annotations = [NSMutableArray new];
+    for (CLLocation *location in self.locations) {
+        DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:1 Location:location.coordinate];
+        [annotations addObject:annotation];
+    }
+    [self.mapView addAnnotations:annotations];
+    NSLog(@"Add annotations...");
+}
 
+#pragma mark - MKMapViewDelegate
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
     NSLog(@"Region will change");
 }
@@ -85,6 +165,33 @@ static NSString *const kMagnitude = @"magnitude";
     float boost = 0.4f;
     UIImage *heatmap = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.weights];
     self.imageView.image = heatmap;
+}
+
+- (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    static NSString *reuse = @"PIN_ANNOTATION";
+    MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:reuse];
+    if (!annotationView) {
+        annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuse];
+    }
+    
+    annotationView.pinColor = MKPinAnnotationColorRed;
+    annotationView.animatesDrop = YES;
+    annotationView.canShowCallout = YES;
+    annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];;
+    
+    return annotationView;
+}
+
+- (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
+    NSLog(@"Callout accessory control tapped");
+    DetailViewController *vc = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"DetailViewController"];
+    vc.pointID = [(DataPointAnnotation *)view.annotation pointID];
+    [self.navigationController pushViewController:vc animated:YES];
+}
+
+#pragma mark - CLLocationManagerDelegate
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    NSLog(@"Did update location");
 }
 
 @end

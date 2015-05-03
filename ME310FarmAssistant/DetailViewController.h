@@ -8,6 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DetailViewController : UIViewController
+@interface DetailViewController : UITableViewController
+
+@property (nonatomic) NSUInteger pointID;
 
 @end

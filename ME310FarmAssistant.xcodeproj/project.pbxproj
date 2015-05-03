@@ -10,8 +10,8 @@
 		2008DD511AD3B08F002C13E5 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2008DD501AD3B08F002C13E5 /* CoreLocation.framework */; };
 		2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2008DD541AD3C437002C13E5 /* AssistantClient.m */; };
 		2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 2008DD571AD3C71A002C13E5 /* DataPoint.m */; };
+		200B01331AF64301008A52AB /* DataPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 200B01321AF64301008A52AB /* DataPointAnnotation.m */; };
 		202447201AED07C800BCD2B5 /* quake.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2024471F1AED07C800BCD2B5 /* quake.plist */; };
-		202447231AED131900BCD2B5 /* CustomSyncTileLayer.m in Sources */ = {isa = PBXBuildFile; fileRef = 202447221AED131900BCD2B5 /* CustomSyncTileLayer.m */; };
 		202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202447251AED1AE800BCD2B5 /* MapViewController.m */; };
 		202447281AED1EF400BCD2B5 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 202447271AED1EF400BCD2B5 /* MapKit.framework */; };
 		2074E6461AD2AFA100C992B6 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2074E6451AD2AFA100C992B6 /* DetailViewController.m */; };
@@ -19,7 +19,6 @@
 		2079FE7A1AD262E700193190 /* PopupInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2079FE791AD262E700193190 /* PopupInfoView.xib */; };
 		20CFBE8F1ACFE2EC00289A17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CFBE8E1ACFE2EC00289A17 /* main.m */; };
 		20CFBE921ACFE2EC00289A17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CFBE911ACFE2EC00289A17 /* AppDelegate.m */; };
-		20CFBE951ACFE2EC00289A17 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CFBE941ACFE2EC00289A17 /* ViewController.m */; };
 		20CFBE981ACFE2EC00289A17 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20CFBE961ACFE2EC00289A17 /* Main.storyboard */; };
 		20CFBE9A1ACFE2EC00289A17 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20CFBE991ACFE2EC00289A17 /* Images.xcassets */; };
 		20CFBE9D1ACFE2EC00289A17 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20CFBE9B1ACFE2EC00289A17 /* LaunchScreen.xib */; };
@@ -45,9 +44,9 @@
 		2008DD541AD3C437002C13E5 /* AssistantClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AssistantClient.m; sourceTree = "<group>"; };
 		2008DD561AD3C71A002C13E5 /* DataPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPoint.h; sourceTree = "<group>"; };
 		2008DD571AD3C71A002C13E5 /* DataPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPoint.m; sourceTree = "<group>"; };
+		200B01311AF64301008A52AB /* DataPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPointAnnotation.h; sourceTree = "<group>"; };
+		200B01321AF64301008A52AB /* DataPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPointAnnotation.m; sourceTree = "<group>"; };
 		2024471F1AED07C800BCD2B5 /* quake.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = quake.plist; path = ME310FarmAssistant/quake.plist; sourceTree = "<group>"; };
-		202447211AED131900BCD2B5 /* CustomSyncTileLayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomSyncTileLayer.h; sourceTree = "<group>"; };
-		202447221AED131900BCD2B5 /* CustomSyncTileLayer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomSyncTileLayer.m; sourceTree = "<group>"; };
 		202447241AED1AE800BCD2B5 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		202447251AED1AE800BCD2B5 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		202447271AED1EF400BCD2B5 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -61,8 +60,6 @@
 		20CFBE8E1ACFE2EC00289A17 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		20CFBE901ACFE2EC00289A17 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		20CFBE911ACFE2EC00289A17 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		20CFBE931ACFE2EC00289A17 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		20CFBE941ACFE2EC00289A17 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		20CFBE971ACFE2EC00289A17 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		20CFBE991ACFE2EC00289A17 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		20CFBE9C1ACFE2EC00289A17 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -101,6 +98,8 @@
 				2008DD541AD3C437002C13E5 /* AssistantClient.m */,
 				2008DD561AD3C71A002C13E5 /* DataPoint.h */,
 				2008DD571AD3C71A002C13E5 /* DataPoint.m */,
+				200B01311AF64301008A52AB /* DataPointAnnotation.h */,
+				200B01321AF64301008A52AB /* DataPointAnnotation.m */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -108,8 +107,6 @@
 		2074E6431AD2AF6D00C992B6 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				20CFBE931ACFE2EC00289A17 /* ViewController.h */,
-				20CFBE941ACFE2EC00289A17 /* ViewController.m */,
 				2074E6441AD2AFA100C992B6 /* DetailViewController.h */,
 				2074E6451AD2AFA100C992B6 /* DetailViewController.m */,
 				202447241AED1AE800BCD2B5 /* MapViewController.h */,
@@ -124,8 +121,6 @@
 				2079FE761AD262C000193190 /* PopupInfoView.h */,
 				2079FE771AD262C000193190 /* PopupInfoView.m */,
 				2079FE791AD262E700193190 /* PopupInfoView.xib */,
-				202447211AED131900BCD2B5 /* CustomSyncTileLayer.h */,
-				202447221AED131900BCD2B5 /* CustomSyncTileLayer.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -154,14 +149,14 @@
 		20CFBE8B1ACFE2EC00289A17 /* ME310FarmAssistant */ = {
 			isa = PBXGroup;
 			children = (
-				2008DD521AD3C3FA002C13E5 /* Model */,
-				2074E6431AD2AF6D00C992B6 /* ViewControllers */,
-				2079FE731AD2620D00193190 /* Views */,
 				20CFBE901ACFE2EC00289A17 /* AppDelegate.h */,
 				20CFBE911ACFE2EC00289A17 /* AppDelegate.m */,
 				20CFBE961ACFE2EC00289A17 /* Main.storyboard */,
 				20CFBE991ACFE2EC00289A17 /* Images.xcassets */,
 				20CFBE9B1ACFE2EC00289A17 /* LaunchScreen.xib */,
+				2008DD521AD3C3FA002C13E5 /* Model */,
+				2074E6431AD2AF6D00C992B6 /* ViewControllers */,
+				2079FE731AD2620D00193190 /* Views */,
 				20CFBE8C1ACFE2EC00289A17 /* Supporting Files */,
 			);
 			path = ME310FarmAssistant;
@@ -357,11 +352,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				2074E6461AD2AFA100C992B6 /* DetailViewController.m in Sources */,
+				200B01331AF64301008A52AB /* DataPointAnnotation.m in Sources */,
 				2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */,
 				2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */,
 				202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */,
-				202447231AED131900BCD2B5 /* CustomSyncTileLayer.m in Sources */,
-				20CFBE951ACFE2EC00289A17 /* ViewController.m in Sources */,
 				2079FE781AD262C000193190 /* PopupInfoView.m in Sources */,
 				20CFBE921ACFE2EC00289A17 /* AppDelegate.m in Sources */,
 				20CFBE8F1ACFE2EC00289A17 /* main.m in Sources */,

@@ -10,4 +10,16 @@
 
 @interface DataPoint : NSObject
 
+@property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
+@property (nonatomic, readonly) NSUInteger pointID;
+@property (nonatomic, strong, readonly) NSNumber *moisture;
+@property (nonatomic, strong, readonly) NSNumber *airTemperature;
+@property (nonatomic, strong, readonly) NSNumber *leafTemperature;
+@property (nonatomic, strong, readonly) NSNumber *humidity;
+@property (nonatomic, strong, readonly) NSNumber *transpiration;
+@property (nonatomic, strong, readonly) NSURL *photoURL;
+@property (nonatomic, strong, readonly) NSDate *time;
+
+- (instancetype)initWithDictionary:(NSDictionary *)dict;
+
 @end

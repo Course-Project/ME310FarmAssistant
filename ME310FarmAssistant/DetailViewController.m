@@ -7,16 +7,38 @@
 //
 
 #import "DetailViewController.h"
+#import "DataPoint.h"
 
 @interface DetailViewController ()
+
+@property (nonatomic, weak) IBOutlet UILabel *moistureLabel;
+@property (nonatomic, weak) IBOutlet UILabel *airTemperatureLabel;
+@property (nonatomic, weak) IBOutlet UILabel *leafTemperatureLabel;
+@property (nonatomic, weak) IBOutlet UILabel *humidityLabel;
+@property (nonatomic, weak) IBOutlet UILabel *transpirationLabel;
+@property (nonatomic, weak) IBOutlet UIImageView *photoImageView;
 
 @end
 
 @implementation DetailViewController
 
+#pragma mark Life Circle
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
+    
+    // Configure Status Bar
+    [self configureStatusBar];
+    
+    WEAKSELF_T weakSelf = self;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [[AssistantClient sharedClient] getDetailIndoWithDataPointID:self.pointID success:^(NSDictionary *dict) {
+        DataPoint *dataPoint = [[DataPoint alloc] initWithDictionary:dict];
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        
+        // Updating UI
+        [weakSelf displayData:dataPoint];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -36,14 +58,22 @@
     // Dispose of any resources that can be recreated.
 }
 
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
+#pragma mark - UI Methods
+- (void)configureStatusBar {
+    //Status Bar
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
 }
-*/
+
+- (void)displayData:(DataPoint *)dataPoint {
+    [self.moistureLabel setText:[dataPoint.moisture stringValue]];
+    [self.airTemperatureLabel setText:[dataPoint.airTemperature stringValue]];
+    [self.leafTemperatureLabel setText:[dataPoint.leafTemperature stringValue]];
+    [self.humidityLabel setText:[dataPoint.humidity stringValue]];
+    [self.transpirationLabel setText:[dataPoint.transpiration stringValue]];
+    
+    // TODO
+    // Updating Image
+    // self.photoImageView
+}
 
 @end
