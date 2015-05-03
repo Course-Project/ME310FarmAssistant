@@ -61,7 +61,7 @@
 #pragma mark - UI Methods
 - (void)configureStatusBar {
     //Status Bar
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
 }
 
 - (void)displayData:(DataPoint *)dataPoint {
