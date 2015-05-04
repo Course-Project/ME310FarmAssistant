@@ -23,17 +23,20 @@ PODS:
   - ASBPlayerScrubbing (0.1)
   - ASMediaFocusManager (0.5):
     - ASBPlayerScrubbing (~> 0.1)
+  - HSDatePickerViewController (1.0.0)
   - LFHeatMap (1.0.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
   - ASMediaFocusManager
+  - HSDatePickerViewController (~> 1.0)
   - LFHeatMap
 
 SPEC CHECKSUMS:
   AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
   ASBPlayerScrubbing: 0fc5e76aad6fdbcf14380734fb7f2c127cd28b66
   ASMediaFocusManager: 5a071038ada1a79abf9d0c95b6b2b1c1e5cd3a87
+  HSDatePickerViewController: 3854fa84da85c6c5704ba727a8b579e22ed1f6e5
   LFHeatMap: b4c6a796f6a116fa9a9e331eb313cc165a790f04
 
 COCOAPODS: 0.35.0
