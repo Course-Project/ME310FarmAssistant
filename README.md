@@ -17,6 +17,7 @@ $ open ME310FarmAssistant.xcworkspace
 
 - [gpolak/LFHeatMap](https://github.com/gpolak/LFHeatMap)
 - [AFNetworking](https://github.com/AFNetworking/AFNetworking)
+- [ASMediaFocusManager](https://github.com/autresphere/ASMediaFocusManager)
 
 ## TODO
 
@@ -25,5 +26,5 @@ $ open ME310FarmAssistant.xcworkspace
 - [-] Displaying image in detail view controller
 - [ ] Historical data points
 - [ ] Heat map
-- [ ] Activity Indicator in detail view controller
+- [ ] Add Activity Indicator in detail view controller
 
