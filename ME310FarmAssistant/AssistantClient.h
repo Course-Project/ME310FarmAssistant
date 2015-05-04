@@ -34,6 +34,15 @@
  *  @param dataPointID each data points have different ID
  *  @param success     callback block
  */
-- (void)getDetailIndoWithDataPointID:(NSUInteger)dataPointID success:(void (^)(NSDictionary *dataDict))success;
+- (void)getDetailWithDataPointID:(NSUInteger)dataPointID success:(void (^)(NSDictionary *dataDict))success;
+
+/**
+ *  Fetch data points in a certain time range
+ *
+ *  @param fromTime begin time
+ *  @param toTime   end time
+ *  @param success  callback block
+ */
+- (void)getHistoryFrom:(NSDate *)fromTime To:(NSDate *)toTime success:(void (^)(NSArray *historyDataPoints))success;
 
 @end

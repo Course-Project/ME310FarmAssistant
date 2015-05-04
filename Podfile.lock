@@ -20,17 +20,20 @@ PODS:
   - AFNetworking/UIKit (2.5.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Google-Maps-iOS-SDK (1.9.2)
+  - ASBPlayerScrubbing (0.1)
+  - ASMediaFocusManager (0.5):
+    - ASBPlayerScrubbing (~> 0.1)
   - LFHeatMap (1.0.1)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
-  - Google-Maps-iOS-SDK (~> 1.9.2)
+  - ASMediaFocusManager
   - LFHeatMap
 
 SPEC CHECKSUMS:
   AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
-  Google-Maps-iOS-SDK: 4c008abdb68e03ae125c7f674be841d369e2b3de
+  ASBPlayerScrubbing: 0fc5e76aad6fdbcf14380734fb7f2c127cd28b66
+  ASMediaFocusManager: 5a071038ada1a79abf9d0c95b6b2b1c1e5cd3a87
   LFHeatMap: b4c6a796f6a116fa9a9e331eb313cc165a790f04
 
 COCOAPODS: 0.35.0

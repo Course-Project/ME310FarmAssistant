@@ -19,7 +19,7 @@
         _leafTemperature = dict[@"leaf_temp"];
         _humidity = dict[@"humidity"];
         _transpiration = dict[@"transpiration"];
-        _photoURL = [NSURL URLWithString:dict[@"photo"]];
+        _photoURLPathString = dict[@"photo"];
         _time = [NSDate new]; // TODO
     }
     return self;

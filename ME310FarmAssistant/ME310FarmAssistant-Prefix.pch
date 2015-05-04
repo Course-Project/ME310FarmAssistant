@@ -13,17 +13,21 @@
 // You will also need to set the Prefix Header build setting of one or more of your targets to reference this file.
 
 #ifdef __OBJC__
-    #import <UIKit/UIKit.h>
-    #import <Foundation/Foundation.h>
-    #import <GoogleMaps/GoogleMaps.h>
-    #import <AFNetworking/AFNetworking.h>
-    #import "AssistantClient.h"
-    #define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
-    #if __has_feature(objc_arc_weak)
-        #define WEAKSELF_T __weak __typeof__(self)
-    #else
-        #define WEAKSELF_T __unsafe_unretained __typeof__(self)
-    #endif
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import <AFNetworking/AFNetworking.h>
+#import "AssistantClient.h"
+#import "API.h"
+
+#define UIColorFromRGB(rgbValue) [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+// Weak self type
+#if __has_feature(objc_arc_weak)
+#define WEAKSELF_T __weak __typeof__(self)
+#else
+#define WEAKSELF_T __unsafe_unretained __typeof__(self)
+#endif
+
 #endif
 
 #endif

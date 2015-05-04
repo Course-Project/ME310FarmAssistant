@@ -22,6 +22,9 @@ static NSString *const kMagnitude = @"magnitude";
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
+@property (nonatomic, weak) IBOutlet UISwitch *moistureSwitch;
+@property (nonatomic, weak) IBOutlet UISwitch *transpirationSwitch;
+
 @end
 
 @implementation MapViewController
@@ -29,9 +32,6 @@ static NSString *const kMagnitude = @"magnitude";
 #pragma mark Life Circle
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
-    // Configure Status Bar
-    [self configureStatusBar];
     
     // Configure Location Manager
     [self configureLocationManager];
@@ -49,7 +49,8 @@ static NSString *const kMagnitude = @"magnitude";
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     
-    [self.navigationController setNavigationBarHidden:YES];
+    // Configure Bars
+    [self configureBars];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -58,9 +59,12 @@ static NSString *const kMagnitude = @"magnitude";
 }
 
 #pragma mark - UI Methods
-- (void)configureStatusBar {
+- (void)configureBars {
     //Status Bar
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+    
+    // Navigation Bar
+    [self.navigationController setNavigationBarHidden:YES];
 }
 
 - (void)configureMap {
@@ -192,6 +196,29 @@ static NSString *const kMagnitude = @"magnitude";
 #pragma mark - CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     NSLog(@"Did update location");
+}
+
+#pragma mark - Actions
+- (IBAction)didChangeTranspirationSwitch:(UISwitch *)sender {
+    NSLog(@"Transpiration Switch changed");
+    if ([sender isOn]) {
+        NSLog(@"ON");
+        // Show Transpiration Heat Map
+        
+    } else {
+        NSLog(@"OFF");
+    }
+}
+
+- (IBAction)didChangeMoistureSwitch:(UISwitch *)sender {
+    NSLog(@"Moisture Switch changed");
+    if ([sender isOn]) {
+        NSLog(@"ON");
+        // Show Moisture Heat Map
+        
+    } else {
+        NSLog(@"OFF");
+    }
 }
 
 @end

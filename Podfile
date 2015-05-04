@@ -2,9 +2,9 @@
 # platform :ios, '6.0'
 
 target 'ME310FarmAssistant' do
-  pod 'Google-Maps-iOS-SDK', '~> 1.9.2'
   pod 'AFNetworking', '~> 2.0'
   pod 'LFHeatMap'
+  pod 'ASMediaFocusManager'
 end
 
 target 'ME310FarmAssistantTests' do

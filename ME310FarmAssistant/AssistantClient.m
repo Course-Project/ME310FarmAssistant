@@ -26,22 +26,13 @@
 }
 
 #pragma mark - Basic HTTP Method
-// TODO - Refactor
-
-
-#pragma mark - Network
-- (void)getDataPointsWithSuccessBlock:(void (^)(NSArray *dataPoints))success {
-    NSDictionary *parameters = @{
-                                 @"time_from": @"2015-04-27",
-                                 @"time_to": @"2015-04-28"
-                                 };
+- (void)GET:(NSString *)api parameters:(id)parameters success:(void (^)(id obj))success {
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"application/json", nil];
-    [manager GET:@"http://film.h1994st.com:8899/farm/gethistory"
+    [manager GET:api
       parameters:parameters
          success:^(AFHTTPRequestOperation *operation, id responseObjecct) {
              NSLog(@"Fetch data successfully!");
-             
              if (success) {
                  success(responseObjecct);
              }
@@ -50,22 +41,19 @@
          }];
 }
 
-- (void)getDetailIndoWithDataPointID:(NSUInteger)dataPointID success:(void (^)(NSDictionary *dataDict))success {
-    AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
-    NSDictionary *parameters = @{
-                                 @"id": [NSNumber numberWithUnsignedInteger:dataPointID],
-                                 };
-    manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"application/json", nil];
-    [manager GET:@"http://film.h1994st.com:8899/farm/getdetail"
-      parameters:parameters
-         success:^(AFHTTPRequestOperation *operation, id responseObjecct) {
-             NSLog(@"Fetch data successfully!");
-             if (success) {
-                 success(responseObjecct);
-             }
-         } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-             NSLog(@"Error: %@", error);
-         }];
+#pragma mark - Network
+- (void)getDataPointsWithSuccessBlock:(void (^)(NSArray *dataPoints))success {
+    [self GET:[baseURL stringByAppendingString:getData] parameters:nil success:success];
+}
+
+- (void)getDetailWithDataPointID:(NSUInteger)dataPointID success:(void (^)(NSDictionary *dataDict))success {
+    NSDictionary *parameters = @{@"id": [NSNumber numberWithUnsignedInteger:dataPointID]};
+    [self GET:[baseURL stringByAppendingString:getDetail] parameters:parameters success:success];
+}
+
+- (void)getHistoryFrom:(NSDate *)fromTime To:(NSDate *)toTime success:(void (^)(NSArray *historyDataPoints))success {
+    NSDictionary *parameters = @{@"time_from": @"2015-04-27", @"time_to": @"2015-04-28"};
+    [self GET:[baseURL stringByAppendingString:getHistory] parameters:parameters success:success];
 }
 
 @end

@@ -67,6 +67,7 @@
 		20CFBEA71ACFE2ED00289A17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20CFBEA81ACFE2ED00289A17 /* ME310FarmAssistantTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ME310FarmAssistantTests.m; sourceTree = "<group>"; };
 		20CFBEB21ACFEADA00289A17 /* ME310FarmAssistant-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ME310FarmAssistant-Prefix.pch"; sourceTree = "<group>"; };
+		20D8AD8C1AF752AE0070483A /* API.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
 		BEF3B7A44564767B65C1F8F0 /* libPods-ME310FarmAssistant.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ME310FarmAssistant.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -168,6 +169,7 @@
 				20CFBE8D1ACFE2EC00289A17 /* Info.plist */,
 				20CFBE8E1ACFE2EC00289A17 /* main.m */,
 				20CFBEB21ACFEADA00289A17 /* ME310FarmAssistant-Prefix.pch */,
+				20D8AD8C1AF752AE0070483A /* API.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";

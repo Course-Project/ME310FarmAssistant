@@ -11,5 +11,6 @@
 @interface DetailViewController : UITableViewController
 
 @property (nonatomic) NSUInteger pointID;
+@property (nonatomic, strong) DataPoint *dataPoint;
 
 @end
