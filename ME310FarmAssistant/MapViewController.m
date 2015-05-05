@@ -10,12 +10,13 @@
 #import <LFHeatMap/LFHeatMap.h>
 #import "DataPointAnnotation.h"
 #import "DetailViewController.h"
+#import <HSDatePickerViewController/HSDatePickerViewController.h>
 
 static NSString *const kLatitude = @"latitude";
 static NSString *const kLongitude = @"longitude";
 static NSString *const kMagnitude = @"magnitude";
 
-@interface MapViewController () <CLLocationManagerDelegate>
+@interface MapViewController () <CLLocationManagerDelegate, HSDatePickerViewControllerDelegate>
 
 @property (nonatomic, strong) NSMutableArray *locations;
 @property (nonatomic, strong) NSMutableArray *weights;
@@ -44,6 +45,12 @@ static NSString *const kMagnitude = @"magnitude";
     
     // Add Annotations
     [self addAnnotations];
+    
+    HSDatePickerViewController *datePickerViewController = [HSDatePickerViewController new];
+    datePickerViewController.delegate = self;
+    [self presentViewController:datePickerViewController animated:YES completion:^{
+        NSLog(@"Presented");
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -196,6 +203,38 @@ static NSString *const kMagnitude = @"magnitude";
 #pragma mark - CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     NSLog(@"Did update location");
+}
+
+#pragma mark - HSDatePickerViewControllerDelegate
+- (void)hsDatePickerPickedDate:(NSDate *)date {
+    NSLog(@"Selected date: %@", date);
+    
+    // TODO: Display historical points
+    AssistantClient *client = [AssistantClient sharedClient];
+    WEAKSELF_T weakSelf = self;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [client getHistoryFrom:date To:date success:^(NSArray *points) {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        NSMutableArray *annotations = [NSMutableArray new];
+        for (id obj in points) {
+            NSUInteger pointID = [[obj valueForKey:@"id"] unsignedIntegerValue];
+            CLLocationDegrees latitude = [[obj valueForKey:@"latitude"] doubleValue];
+            CLLocationDegrees longtitude = [[obj valueForKey:@"longtitude"] doubleValue];
+            
+            DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:pointID
+                                                                             Location:CLLocationCoordinate2DMake(latitude, longtitude)];
+            [annotations addObject:annotation];
+        }
+        [weakSelf.mapView showAnnotations:annotations animated:YES];
+    }];
+}
+
+- (void)hsDatePickerWillDismissWithQuitMethod:(HSDatePickerQuitMethod)method {
+    NSLog(@"Date picker will dismiss");
+}
+
+- (void)hsDatePickerDidDismissWithQuitMethod:(HSDatePickerQuitMethod)method {
+    NSLog(@"Date picker did dismiss");
 }
 
 #pragma mark - Actions
