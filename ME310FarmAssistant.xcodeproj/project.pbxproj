@@ -24,6 +24,8 @@
 		20CFBE9D1ACFE2EC00289A17 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20CFBE9B1ACFE2EC00289A17 /* LaunchScreen.xib */; };
 		20CFBEA91ACFE2ED00289A17 /* ME310FarmAssistantTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CFBEA81ACFE2ED00289A17 /* ME310FarmAssistantTests.m */; };
 		A7CD0AF3B5FB0E87C322F543 /* libPods-ME310FarmAssistant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEF3B7A44564767B65C1F8F0 /* libPods-ME310FarmAssistant.a */; };
+		D88898CC1AF7A1E9006620D8 /* FAMapOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */; };
+		D88898CF1AF7A210006620D8 /* FAMapOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +71,10 @@
 		20CFBEB21ACFEADA00289A17 /* ME310FarmAssistant-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ME310FarmAssistant-Prefix.pch"; sourceTree = "<group>"; };
 		20D8AD8C1AF752AE0070483A /* API.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
 		BEF3B7A44564767B65C1F8F0 /* libPods-ME310FarmAssistant.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ME310FarmAssistant.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D88898CA1AF7A1E9006620D8 /* FAMapOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAMapOverlay.h; sourceTree = "<group>"; };
+		D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMapOverlay.m; sourceTree = "<group>"; };
+		D88898CD1AF7A210006620D8 /* FAMapOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAMapOverlayView.h; sourceTree = "<group>"; };
+		D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMapOverlayView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +118,10 @@
 				2074E6451AD2AFA100C992B6 /* DetailViewController.m */,
 				202447241AED1AE800BCD2B5 /* MapViewController.h */,
 				202447251AED1AE800BCD2B5 /* MapViewController.m */,
+				D88898CA1AF7A1E9006620D8 /* FAMapOverlay.h */,
+				D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */,
+				D88898CD1AF7A210006620D8 /* FAMapOverlayView.h */,
+				D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -353,8 +363,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D88898CC1AF7A1E9006620D8 /* FAMapOverlay.m in Sources */,
 				2074E6461AD2AFA100C992B6 /* DetailViewController.m in Sources */,
 				200B01331AF64301008A52AB /* DataPointAnnotation.m in Sources */,
+				D88898CF1AF7A210006620D8 /* FAMapOverlayView.m in Sources */,
 				2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */,
 				2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */,
 				202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */,
