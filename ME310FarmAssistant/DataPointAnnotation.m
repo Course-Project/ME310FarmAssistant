@@ -15,8 +15,8 @@
     if (self) {
         _pointID = pointID;
         _coordinate = coord;
-        _title = @"Test";
-        _subtitle = @"HEHEHE";
+        _title = [NSString stringWithFormat:@"#%tu",pointID];
+        _subtitle = [NSString stringWithFormat:@"#%tu",pointID];
     }
     return self;
 }
