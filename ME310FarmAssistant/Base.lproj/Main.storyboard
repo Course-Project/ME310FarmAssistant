@@ -99,14 +99,20 @@
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="vXZ-lx-hvc" id="Wsy-NK-LTM"/>
+                                        </connections>
                                     </textField>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PDD-4q-mfs">
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="PDD-4q-mfs">
                                         <rect key="frame" x="59" y="47" width="97" height="30"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="97" id="pL6-3S-FVJ"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
+                                        <connections>
+                                            <outlet property="delegate" destination="vXZ-lx-hvc" id="LSB-S7-fbZ"/>
+                                        </connections>
                                     </textField>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="End:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pIG-hg-Cej">
                                         <rect key="frame" x="9" y="52" width="42" height="20"/>
@@ -156,8 +162,10 @@
                     <nil key="simulatedTopBarMetrics"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="endTimeTextField" destination="PDD-4q-mfs" id="EdC-aK-FtW"/>
                         <outlet property="mapView" destination="yxQ-e5-BIh" id="yGQ-oO-ia0"/>
                         <outlet property="moistureSwitch" destination="YPS-ck-NC5" id="LE3-ad-B6c"/>
+                        <outlet property="startTimeTextField" destination="5KV-4I-rA0" id="6bn-Jj-tOW"/>
                         <outlet property="transpirationSwitch" destination="HXB-oj-sj0" id="jqS-M5-fQi"/>
                     </connections>
                 </viewController>

@@ -16,7 +16,13 @@ static NSString *const kLatitude = @"latitude";
 static NSString *const kLongitude = @"longitude";
 static NSString *const kMagnitude = @"magnitude";
 
-@interface MapViewController () <CLLocationManagerDelegate, HSDatePickerViewControllerDelegate>
+typedef NS_ENUM(NSUInteger, TimeRange) {
+    TimeRangeStart,
+    TimeRangeEnd,
+    TimeRangeNone,
+};
+
+@interface MapViewController () <CLLocationManagerDelegate, HSDatePickerViewControllerDelegate, UITextFieldDelegate>
 
 @property (nonatomic, strong) NSMutableArray *locations;
 @property (nonatomic, strong) NSMutableArray *weights;
@@ -25,6 +31,11 @@ static NSString *const kMagnitude = @"magnitude";
 
 @property (nonatomic, weak) IBOutlet UISwitch *moistureSwitch;
 @property (nonatomic, weak) IBOutlet UISwitch *transpirationSwitch;
+
+@property (nonatomic, weak) IBOutlet UITextField *startTimeTextField;
+@property (nonatomic, weak) IBOutlet UITextField *endTimeTextField;
+
+@property (nonatomic, assign) TimeRange currentTimeRange;
 
 @end
 
@@ -45,12 +56,6 @@ static NSString *const kMagnitude = @"magnitude";
     
     // Add Annotations
     [self addAnnotations];
-    
-    HSDatePickerViewController *datePickerViewController = [HSDatePickerViewController new];
-    datePickerViewController.delegate = self;
-    [self presentViewController:datePickerViewController animated:YES completion:^{
-        NSLog(@"Presented");
-    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -166,6 +171,11 @@ static NSString *const kMagnitude = @"magnitude";
     NSLog(@"Add annotations...");
 }
 
+- (void)configureTextFields {
+    self.startTimeTextField.enabled = YES;
+    self.endTimeTextField.enabled = NO;
+}
+
 #pragma mark - MKMapViewDelegate
 - (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
     NSLog(@"Region will change");
@@ -208,25 +218,45 @@ static NSString *const kMagnitude = @"magnitude";
 #pragma mark - HSDatePickerViewControllerDelegate
 - (void)hsDatePickerPickedDate:(NSDate *)date {
     NSLog(@"Selected date: %@", date);
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = @"yyyy-MM-dd";
+    
+    
+    // Display date
+    switch (self.currentTimeRange) {
+        case TimeRangeStart:
+            self.startTimeTextField.text = [dateFormatter stringFromDate:date];
+            
+            self.endTimeTextField.enabled = YES;
+            break;
+        case TimeRangeEnd:
+            self.endTimeTextField.text = [dateFormatter stringFromDate:date];
+            break;
+        case TimeRangeNone:
+            
+            break;
+        default:
+            break;
+    }
     
     // TODO: Display historical points
-    AssistantClient *client = [AssistantClient sharedClient];
-    WEAKSELF_T weakSelf = self;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    [client getHistoryFrom:date To:date success:^(NSArray *points) {
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        NSMutableArray *annotations = [NSMutableArray new];
-        for (id obj in points) {
-            NSUInteger pointID = [[obj valueForKey:@"id"] unsignedIntegerValue];
-            CLLocationDegrees latitude = [[obj valueForKey:@"latitude"] doubleValue];
-            CLLocationDegrees longtitude = [[obj valueForKey:@"longtitude"] doubleValue];
-            
-            DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:pointID
-                                                                             Location:CLLocationCoordinate2DMake(latitude, longtitude)];
-            [annotations addObject:annotation];
-        }
-        [weakSelf.mapView showAnnotations:annotations animated:YES];
-    }];
+//    AssistantClient *client = [AssistantClient sharedClient];
+//    WEAKSELF_T weakSelf = self;
+//    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+//    [client getHistoryFrom:date To:date success:^(NSArray *points) {
+//        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+//        NSMutableArray *annotations = [NSMutableArray new];
+//        for (id obj in points) {
+//            NSUInteger pointID = [[obj valueForKey:@"id"] unsignedIntegerValue];
+//            CLLocationDegrees latitude = [[obj valueForKey:@"latitude"] doubleValue];
+//            CLLocationDegrees longtitude = [[obj valueForKey:@"longtitude"] doubleValue];
+//            
+//            DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:pointID
+//                                                                             Location:CLLocationCoordinate2DMake(latitude, longtitude)];
+//            [annotations addObject:annotation];
+//        }
+//        [weakSelf.mapView showAnnotations:annotations animated:YES];
+//    }];
 }
 
 - (void)hsDatePickerWillDismissWithQuitMethod:(HSDatePickerQuitMethod)method {
@@ -235,6 +265,30 @@ static NSString *const kMagnitude = @"magnitude";
 
 - (void)hsDatePickerDidDismissWithQuitMethod:(HSDatePickerQuitMethod)method {
     NSLog(@"Date picker did dismiss");
+}
+
+#pragma mark - UITextFieldDelegate
+- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
+    HSDatePickerViewController *datePickerViewController = [HSDatePickerViewController new];
+    datePickerViewController.delegate = self;
+    
+    if ([textField isEqual:self.startTimeTextField]) {
+        self.currentTimeRange = TimeRangeStart;
+    } else if ([textField isEqual:self.endTimeTextField]) {
+        NSDateFormatter *dateFormatter = [NSDateFormatter new];
+        dateFormatter.dateFormat = @"yyyy-MM-dd";
+        datePickerViewController.minDate = [dateFormatter dateFromString:self.startTimeTextField.text];
+        self.currentTimeRange = TimeRangeEnd;
+    } else {
+        self.currentTimeRange = TimeRangeNone;
+    }
+    
+    datePickerViewController.maxDate = [NSDate date];
+    [self presentViewController:datePickerViewController animated:YES completion:^{
+        NSLog(@"Presented");
+    }];
+    
+    return NO;
 }
 
 #pragma mark - Actions
