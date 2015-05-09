@@ -20,6 +20,7 @@
         _humidity = dict[@"humidity"];
         _transpiration = dict[@"transpiration"];
         _photoURLPathString = dict[@"photo"];
+        _coordinate = CLLocationCoordinate2DMake([dict[@"latitude"] doubleValue], [dict[@"longtitude"]doubleValue]);
         _time = [NSDate new]; // TODO
     }
     return self;

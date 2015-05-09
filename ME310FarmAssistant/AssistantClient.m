@@ -52,7 +52,7 @@
 }
 
 - (void)getHistoryFrom:(NSDate *)fromTime To:(NSDate *)toTime success:(void (^)(NSArray *historyDataPoints))success {
-    NSDictionary *parameters = @{@"time_from": @"2015-04-27", @"time_to": @"2015-04-28"};
+    NSDictionary *parameters = @{@"time_from": @"2015-05-07", @"time_to": @"2015-05-08"};
     [self GET:[baseURL stringByAppendingString:getHistory] parameters:parameters success:success];
 }
 

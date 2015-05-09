@@ -10,6 +10,7 @@
 #import <LFHeatMap/LFHeatMap.h>
 #import "DataPointAnnotation.h"
 #import "DetailViewController.h"
+#import "DataPoint.h"
 #import <HSDatePickerViewController/HSDatePickerViewController.h>
 
 static NSString *const kLatitude = @"latitude";
@@ -26,6 +27,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 @property (nonatomic, strong) NSMutableArray *locations;
 @property (nonatomic, strong) NSMutableArray *weights;
+@property (nonatomic, strong) NSMutableArray *dataPoints;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
@@ -51,11 +53,14 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     // Configure Map
     [self configureMap];
     
-    // Configure Heat Map
-    [self configureHeatMap];
-    
-    // Add Annotations
-    [self addAnnotations];
+    // Configure Data
+    [self configureDataPointWithCompletion:^{
+        // Configure Heat Map
+        [self configureHeatMap];
+        
+        // Add Annotations
+        [self addAnnotations];
+    }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -110,70 +115,62 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 - (void)configureHeatMap {
-    // get data
-    NSString *dataFile = [[NSBundle mainBundle] pathForResource:@"quake" ofType:@"plist"];
-    NSArray *quakeData = [[NSArray alloc] initWithContentsOfFile:dataFile];
     
-    self.locations = [[NSMutableArray alloc] initWithCapacity:[quakeData count]];
-    self.weights = [[NSMutableArray alloc] initWithCapacity:[quakeData count]];
-    for (NSDictionary *reading in quakeData) {
-        CLLocationDegrees latitude = [[reading objectForKey:kLatitude] doubleValue];
-        CLLocationDegrees longitude = [[reading objectForKey:kLongitude] doubleValue];
-        double magnitude = [[reading objectForKey:kMagnitude] doubleValue];
-        
-        CLLocation *location = [[CLLocation alloc] initWithLatitude:latitude longitude:longitude];
-        [self.locations addObject:location];
-        
-        [self.weights addObject:[NSNumber numberWithInteger:(magnitude * 10)]];
-    }
+    WEAKSELF_T weakSelf = self;
     
-    // set map region
-    MKCoordinateSpan span = MKCoordinateSpanMake(10.0, 13.0);
-    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(39.0, -77.0);
-    self.mapView.region = MKCoordinateRegionMake(center, span);
+    MKCoordinateSpan span = MKCoordinateSpanMake(0.05, 0.05);
+    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(37.4263, -122.1720);
+    weakSelf.mapView.region = MKCoordinateRegionMake(center, span);
     
     // create overlay view for the heatmap image
-    self.imageView = [[UIImageView alloc] initWithFrame:self.view.frame];
-    self.imageView.contentMode = UIViewContentModeCenter;
-    [self.view addSubview:self.imageView];
+    weakSelf.imageView = [[UIImageView alloc] initWithFrame:weakSelf.view.frame];
+    weakSelf.imageView.contentMode = UIViewContentModeCenter;
+    [weakSelf.view addSubview:weakSelf.imageView];
     
-    float boost = 0.4f;
-    UIImage *heatmap = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.weights];
-    self.imageView.image = heatmap;
+    //crete location array & weight array (temperature)
+    weakSelf.locations = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
+    weakSelf.weights = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
+    for (DataPoint *point in weakSelf.dataPoints) {
+         CLLocation *location = [[CLLocation alloc] initWithLatitude:point.coordinate.latitude longitude:point.coordinate.longitude];
+        [weakSelf.locations addObject:location];
+        [weakSelf.weights addObject:point.airTemperature];
+    }
+    
+
+    
+    float boost = 1.0f;
+    UIImage *heatmap = [LFHeatMap heatMapForMapView:weakSelf.mapView boost:boost locations:weakSelf.locations weights:weakSelf.weights];
+    weakSelf.imageView.image = heatmap;
 }
 
 - (void)addAnnotations {
-//    AssistantClient *client = [AssistantClient sharedClient];
-//    WEAKSELF_T weakSelf = self;
-//    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-//    [client getDataPointsWithSuccessBlock:^(NSArray *points) {
-//        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-//        NSMutableArray *annotations = [NSMutableArray new];
-//        for (id obj in points) {
-//            NSUInteger pointID = [[obj valueForKey:@"id"] unsignedIntegerValue];
-//            CLLocationDegrees latitude = [[obj valueForKey:@"latitude"] doubleValue];
-//            CLLocationDegrees longtitude = [[obj valueForKey:@"longtitude"] doubleValue];
-//            
-//            DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:pointID
-//                                                                             Location:CLLocationCoordinate2DMake(latitude, longtitude)];
-//            [annotations addObject:annotation];
-//        }
-//        [weakSelf.mapView showAnnotations:annotations animated:YES];
-//    }];
-    
-    // Testing
-    NSMutableArray *annotations = [NSMutableArray new];
-    for (CLLocation *location in self.locations) {
-        DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:1 Location:location.coordinate];
-        [annotations addObject:annotation];
+    WEAKSELF_T weakSelf = self;
+    for (DataPoint *point in weakSelf.dataPoints) {
+        DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:point.pointID
+                                                                         Location:point.coordinate];
+        [weakSelf.mapView addAnnotation:annotation];
     }
-    [self.mapView addAnnotations:annotations];
+    
     NSLog(@"Add annotations...");
 }
 
 - (void)configureTextFields {
     self.startTimeTextField.enabled = YES;
     self.endTimeTextField.enabled = NO;
+}
+
+- (void)configureDataPointWithCompletion:(void (^)(void))completed{
+    AssistantClient *client = [AssistantClient sharedClient];
+    WEAKSELF_T weakSelf = self;
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [client getHistoryFrom:nil To:nil success:^(NSArray *points) {
+        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+        for (id obj in points) {
+            DataPoint *point = [[DataPoint alloc]initWithDictionary:obj];
+            [weakSelf.dataPoints addObject:point];
+        }
+        completed();
+    }];
 }
 
 #pragma mark - MKMapViewDelegate
@@ -183,7 +180,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
     NSLog(@"Region did change");
-    float boost = 0.4f;
+    float boost = 1.0f;
     UIImage *heatmap = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.weights];
     self.imageView.image = heatmap;
 }
@@ -312,6 +309,14 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     } else {
         NSLog(@"OFF");
     }
+}
+
+#pragma mark - Initialization
+- (NSMutableArray *)dataPoints{
+    if (!_dataPoints) {
+        _dataPoints = [[NSMutableArray alloc]init];
+    }
+    return _dataPoints;
 }
 
 @end
