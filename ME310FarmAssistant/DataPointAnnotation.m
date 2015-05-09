@@ -7,16 +7,17 @@
 //
 
 #import "DataPointAnnotation.h"
+#import "DataPoint.h"
 
 @implementation DataPointAnnotation
 
-- (instancetype)initWithID:(NSUInteger)pointID Location:(CLLocationCoordinate2D)coord {
+- (instancetype)initWithDataPoint:(DataPoint *)dataPoint {
     self = [super init];
     if (self) {
-        _pointID = pointID;
-        _coordinate = coord;
-        _title = [NSString stringWithFormat:@"#%tu",pointID];
-        _subtitle = [NSString stringWithFormat:@"#%tu",pointID];
+        _pointID = dataPoint.pointID;
+        _coordinate = dataPoint.coordinate;
+        _title = [NSString stringWithFormat:@"Point #%tu", dataPoint.pointID];
+        _subtitle = [NSString stringWithFormat:@"Moisture: %@  Transpiration: %@", [dataPoint.moisture stringValue], [dataPoint.transpiration stringValue]];
     }
     return self;
 }

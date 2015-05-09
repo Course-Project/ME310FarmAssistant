@@ -9,6 +9,8 @@
 #import <Foundation/Foundation.h>
 #import <MapKit/MapKit.h>
 
+@class DataPoint;
+
 @interface DataPointAnnotation : NSObject <MKAnnotation>
 
 @property (nonatomic, readonly) NSUInteger pointID;
@@ -19,6 +21,6 @@
 @property (nonatomic, readonly, copy) NSString *subtitle;
 
 #pragma mark - init
-- (instancetype)initWithID:(NSUInteger)pointID Location:(CLLocationCoordinate2D)coord;
+- (instancetype)initWithDataPoint:(DataPoint *)dataPoint;
 
 @end

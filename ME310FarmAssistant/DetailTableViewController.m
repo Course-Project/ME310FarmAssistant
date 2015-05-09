@@ -6,12 +6,12 @@
 //  Copyright (c) 2015 Tom Hu. All rights reserved.
 //
 
-#import "DetailViewController.h"
+#import "DetailTableViewController.h"
 #import "DataPoint.h"
 #import <UIImageView+AFNetworking.h>
 #import <ASMediaFocusManager/ASMediaFocusManager.h>
 
-@interface DetailViewController () <ASMediasFocusDelegate>
+@interface DetailTableViewController () <ASMediasFocusDelegate>
 
 @property (nonatomic, weak) IBOutlet UILabel *moistureLabel;
 @property (nonatomic, weak) IBOutlet UILabel *airTemperatureLabel;
@@ -24,12 +24,11 @@
 
 @end
 
-@implementation DetailViewController
+@implementation DetailTableViewController
 
 #pragma mark Life Circle
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
     
     self.mediaFocusManager = [[ASMediaFocusManager alloc] init];
     self.mediaFocusManager.delegate = self;
@@ -48,31 +47,27 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    // Configure Bars
-    [self configureBars];
 }
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - UI Methods
-- (void)configureBars {
-    //Status Bar
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
-    
-    // Navigation Bar
-    [self.navigationController setNavigationBarHidden:NO];
-}
-
 - (void)displayData:(DataPoint *)dataPoint {
     [self.moistureLabel setText:[dataPoint.moisture stringValue]];
     [self.airTemperatureLabel setText:[dataPoint.airTemperature stringValue]];
     [self.leafTemperatureLabel setText:[dataPoint.leafTemperature stringValue]];
     [self.humidityLabel setText:[dataPoint.humidity stringValue]];
     [self.transpirationLabel setText:[dataPoint.transpiration stringValue]];
+    
+    double moisture = [dataPoint.moisture doubleValue];
+    double transpiration = [dataPoint.transpiration doubleValue];
+    
+    if (!(moisture > 30 && transpiration > 20)) {
+        [self.moistureLabel setTextColor:UIColorFromRGB(0x9E0000)];
+        [self.transpirationLabel setTextColor:UIColorFromRGB(0x9E0000)];
+    }
     
     // Updating Image
     NSString *imageURLString = [photoBaseURL stringByAppendingString:dataPoint.photoURLPathString];

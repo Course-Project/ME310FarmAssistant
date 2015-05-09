@@ -14,7 +14,9 @@
 		202447201AED07C800BCD2B5 /* quake.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2024471F1AED07C800BCD2B5 /* quake.plist */; };
 		202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202447251AED1AE800BCD2B5 /* MapViewController.m */; };
 		202447281AED1EF400BCD2B5 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 202447271AED1EF400BCD2B5 /* MapKit.framework */; };
-		2074E6461AD2AFA100C992B6 /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2074E6451AD2AFA100C992B6 /* DetailViewController.m */; };
+		20634B501AFE3C2E005A06F1 /* FAIndexTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 20634B4F1AFE3C2E005A06F1 /* FAIndexTableViewController.m */; };
+		20634B531AFE4B4B005A06F1 /* FAIndexTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20634B521AFE4B4B005A06F1 /* FAIndexTableViewCell.m */; };
+		2074E6461AD2AFA100C992B6 /* DetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2074E6451AD2AFA100C992B6 /* DetailTableViewController.m */; };
 		2079FE781AD262C000193190 /* PopupInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2079FE771AD262C000193190 /* PopupInfoView.m */; };
 		2079FE7A1AD262E700193190 /* PopupInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2079FE791AD262E700193190 /* PopupInfoView.xib */; };
 		20CFBE8F1ACFE2EC00289A17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CFBE8E1ACFE2EC00289A17 /* main.m */; };
@@ -52,8 +54,12 @@
 		202447241AED1AE800BCD2B5 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		202447251AED1AE800BCD2B5 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		202447271AED1EF400BCD2B5 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
-		2074E6441AD2AFA100C992B6 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
-		2074E6451AD2AFA100C992B6 /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+		20634B4E1AFE3C2E005A06F1 /* FAIndexTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAIndexTableViewController.h; sourceTree = "<group>"; };
+		20634B4F1AFE3C2E005A06F1 /* FAIndexTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAIndexTableViewController.m; sourceTree = "<group>"; };
+		20634B511AFE4B4B005A06F1 /* FAIndexTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAIndexTableViewCell.h; sourceTree = "<group>"; };
+		20634B521AFE4B4B005A06F1 /* FAIndexTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAIndexTableViewCell.m; sourceTree = "<group>"; };
+		2074E6441AD2AFA100C992B6 /* DetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailTableViewController.h; sourceTree = "<group>"; };
+		2074E6451AD2AFA100C992B6 /* DetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailTableViewController.m; sourceTree = "<group>"; };
 		2079FE761AD262C000193190 /* PopupInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupInfoView.h; sourceTree = "<group>"; };
 		2079FE771AD262C000193190 /* PopupInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupInfoView.m; sourceTree = "<group>"; };
 		2079FE791AD262E700193190 /* PopupInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupInfoView.xib; sourceTree = "<group>"; };
@@ -105,23 +111,30 @@
 				2008DD541AD3C437002C13E5 /* AssistantClient.m */,
 				2008DD561AD3C71A002C13E5 /* DataPoint.h */,
 				2008DD571AD3C71A002C13E5 /* DataPoint.m */,
-				200B01311AF64301008A52AB /* DataPointAnnotation.h */,
-				200B01321AF64301008A52AB /* DataPointAnnotation.m */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		20634B541AFE5F52005A06F1 /* MapObject */ = {
+			isa = PBXGroup;
+			children = (
+				200B01311AF64301008A52AB /* DataPointAnnotation.h */,
+				200B01321AF64301008A52AB /* DataPointAnnotation.m */,
+				D88898CA1AF7A1E9006620D8 /* FAMapOverlay.h */,
+				D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */,
+			);
+			name = MapObject;
 			sourceTree = "<group>";
 		};
 		2074E6431AD2AF6D00C992B6 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				2074E6441AD2AFA100C992B6 /* DetailViewController.h */,
-				2074E6451AD2AFA100C992B6 /* DetailViewController.m */,
+				2074E6441AD2AFA100C992B6 /* DetailTableViewController.h */,
+				2074E6451AD2AFA100C992B6 /* DetailTableViewController.m */,
 				202447241AED1AE800BCD2B5 /* MapViewController.h */,
 				202447251AED1AE800BCD2B5 /* MapViewController.m */,
-				D88898CA1AF7A1E9006620D8 /* FAMapOverlay.h */,
-				D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */,
-				D88898CD1AF7A210006620D8 /* FAMapOverlayView.h */,
-				D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */,
+				20634B4E1AFE3C2E005A06F1 /* FAIndexTableViewController.h */,
+				20634B4F1AFE3C2E005A06F1 /* FAIndexTableViewController.m */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -129,9 +142,13 @@
 		2079FE731AD2620D00193190 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				D88898CD1AF7A210006620D8 /* FAMapOverlayView.h */,
+				D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */,
 				2079FE761AD262C000193190 /* PopupInfoView.h */,
 				2079FE771AD262C000193190 /* PopupInfoView.m */,
 				2079FE791AD262E700193190 /* PopupInfoView.xib */,
+				20634B511AFE4B4B005A06F1 /* FAIndexTableViewCell.h */,
+				20634B521AFE4B4B005A06F1 /* FAIndexTableViewCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -165,6 +182,7 @@
 				20CFBE961ACFE2EC00289A17 /* Main.storyboard */,
 				20CFBE991ACFE2EC00289A17 /* Images.xcassets */,
 				20CFBE9B1ACFE2EC00289A17 /* LaunchScreen.xib */,
+				20634B541AFE5F52005A06F1 /* MapObject */,
 				2008DD521AD3C3FA002C13E5 /* Model */,
 				2074E6431AD2AF6D00C992B6 /* ViewControllers */,
 				2079FE731AD2620D00193190 /* Views */,
@@ -364,13 +382,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				D88898CC1AF7A1E9006620D8 /* FAMapOverlay.m in Sources */,
-				2074E6461AD2AFA100C992B6 /* DetailViewController.m in Sources */,
+				2074E6461AD2AFA100C992B6 /* DetailTableViewController.m in Sources */,
 				200B01331AF64301008A52AB /* DataPointAnnotation.m in Sources */,
 				D88898CF1AF7A210006620D8 /* FAMapOverlayView.m in Sources */,
 				2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */,
 				2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */,
 				202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */,
+				20634B531AFE4B4B005A06F1 /* FAIndexTableViewCell.m in Sources */,
 				2079FE781AD262C000193190 /* PopupInfoView.m in Sources */,
+				20634B501AFE3C2E005A06F1 /* FAIndexTableViewController.m in Sources */,
 				20CFBE921ACFE2EC00289A17 /* AppDelegate.m in Sources */,
 				20CFBE8F1ACFE2EC00289A17 /* main.m in Sources */,
 			);

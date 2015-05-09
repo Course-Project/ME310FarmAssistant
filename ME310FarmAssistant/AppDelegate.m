@@ -32,6 +32,9 @@
                                                           [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:21.0], NSFontAttributeName,
                                                           nil]];
     
+    //Status Bar
+    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+    
     return YES;
 }
 

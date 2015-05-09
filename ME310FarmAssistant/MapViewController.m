@@ -9,7 +9,7 @@
 #import "MapViewController.h"
 #import <LFHeatMap/LFHeatMap.h>
 #import "DataPointAnnotation.h"
-#import "DetailViewController.h"
+#import "DetailTableViewController.h"
 #import "DataPoint.h"
 #import <HSDatePickerViewController/HSDatePickerViewController.h>
 
@@ -54,20 +54,18 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     [self configureMap];
     
     // Configure Data
+    WEAKSELF_T weakSelf = self;
     [self configureDataPointWithCompletion:^{
         // Configure Heat Map
-        [self configureHeatMap];
+        [weakSelf configureHeatMap];
         
         // Add Annotations
-        [self addAnnotations];
+        [weakSelf addAnnotations];
     }];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    // Configure Bars
-    [self configureBars];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -76,14 +74,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 #pragma mark - UI Methods
-- (void)configureBars {
-    //Status Bar
-    [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
-    
-    // Navigation Bar
-    [self.navigationController setNavigationBarHidden:YES];
-}
-
 - (void)configureMap {
     // Show user location
     self.mapView.showsUserLocation = YES;
@@ -144,11 +134,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 - (void)addAnnotations {
-    WEAKSELF_T weakSelf = self;
-    for (DataPoint *point in weakSelf.dataPoints) {
-        DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:point.pointID
-                                                                         Location:point.coordinate];
-        [weakSelf.mapView addAnnotation:annotation];
+    for (DataPoint *point in self.dataPoints) {
+        DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithDataPoint:point];
+        [self.mapView addAnnotation:annotation];
     }
     
     NSLog(@"Add annotations...");
@@ -166,7 +154,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     [client getHistoryFrom:nil To:nil success:^(NSArray *points) {
         [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         for (id obj in points) {
-            DataPoint *point = [[DataPoint alloc]initWithDictionary:obj];
+            DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
             [weakSelf.dataPoints addObject:point];
         }
         completed();
@@ -202,7 +190,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
     NSLog(@"Callout accessory control tapped");
-    DetailViewController *vc = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"DetailViewController"];
+    DetailTableViewController *vc = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"DetailViewController"];
     vc.pointID = [(DataPointAnnotation *)view.annotation pointID];
     [self.navigationController pushViewController:vc animated:YES];
 }
@@ -311,10 +299,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     }
 }
 
-#pragma mark - Initialization
-- (NSMutableArray *)dataPoints{
+#pragma mark - Properties
+- (NSMutableArray *)dataPoints {
     if (!_dataPoints) {
-        _dataPoints = [[NSMutableArray alloc]init];
+        _dataPoints = [NSMutableArray new];
     }
     return _dataPoints;
 }

@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface DetailViewController : UITableViewController
+@interface DetailTableViewController : UITableViewController
 
 @property (nonatomic) NSUInteger pointID;
 @property (nonatomic, strong) DataPoint *dataPoint;
