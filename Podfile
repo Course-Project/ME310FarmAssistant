@@ -3,7 +3,6 @@
 
 target 'ME310FarmAssistant' do
   pod 'AFNetworking', '~> 2.0'
-  pod 'LFHeatMap'
   pod 'ASMediaFocusManager'
   pod 'HSDatePickerViewController', '~> 1.0'
 end

@@ -7,7 +7,7 @@
 //
 
 #import "MapViewController.h"
-#import <LFHeatMap/LFHeatMap.h>
+#import "LFHeatMap.h"
 #import "DataPointAnnotation.h"
 #import "DetailTableViewController.h"
 #import "DataPoint.h"
