@@ -11,6 +11,8 @@
 #import "DataPointAnnotation.h"
 #import "DetailTableViewController.h"
 #import "DataPoint.h"
+#import "FAMapOverlay.h"
+#import "FAMapOverlayView.h"
 #import <HSDatePickerViewController/HSDatePickerViewController.h>
 
 static NSString *const kLatitude = @"latitude";
@@ -30,6 +32,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 @property (nonatomic, strong) NSMutableArray *dataPoints;
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) CLLocationManager *locationManager;
+
+@property (nonatomic, strong) UIImage *heatMapImage;
 
 @property (nonatomic, weak) IBOutlet UISwitch *moistureSwitch;
 @property (nonatomic, weak) IBOutlet UISwitch *transpirationSwitch;
@@ -59,6 +63,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         // Configure Heat Map
         [weakSelf configureHeatMap];
         
+        // Configure Overlay
+        [weakSelf configureMapOverlay];
+        
         // Add Annotations
         [weakSelf addAnnotations];
     }];
@@ -66,6 +73,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
+    
+    //add overlay
+    [self configureMapOverlay];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -79,6 +89,12 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     self.mapView.showsUserLocation = YES;
     
     [self.mapView setCenterCoordinate:self.mapView.userLocation.coordinate animated:YES];
+}
+
+- (void)configureMapOverlay{
+    WEAKSELF_T weakSelf = self;
+    FAMapOverlay *mapOverlay = [[FAMapOverlay alloc]initWithView:weakSelf.mapView];
+    [weakSelf.mapView addOverlay:mapOverlay];
 }
 
 - (void)configureLocationManager {
@@ -130,7 +146,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     float boost = 1.0f;
     UIImage *heatmap = [LFHeatMap heatMapForMapView:weakSelf.mapView boost:boost locations:weakSelf.locations weights:weakSelf.weights];
-    weakSelf.imageView.image = heatmap;
+    weakSelf.heatMapImage = heatmap;
 }
 
 - (void)addAnnotations {
@@ -168,9 +184,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
     NSLog(@"Region did change");
-    float boost = 1.0f;
-    UIImage *heatmap = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.weights];
-    self.imageView.image = heatmap;
+    
 }
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
@@ -275,6 +289,17 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     return NO;
 }
+
+#pragma mark - Overlay Delegate
+
+- (MKOverlayView *) mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay{
+    WEAKSELF_T weakSelf = self;
+    FAMapOverlay *mapOverlay = (FAMapOverlay *)overlay;
+    FAMapOverlayView *mapOverlayView = [[FAMapOverlayView alloc]initWithOverlay:mapOverlay];
+    mapOverlayView.heatMapImage = weakSelf.heatMapImage;
+    return  mapOverlayView;
+}
+
 
 #pragma mark - Actions
 - (IBAction)didChangeTranspirationSwitch:(UISwitch *)sender {

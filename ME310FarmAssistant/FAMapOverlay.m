@@ -10,23 +10,22 @@
 
 @implementation FAMapOverlay
 
+- (id)initWithView:(MKMapView *)mapView{
+    if (self = [super init]) {
+        _mapView = mapView;
+        _coordinate = mapView.centerCoordinate;
+        _mapRect = mapView.visibleMapRect;
+    }
+    return self;
+}
+
 -(CLLocationCoordinate2D)coordinate {
-    //Image center point
-    //    return CLLocationCoordinate2DMake(48.85883, 2.2945);
-    return CLLocationCoordinate2DMake(31.28539, 121.2077);
+    return CLLocationCoordinate2DMake(37.4263, -122.1720);
 }
 
 - (MKMapRect)boundingMapRect
 {
-    //Latitue and longitude for each corner point
-    MKMapPoint upperLeft   = MKMapPointForCoordinate(CLLocationCoordinate2DMake(31.28542, 121.2065));
-    MKMapPoint upperRight  = MKMapPointForCoordinate(CLLocationCoordinate2DMake(31.28542, 121.2089));
-    MKMapPoint bottomLeft  = MKMapPointForCoordinate(CLLocationCoordinate2DMake(31.28539, 121.2065));
-    
-    //Building a map rect that represents the image projection on the map
-    MKMapRect bounds = MKMapRectMake(upperLeft.x, upperLeft.y, fabs(upperLeft.x - upperRight.x), fabs(upperLeft.y - bottomLeft.y));
-    
-    return bounds;
+    return _mapRect;
 }
 
 

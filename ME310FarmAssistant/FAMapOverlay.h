@@ -11,8 +11,11 @@
 #import <CoreLocation/CoreLocation.h>
 @interface FAMapOverlay : NSObject<MKOverlay>
 
+- (id)initWithView:(MKMapView *)mapView;
 - (MKMapRect)boundingMapRect;
-@property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 
+@property (nonatomic) MKMapRect mapRect;
+@property (nonatomic) CLLocationCoordinate2D coordinate;
+@property (nonatomic, strong) MKMapView *mapView;
 
 @end
