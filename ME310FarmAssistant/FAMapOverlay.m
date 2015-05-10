@@ -20,7 +20,7 @@
 }
 
 -(CLLocationCoordinate2D)coordinate {
-    return CLLocationCoordinate2DMake(37.4263, -122.1720);
+    return _coordinate;
 }
 
 - (MKMapRect)boundingMapRect
