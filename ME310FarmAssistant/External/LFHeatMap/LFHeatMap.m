@@ -157,7 +157,11 @@ inline static int isqrt(int x)
         [points addObject:[NSValue valueWithCGPoint:point]];
     }
     
-    return [LFHeatMap heatMapWithRect:mapView.frame boost:boost points:points weights:weights];
+#warning Hard Code Here!!
+    CGRect frame = mapView.frame;
+    frame.origin.y += 32;
+
+    return [LFHeatMap heatMapWithRect:frame boost:boost points:points weights:weights];
 }
 
 + (UIImage *)heatMapWithRect:(CGRect)rect
