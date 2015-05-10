@@ -40,10 +40,6 @@
     }];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
 #pragma mark - UI Methods
 - (void)configureDataPointWithCompletion:(void (^)(void))completed{
     AssistantClient *client = [AssistantClient sharedClient];

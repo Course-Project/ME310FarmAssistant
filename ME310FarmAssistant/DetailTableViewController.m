@@ -45,14 +45,6 @@
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-}
-
 #pragma mark - UI Methods
 - (void)displayData:(DataPoint *)dataPoint {
     [self.moistureLabel setText:[dataPoint.moisture stringValue]];
@@ -95,7 +87,7 @@
 
 // Returns the title for this media view. Return nil if you don't want any title to appear.
 - (NSString *)mediaFocusManager:(ASMediaFocusManager *)mediaFocusManager titleForView:(UIView *)view {
-    return @"test";
+    return [NSString stringWithFormat:@"Point ID: #%tu", self.dataPoint.pointID];
 }
 
 - (void)mediaFocusManagerWillAppear:(ASMediaFocusManager *)mediaFocusManager {

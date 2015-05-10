@@ -7,7 +7,7 @@
 //
 
 #import "MapViewController.h"
-#import <LFHeatMap/LFHeatMap.h>
+#import "LFHeatMap.h"
 #import "DataPointAnnotation.h"
 #import "DetailTableViewController.h"
 #import "DataPoint.h"
@@ -62,15 +62,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         // Add Annotations
         [weakSelf addAnnotations];
     }];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-}
-
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 #pragma mark - UI Methods
