@@ -51,7 +51,10 @@
             double moisture = [obj[@"moisture"] doubleValue];
             double transpiration = [obj[@"transpiration"] doubleValue];
             
-            if (moisture > 30.0f && transpiration > 20.0f) continue; // Filter
+            // (moisture < 30, moisture >60, transpiration < 20, transpiration > 50)
+            if ((moisture >= 30.0f && moisture <= 60.0f) &&
+                (transpiration >= 20.0f && transpiration <= 50.0f))
+                continue; // Filter
             
             DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
             [weakSelf.importantDataPoints addObject:point];

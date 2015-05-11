@@ -46,6 +46,10 @@
     [self GET:[baseURL stringByAppendingString:getData] parameters:nil success:success];
 }
 
+- (void)getImportantDataPointWithSuccessBlock:(void (^)(NSArray *importantDataPoints))success {
+    [self GET:[baseURL stringByAppendingString:getImportantData] parameters:nil success:success];
+}
+
 - (void)getDetailWithDataPointID:(NSUInteger)dataPointID success:(void (^)(NSDictionary *dataDict))success {
     NSDictionary *parameters = @{@"id": [NSNumber numberWithUnsignedInteger:dataPointID]};
     [self GET:[baseURL stringByAppendingString:getDetail] parameters:parameters success:success];

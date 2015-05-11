@@ -209,6 +209,15 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     [self.navigationController pushViewController:vc animated:YES];
 }
 
+// Overlay Delegate
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay{
+    WEAKSELF_T weakSelf = self;
+    FAMapOverlay *mapOverlay = (FAMapOverlay *)overlay;
+    FAMapOverlayView *mapOverlayView = [[FAMapOverlayView alloc]initWithOverlay:mapOverlay];
+    mapOverlayView.heatMapImage = weakSelf.heatMapImage;
+    return  mapOverlayView;
+}
+
 #pragma mark - CLLocationManagerDelegate
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
     NSLog(@"Did update location");
@@ -289,17 +298,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     return NO;
 }
-
-#pragma mark - Overlay Delegate
-
-- (MKOverlayView *) mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay{
-    WEAKSELF_T weakSelf = self;
-    FAMapOverlay *mapOverlay = (FAMapOverlay *)overlay;
-    FAMapOverlayView *mapOverlayView = [[FAMapOverlayView alloc]initWithOverlay:mapOverlay];
-    mapOverlayView.heatMapImage = weakSelf.heatMapImage;
-    return  mapOverlayView;
-}
-
 
 #pragma mark - Actions
 - (IBAction)didChangeTranspirationSwitch:(UISwitch *)sender {

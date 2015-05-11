@@ -53,10 +53,7 @@
     [self.humidityLabel setText:[dataPoint.humidity stringValue]];
     [self.transpirationLabel setText:[dataPoint.transpiration stringValue]];
     
-    double moisture = [dataPoint.moisture doubleValue];
-    double transpiration = [dataPoint.transpiration doubleValue];
-    
-    if (!(moisture > 30 && transpiration > 20)) {
+    if (!dataPoint.isNormal) {
         [self.moistureLabel setTextColor:UIColorFromRGB(0x9E0000)];
         [self.transpirationLabel setTextColor:UIColorFromRGB(0x9E0000)];
     }

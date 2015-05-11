@@ -23,4 +23,6 @@
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 
+- (BOOL)isNormal;
+
 @end

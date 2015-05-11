@@ -26,4 +26,11 @@
     return self;
 }
 
+- (BOOL)isNormal {
+    double moisture = [_moisture doubleValue];
+    double transpiration = [_transpiration doubleValue];
+    return ((moisture >= 30.0f && moisture <= 60.0f) &&
+            (transpiration >= 20.0f && transpiration <= 50.0f));
+}
+
 @end

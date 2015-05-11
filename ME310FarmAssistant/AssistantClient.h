@@ -29,6 +29,14 @@
 - (void)getDataPointsWithSuccessBlock:(void (^)(NSArray *dataPoints))success;
 
 /**
+ *  Fetch data points (moisture < 30, moisture >60, transpiration < 20, transpiration > 50)
+ *  (Fetch abnormal data points)
+ *
+ *  @param success callback block
+ */
+- (void)getImportantDataPointWithSuccessBlock:(void (^)(NSArray *importantDataPoints))success;
+
+/**
  *  Fetch detail information of a specific data point
  *
  *  @param dataPointID each data points have different ID
