@@ -60,10 +60,12 @@
     }
     
     // Updating Image
-    NSString *imageURLString = [photoBaseURL stringByAppendingString:dataPoint.photoURLPathString];
-    [self.photoImageView setImageWithURL:[NSURL URLWithString:imageURLString]];
-    
-    [self.mediaFocusManager installOnView:self.photoImageView];
+    NSString *imagePath = dataPoint.photoURLPathString;
+    if (imagePath) {
+        NSString *imageURLString = [photoBaseURL stringByAppendingString:imagePath];
+        [self.photoImageView setImageWithURL:[NSURL URLWithString:imageURLString]];
+        [self.mediaFocusManager installOnView:self.photoImageView];
+    }
 }
 
 #pragma mark - UITableViewDelegate

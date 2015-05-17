@@ -44,9 +44,8 @@
 - (void)configureDataPointWithCompletion:(void (^)(void))completed{
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    [client getHistoryFrom:nil To:nil success:^(NSArray *points) {
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [SVProgressHUD showWithStatus:@"Loading..."];
+    [client getHistoryFrom:@"2015-05-07" To:@"2015-05-08" success:^(NSArray *points) {
         for (id obj in points) {
             double moisture = [obj[@"moisture"] doubleValue];
             double transpiration = [obj[@"transpiration"] doubleValue];
@@ -63,6 +62,8 @@
         if (completed) {
             completed();
         }
+        
+        [SVProgressHUD showSuccessWithStatus:@"Success!"];
     }];
 }
 

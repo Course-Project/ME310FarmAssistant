@@ -178,6 +178,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)configureAnnotations {
     NSLog(@"Add annotations...");
+    [self.dataPointAnnotationsArray removeAllObjects];
     for (DataPoint *point in self.dataPoints) {
         DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithDataPoint:point];
         [self.dataPointAnnotationsArray addObject:annotation];
@@ -205,8 +206,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
     [SVProgressHUD showWithStatus:@"Loading..."];
-    [client getHistoryFrom:@"2015-05-07" To:@"2015-05-07" success:^(NSArray *points) {
-        [SVProgressHUD showSuccessWithStatus:@"Success!"];
+    [client getHistoryFrom:@"2015-05-07" To:@"2015-05-08" success:^(NSArray *points) {
         for (id obj in points) {
             DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
             [weakSelf.dataPoints addObject:point];
@@ -214,6 +214,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         if (completed) {
             completed();
         }
+        [SVProgressHUD showSuccessWithStatus:@"Success!"];
     }];
 }
 
@@ -365,6 +366,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     [SVProgressHUD showWithStatus:@"Loading..."];
     [client getHistoryFrom:startDate To:endDate success:^(NSArray *points) {
+        // Remove Old Data Points
+        [weakSelf.dataPoints removeAllObjects];
+        
         for (id obj in points) {
             DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
             [weakSelf.dataPoints addObject:point];
@@ -377,7 +381,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         [weakSelf.moistureSwitch setOn:NO animated:YES];
         [weakSelf.transpirationSwitch setOn:NO animated:YES];
         
-        // Add new annotations
+        // Configure Heat Map
+        [weakSelf configureHeatMap];
+        
+        // Add Annotations
         [weakSelf configureAnnotations];
         
         [SVProgressHUD showSuccessWithStatus:@"Success!"];
