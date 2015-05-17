@@ -30,31 +30,25 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 // Point location for annotations
 @property (nonatomic, strong) NSMutableArray *locations;
 
-// TODO: Replace this array with Moisture Weights & Transpiration Weights
-@property (nonatomic, strong) NSMutableArray *weights;
-
-// TODO: Moisture Weights & Transpiration Weights
+// Moisture Weights & Transpiration Weights
 @property (nonatomic, strong) NSMutableArray *moistureWeights;
 @property (nonatomic, strong) NSMutableArray *transpirationWeights;
 
-// TODO: Moisture & Transpiration Heat Map Overlay
+// Moisture & Transpiration Heat Map Overlay
 @property (nonatomic, strong) FAMapOverlay *moistureHeatMapOverlay;
 @property (nonatomic, strong) FAMapOverlay *transpirationHeatMapOverlay;
 
-// TODO: Moisture & Transpiration Heat Map Image
+// Moisture & Transpiration Heat Map Image
 @property (nonatomic, strong) UIImage *moistureHeatMapImage;
 @property (nonatomic, strong) UIImage *transpirationHeatMapImage;
 
 // Data Points
 @property (nonatomic, strong) NSMutableArray *dataPoints;
 
-// TODO: Annotations
+// Annotations Array
 @property (nonatomic, strong) NSMutableArray *dataPointAnnotationsArray;
 
 @property (nonatomic, strong) CLLocationManager *locationManager;
-
-// TODO: Delete
-@property (nonatomic, strong) UIImage *heatMapImage;
 
 // Wigets - UI
 @property (nonatomic, weak) IBOutlet UISwitch *moistureSwitch;
@@ -64,7 +58,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 @property (nonatomic, weak) IBOutlet UITextField *endTimeTextField;
 @property (nonatomic, weak) IBOutlet UIButton *searchHistoryButton;
 
-//
 @property (nonatomic, assign) TimeRange currentTimeRange;
 
 @end
