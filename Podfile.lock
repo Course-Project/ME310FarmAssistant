@@ -24,16 +24,19 @@ PODS:
   - ASMediaFocusManager (0.5):
     - ASBPlayerScrubbing (~> 0.1)
   - HSDatePickerViewController (1.0.1)
+  - SVProgressHUD (1.1.3)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
   - ASMediaFocusManager
   - HSDatePickerViewController (~> 1.0)
+  - SVProgressHUD
 
 SPEC CHECKSUMS:
   AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
   ASBPlayerScrubbing: 0fc5e76aad6fdbcf14380734fb7f2c127cd28b66
   ASMediaFocusManager: 5a071038ada1a79abf9d0c95b6b2b1c1e5cd3a87
   HSDatePickerViewController: b292f2a53b2644a68aa5e1343053d2f3554de64c
+  SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
 
 COCOAPODS: 0.35.0

@@ -35,13 +35,14 @@
     self.mediaFocusManager.elasticAnimation = YES;
     
     WEAKSELF_T weakSelf = self;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    [SVProgressHUD showWithStatus:@"Loading..."];
     [[AssistantClient sharedClient] getDetailWithDataPointID:self.pointID success:^(NSDictionary *dict) {
         weakSelf.dataPoint = [[DataPoint alloc] initWithDictionary:dict];
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
         
         // Updating UI
         [weakSelf displayData:weakSelf.dataPoint];
+        
+        [SVProgressHUD showSuccessWithStatus:@"Success!"];
     }];
 }
 

@@ -51,6 +51,6 @@
  *  @param toTime   end time
  *  @param success  callback block
  */
-- (void)getHistoryFrom:(NSDate *)fromTime To:(NSDate *)toTime success:(void (^)(NSArray *historyDataPoints))success;
+- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(NSArray *historyDataPoints))success;
 
 @end

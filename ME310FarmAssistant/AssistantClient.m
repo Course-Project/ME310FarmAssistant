@@ -27,12 +27,18 @@
 
 #pragma mark - Basic HTTP Method
 - (void)GET:(NSString *)api parameters:(id)parameters success:(void (^)(id obj))success {
+    // Show network activity indicator
+    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
+    
     AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
     manager.responseSerializer.acceptableContentTypes = [NSSet setWithObjects:@"text/html", @"application/json", nil];
     [manager GET:api
       parameters:parameters
          success:^(AFHTTPRequestOperation *operation, id responseObjecct) {
              NSLog(@"Fetch data successfully!");
+             // Hide network activity indicator
+             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+             
              if (success) {
                  success(responseObjecct);
              }
@@ -55,8 +61,8 @@
     [self GET:[baseURL stringByAppendingString:getDetail] parameters:parameters success:success];
 }
 
-- (void)getHistoryFrom:(NSDate *)fromTime To:(NSDate *)toTime success:(void (^)(NSArray *historyDataPoints))success {
-    NSDictionary *parameters = @{@"time_from": @"2015-05-07", @"time_to": @"2015-05-08"};
+- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(NSArray *historyDataPoints))success {
+    NSDictionary *parameters = @{@"time_from": fromTime, @"time_to": toTime};
     [self GET:[baseURL stringByAppendingString:getHistory] parameters:parameters success:success];
 }
 

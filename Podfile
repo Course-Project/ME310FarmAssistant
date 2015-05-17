@@ -5,6 +5,7 @@ target 'ME310FarmAssistant' do
   pod 'AFNetworking', '~> 2.0'
   pod 'ASMediaFocusManager'
   pod 'HSDatePickerViewController', '~> 1.0'
+  pod 'SVProgressHUD'
 end
 
 target 'ME310FarmAssistantTests' do

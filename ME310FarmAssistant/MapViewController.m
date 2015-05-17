@@ -27,20 +27,44 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 @interface MapViewController () <CLLocationManagerDelegate, HSDatePickerViewControllerDelegate, UITextFieldDelegate>
 
+// Point location for annotations
 @property (nonatomic, strong) NSMutableArray *locations;
+
+// TODO: Replace this array with Moisture Weights & Transpiration Weights
 @property (nonatomic, strong) NSMutableArray *weights;
+
+// TODO: Moisture Weights & Transpiration Weights
+@property (nonatomic, strong) NSMutableArray *moistureWeights;
+@property (nonatomic, strong) NSMutableArray *transpirationWeights;
+
+// TODO: Moisture & Transpiration Heat Map Overlay
+@property (nonatomic, strong) FAMapOverlay *moistureHeatMapOverlay;
+@property (nonatomic, strong) FAMapOverlay *transpirationHeatMapOverlay;
+
+// TODO: Moisture & Transpiration Heat Map Image
+@property (nonatomic, strong) UIImage *moistureHeatMapImage;
+@property (nonatomic, strong) UIImage *transpirationHeatMapImage;
+
+// Data Points
 @property (nonatomic, strong) NSMutableArray *dataPoints;
-@property (nonatomic, strong) UIImageView *imageView;
+
+// TODO: Annotations
+@property (nonatomic, strong) NSMutableArray *dataPointAnnotationsArray;
+
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
+// TODO: Delete
 @property (nonatomic, strong) UIImage *heatMapImage;
 
+// Wigets - UI
 @property (nonatomic, weak) IBOutlet UISwitch *moistureSwitch;
 @property (nonatomic, weak) IBOutlet UISwitch *transpirationSwitch;
 
 @property (nonatomic, weak) IBOutlet UITextField *startTimeTextField;
 @property (nonatomic, weak) IBOutlet UITextField *endTimeTextField;
+@property (nonatomic, weak) IBOutlet UIButton *searchHistoryButton;
 
+//
 @property (nonatomic, assign) TimeRange currentTimeRange;
 
 @end
@@ -50,6 +74,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 #pragma mark Life Circle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    [self.searchHistoryButton setEnabled:NO];
     
     // Configure Location Manager
     [self configureLocationManager];
@@ -63,11 +89,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         // Configure Heat Map
         [weakSelf configureHeatMap];
         
-        // Configure Overlay
-        [weakSelf configureMapOverlay];
-        
         // Add Annotations
-        [weakSelf addAnnotations];
+        [weakSelf configureAnnotations];
     }];
 }
 
@@ -93,7 +116,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)configureMapOverlay{
     WEAKSELF_T weakSelf = self;
-    FAMapOverlay *mapOverlay = [[FAMapOverlay alloc]initWithView:weakSelf.mapView];
+    FAMapOverlay *mapOverlay = [[FAMapOverlay alloc] initWithView:weakSelf.mapView];
     [weakSelf.mapView addOverlay:mapOverlay];
 }
 
@@ -128,34 +151,49 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     CLLocationCoordinate2D center = CLLocationCoordinate2DMake(37.4263, -122.1720);
     weakSelf.mapView.region = MKCoordinateRegionMake(center, span);
     
-    // create overlay view for the heatmap image
-    weakSelf.imageView = [[UIImageView alloc] initWithFrame:weakSelf.view.frame];
-    weakSelf.imageView.contentMode = UIViewContentModeCenter;
-    [weakSelf.view addSubview:weakSelf.imageView];
-    
-    //crete location array & weight array (temperature)
+    // Crete location array & weight array (moisture & transipiration)
     weakSelf.locations = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
-    weakSelf.weights = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
+    weakSelf.moistureWeights = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
+    weakSelf.transpirationWeights = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
+    
     for (DataPoint *point in weakSelf.dataPoints) {
          CLLocation *location = [[CLLocation alloc] initWithLatitude:point.coordinate.latitude longitude:point.coordinate.longitude];
         [weakSelf.locations addObject:location];
-        [weakSelf.weights addObject:point.airTemperature];
+        [weakSelf.moistureWeights addObject:point.moisture];
+        [weakSelf.transpirationWeights addObject:point.transpiration];
     }
-    
-
-    
-    float boost = 1.0f;
-    UIImage *heatmap = [LFHeatMap heatMapForMapView:weakSelf.mapView boost:boost locations:weakSelf.locations weights:weakSelf.weights];
-    weakSelf.heatMapImage = heatmap;
 }
 
-- (void)addAnnotations {
+- (void)generateMoistureHeatMap {
+    NSLog(@"Generating moisture heat map...");
+    float boost = 1.0f;
+    self.moistureHeatMapImage = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.moistureWeights];
+}
+
+- (void)generateTranspirationHeatMap {
+    NSLog(@"Generating transpiration heat map...");
+    float boost = 1.0f;
+    self.transpirationHeatMapImage = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.transpirationWeights];
+}
+
+- (void)configureAnnotations {
+    NSLog(@"Add annotations...");
     for (DataPoint *point in self.dataPoints) {
         DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithDataPoint:point];
-        [self.mapView addAnnotation:annotation];
+        [self.dataPointAnnotationsArray addObject:annotation];
     }
-    
-    NSLog(@"Add annotations...");
+    [self.mapView addAnnotations:self.dataPointAnnotationsArray];
+}
+
+- (void)removeAnnotations {
+    NSLog(@"Remove annotations...");
+    [self.mapView removeAnnotations:self.dataPointAnnotationsArray];
+}
+
+- (void)removeHeatMapOverlays {
+    NSLog(@"Remove Overlays...");
+    [self.mapView removeOverlay:self.moistureHeatMapOverlay];
+    [self.mapView removeOverlay:self.transpirationHeatMapOverlay];
 }
 
 - (void)configureTextFields {
@@ -163,29 +201,30 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     self.endTimeTextField.enabled = NO;
 }
 
-- (void)configureDataPointWithCompletion:(void (^)(void))completed{
+- (void)configureDataPointWithCompletion:(void (^)(void))completed {
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    [client getHistoryFrom:nil To:nil success:^(NSArray *points) {
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
+    [SVProgressHUD showWithStatus:@"Loading..."];
+    [client getHistoryFrom:@"2015-05-07" To:@"2015-05-07" success:^(NSArray *points) {
+        [SVProgressHUD showSuccessWithStatus:@"Success!"];
         for (id obj in points) {
             DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
             [weakSelf.dataPoints addObject:point];
         }
-        completed();
+        if (completed) {
+            completed();
+        }
     }];
 }
 
 #pragma mark - MKMapViewDelegate
-- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
-    NSLog(@"Region will change");
-}
-
-- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
-    NSLog(@"Region did change");
-    
-}
+//- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
+//    NSLog(@"Region will change");
+//}
+//
+//- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
+//    NSLog(@"Region did change");
+//}
 
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
     static NSString *reuse = @"PIN_ANNOTATION";
@@ -211,11 +250,16 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 // Overlay Delegate
 - (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay{
-    WEAKSELF_T weakSelf = self;
     FAMapOverlay *mapOverlay = (FAMapOverlay *)overlay;
-    FAMapOverlayView *mapOverlayView = [[FAMapOverlayView alloc]initWithOverlay:mapOverlay];
-    mapOverlayView.heatMapImage = weakSelf.heatMapImage;
-    return  mapOverlayView;
+    FAMapOverlayView *mapOverlayView = [[FAMapOverlayView alloc] initWithOverlay:mapOverlay];
+    
+    if ([overlay isEqual:self.moistureHeatMapOverlay]) {
+        mapOverlayView.heatMapImage = self.moistureHeatMapImage;
+    } else if ([overlay isEqual:self.transpirationHeatMapOverlay]) {
+        mapOverlayView.heatMapImage = self.transpirationHeatMapImage;
+    }
+    
+    return mapOverlayView;
 }
 
 #pragma mark - CLLocationManagerDelegate
@@ -229,7 +273,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     dateFormatter.dateFormat = @"yyyy-MM-dd";
     
-    
     // Display date
     switch (self.currentTimeRange) {
         case TimeRangeStart:
@@ -239,6 +282,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
             break;
         case TimeRangeEnd:
             self.endTimeTextField.text = [dateFormatter stringFromDate:date];
+            
+            [self.searchHistoryButton setEnabled:YES];
             break;
         case TimeRangeNone:
             
@@ -246,25 +291,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         default:
             break;
     }
-    
-    // TODO: Display historical points
-//    AssistantClient *client = [AssistantClient sharedClient];
-//    WEAKSELF_T weakSelf = self;
-//    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-//    [client getHistoryFrom:date To:date success:^(NSArray *points) {
-//        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-//        NSMutableArray *annotations = [NSMutableArray new];
-//        for (id obj in points) {
-//            NSUInteger pointID = [[obj valueForKey:@"id"] unsignedIntegerValue];
-//            CLLocationDegrees latitude = [[obj valueForKey:@"latitude"] doubleValue];
-//            CLLocationDegrees longtitude = [[obj valueForKey:@"longtitude"] doubleValue];
-//            
-//            DataPointAnnotation *annotation = [[DataPointAnnotation alloc] initWithID:pointID
-//                                                                             Location:CLLocationCoordinate2DMake(latitude, longtitude)];
-//            [annotations addObject:annotation];
-//        }
-//        [weakSelf.mapView showAnnotations:annotations animated:YES];
-//    }];
 }
 
 - (void)hsDatePickerWillDismissWithQuitMethod:(HSDatePickerQuitMethod)method {
@@ -304,10 +330,12 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Transpiration Switch changed");
     if ([sender isOn]) {
         NSLog(@"ON");
-        // Show Transpiration Heat Map
-        
+        self.moistureHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
+        [self generateMoistureHeatMap];
+        [self.mapView addOverlay:self.moistureHeatMapOverlay];
     } else {
         NSLog(@"OFF");
+        [self.mapView removeOverlay:self.moistureHeatMapOverlay];
     }
 }
 
@@ -315,11 +343,45 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Moisture Switch changed");
     if ([sender isOn]) {
         NSLog(@"ON");
-        // Show Moisture Heat Map
-        
+        self.transpirationHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
+        [self generateTranspirationHeatMap];
+        [self.mapView addOverlay:self.transpirationHeatMapOverlay];
     } else {
         NSLog(@"OFF");
+        [self.mapView removeOverlay:self.transpirationHeatMapOverlay];
     }
+}
+
+- (IBAction)didClickSearchHistoryButton:(UIButton *)sender {
+    // Remove old data points
+    [self.dataPoints removeAllObjects];
+    
+    // Get start & end date
+    NSString *startDate = self.startTimeTextField.text;
+    NSString *endDate = self.endTimeTextField.text;
+    
+    AssistantClient *client = [AssistantClient sharedClient];
+    WEAKSELF_T weakSelf = self;
+    
+    [SVProgressHUD showWithStatus:@"Loading..."];
+    [client getHistoryFrom:startDate To:endDate success:^(NSArray *points) {
+        for (id obj in points) {
+            DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
+            [weakSelf.dataPoints addObject:point];
+        }
+        
+        // Remove Annotations
+        [weakSelf removeAnnotations];
+        
+        // TODO: Disable Heat Map
+        [weakSelf.moistureSwitch setOn:NO animated:YES];
+        [weakSelf.transpirationSwitch setOn:NO animated:YES];
+        
+        // Add new annotations
+        [weakSelf configureAnnotations];
+        
+        [SVProgressHUD showSuccessWithStatus:@"Success!"];
+    }];
 }
 
 #pragma mark - Properties
@@ -328,6 +390,13 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         _dataPoints = [NSMutableArray new];
     }
     return _dataPoints;
+}
+
+- (NSMutableArray *)dataPointAnnotationsArray {
+    if (!_dataPointAnnotationsArray) {
+        _dataPointAnnotationsArray = [NSMutableArray new];
+    }
+    return _dataPointAnnotationsArray;
 }
 
 @end

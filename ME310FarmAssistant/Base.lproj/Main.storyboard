@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14B25" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="4tU-bI-86y">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6254" systemVersion="13F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="4tU-bI-86y">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -75,7 +75,7 @@
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="fY6-AT-pJd">
-                                <rect key="frame" x="16" y="72" width="164" height="85"/>
+                                <rect key="frame" x="16" y="72" width="220" height="85"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Start:" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xm0-QX-3Gk">
                                         <rect key="frame" x="9" y="13" width="42" height="20"/>
@@ -129,18 +129,28 @@
                                             </mask>
                                         </variation>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6BD-Rg-ZKo">
+                                        <rect key="frame" x="164" y="8" width="48" height="69"/>
+                                        <state key="normal" title="Search"/>
+                                        <connections>
+                                            <action selector="didClickSearchHistoryButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="hNI-YY-Mbp"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" white="0.33333333329999998" alpha="0.45000000000000001" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstItem="xm0-QX-3Gk" firstAttribute="leading" secondItem="fY6-AT-pJd" secondAttribute="leading" constant="9" id="1eF-DF-7VQ"/>
+                                    <constraint firstItem="6BD-Rg-ZKo" firstAttribute="leading" secondItem="5KV-4I-rA0" secondAttribute="trailing" constant="8" id="2Oj-TN-1yu"/>
                                     <constraint firstItem="PDD-4q-mfs" firstAttribute="leading" secondItem="pIG-hg-Cej" secondAttribute="trailing" constant="8" id="7ks-Rb-F1O"/>
                                     <constraint firstItem="5KV-4I-rA0" firstAttribute="top" secondItem="fY6-AT-pJd" secondAttribute="top" constant="8" id="A0A-6x-nbg"/>
-                                    <constraint firstAttribute="trailing" secondItem="PDD-4q-mfs" secondAttribute="trailing" constant="8" id="LUY-BT-4FU"/>
+                                    <constraint firstItem="5KV-4I-rA0" firstAttribute="top" secondItem="6BD-Rg-ZKo" secondAttribute="top" id="F4P-zl-CoH"/>
                                     <constraint firstItem="PDD-4q-mfs" firstAttribute="top" secondItem="5KV-4I-rA0" secondAttribute="bottom" constant="9" id="NVH-Rk-tn7"/>
                                     <constraint firstAttribute="bottom" secondItem="PDD-4q-mfs" secondAttribute="bottom" constant="8" id="ThE-MH-DbB"/>
+                                    <constraint firstItem="6BD-Rg-ZKo" firstAttribute="bottom" secondItem="PDD-4q-mfs" secondAttribute="bottom" id="Wyr-Vv-s0k"/>
+                                    <constraint firstItem="6BD-Rg-ZKo" firstAttribute="leading" secondItem="PDD-4q-mfs" secondAttribute="trailing" constant="8" id="cDb-mv-ggN"/>
                                     <constraint firstItem="5KV-4I-rA0" firstAttribute="leading" secondItem="xm0-QX-3Gk" secondAttribute="trailing" constant="8" id="eJh-EO-CUv"/>
-                                    <constraint firstAttribute="trailing" secondItem="5KV-4I-rA0" secondAttribute="trailing" constant="8" id="hlW-rZ-feB"/>
                                     <constraint firstItem="xm0-QX-3Gk" firstAttribute="centerY" secondItem="5KV-4I-rA0" secondAttribute="centerY" id="kbQ-Ml-JeX"/>
+                                    <constraint firstAttribute="trailing" secondItem="6BD-Rg-ZKo" secondAttribute="trailing" constant="8" id="urp-WU-Wlw"/>
                                     <constraint firstItem="PDD-4q-mfs" firstAttribute="centerY" secondItem="pIG-hg-Cej" secondAttribute="centerY" id="w5m-bC-cib"/>
                                     <constraint firstItem="pIG-hg-Cej" firstAttribute="leading" secondItem="fY6-AT-pJd" secondAttribute="leading" constant="9" id="xFk-sf-3Y2"/>
                                 </constraints>
@@ -164,6 +174,7 @@
                         <outlet property="endTimeTextField" destination="PDD-4q-mfs" id="EdC-aK-FtW"/>
                         <outlet property="mapView" destination="yxQ-e5-BIh" id="yGQ-oO-ia0"/>
                         <outlet property="moistureSwitch" destination="YPS-ck-NC5" id="LE3-ad-B6c"/>
+                        <outlet property="searchHistoryButton" destination="6BD-Rg-ZKo" id="3Oy-Zq-F5z"/>
                         <outlet property="startTimeTextField" destination="5KV-4I-rA0" id="6bn-Jj-tOW"/>
                         <outlet property="transpirationSwitch" destination="HXB-oj-sj0" id="jqS-M5-fQi"/>
                     </connections>
