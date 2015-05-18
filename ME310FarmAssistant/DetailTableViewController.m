@@ -20,6 +20,8 @@
 @property (nonatomic, weak) IBOutlet UILabel *transpirationLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *photoImageView;
 
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
+
 @property (nonatomic, strong) ASMediaFocusManager *mediaFocusManager;
 
 @end
@@ -30,10 +32,32 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Configure Refresh Control
+    [self configureRefreshControl];
+    
+    // Configure Media Focus Manager
+    [self configureMediaFocusManager];
+    
+    // Refresh Data
+    [self refreshData:nil];
+}
+
+#pragma mark - UI Methods
+- (void)configureRefreshControl {
+    self.refreshControl = [[UIRefreshControl alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.tableView.frame.size.width, 100.0f)];
+    [self.refreshControl addTarget:self action:@selector(refreshData:) forControlEvents:UIControlEventValueChanged];
+    self.tableView.tableHeaderView = [[UIView alloc] init];
+    [self.tableView.tableHeaderView addSubview:self.refreshControl];
+}
+
+- (void)configureMediaFocusManager {
     self.mediaFocusManager = [[ASMediaFocusManager alloc] init];
     self.mediaFocusManager.delegate = self;
     self.mediaFocusManager.elasticAnimation = YES;
-    
+}
+
+- (void)refreshData:(id)sender {
+    [self.refreshControl beginRefreshing];
     WEAKSELF_T weakSelf = self;
     [SVProgressHUD showWithStatus:@"Loading..."];
     [[AssistantClient sharedClient] getDetailWithDataPointID:self.pointID success:^(NSDictionary *dict) {
@@ -43,10 +67,11 @@
         [weakSelf displayData:weakSelf.dataPoint];
         
         [SVProgressHUD showSuccessWithStatus:@"Success!"];
+        
+        [weakSelf.refreshControl endRefreshing];
     }];
 }
 
-#pragma mark - UI Methods
 - (void)displayData:(DataPoint *)dataPoint {
     [self.moistureLabel setText:[dataPoint.moisture stringValue]];
     [self.airTemperatureLabel setText:[dataPoint.airTemperature stringValue]];

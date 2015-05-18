@@ -15,6 +15,8 @@
 
 @property (nonatomic, strong) NSMutableArray *importantDataPoints;
 
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
+
 @end
 
 @implementation FAIndexTableViewController
@@ -31,21 +33,36 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Configure Refresh Control
+    [self configureRefreshControl];
+    
     // Load Data
-    WEAKSELF_T weakSelf = self;
-    [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
-    [self configureDataPointWithCompletion:^{
-        [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
-        [weakSelf.tableView reloadData];
-    }];
+    [self refreshData:nil];
 }
 
 #pragma mark - UI Methods
+- (void)configureRefreshControl {
+    self.refreshControl = [[UIRefreshControl alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.tableView.frame.size.width, 100.0f)];
+    [self.refreshControl addTarget:self action:@selector(refreshData:) forControlEvents:UIControlEventValueChanged];
+    self.tableView.tableHeaderView = [[UIView alloc] init];
+    [self.tableView.tableHeaderView addSubview:self.refreshControl];
+}
+
+- (void)refreshData:(id)sender {
+    [self.refreshControl beginRefreshing];
+    WEAKSELF_T weakSelf = self;
+    [self configureDataPointWithCompletion:^{
+        [weakSelf.tableView reloadData];
+        [self.refreshControl endRefreshing];
+    }];
+}
+
 - (void)configureDataPointWithCompletion:(void (^)(void))completed{
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
     [SVProgressHUD showWithStatus:@"Loading..."];
-    [client getHistoryFrom:@"2015-05-07" To:@"2015-05-08" success:^(NSArray *points) {
+    [client getDataPointsWithSuccessBlock:^(NSArray *points) {
+        [weakSelf.importantDataPoints removeAllObjects];
         for (id obj in points) {
             double moisture = [obj[@"moisture"] doubleValue];
             double transpiration = [obj[@"transpiration"] doubleValue];

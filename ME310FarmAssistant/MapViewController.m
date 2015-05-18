@@ -87,13 +87,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     }];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-    
-    //add overlay
-    [self configureMapOverlay];
-}
-
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
@@ -105,12 +98,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     self.mapView.showsUserLocation = YES;
     
     [self.mapView setCenterCoordinate:self.mapView.userLocation.coordinate animated:YES];
-}
-
-- (void)configureMapOverlay{
-    WEAKSELF_T weakSelf = self;
-    FAMapOverlay *mapOverlay = [[FAMapOverlay alloc] initWithView:weakSelf.mapView];
-    [weakSelf.mapView addOverlay:mapOverlay];
 }
 
 - (void)configureLocationManager {
@@ -199,7 +186,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
     [SVProgressHUD showWithStatus:@"Loading..."];
-    [client getHistoryFrom:@"2015-05-07" To:@"2015-05-08" success:^(NSArray *points) {
+    [client getDataPointsWithSuccessBlock:^(NSArray *points) {
         for (id obj in points) {
             DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
             [weakSelf.dataPoints addObject:point];
@@ -265,7 +252,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)hsDatePickerPickedDate:(NSDate *)date {
     NSLog(@"Selected date: %@", date);
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    dateFormatter.dateFormat = @"yyyy-MM-dd";
+    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
     
     // Display date
     switch (self.currentTimeRange) {
@@ -304,7 +291,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         self.currentTimeRange = TimeRangeStart;
     } else if ([textField isEqual:self.endTimeTextField]) {
         NSDateFormatter *dateFormatter = [NSDateFormatter new];
-        dateFormatter.dateFormat = @"yyyy-MM-dd";
+        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
         datePickerViewController.minDate = [dateFormatter dateFromString:self.startTimeTextField.text];
         self.currentTimeRange = TimeRangeEnd;
     } else {
@@ -351,8 +338,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     [self.dataPoints removeAllObjects];
     
     // Get start & end date
-    NSString *startDate = self.startTimeTextField.text;
-    NSString *endDate = self.endTimeTextField.text;
+    NSString *startDate = [NSString stringWithFormat:@"%@:00", self.startTimeTextField.text];
+    NSString *endDate = [NSString stringWithFormat:@"%@:59", self.endTimeTextField.text];
     
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
