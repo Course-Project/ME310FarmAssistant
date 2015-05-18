@@ -19,7 +19,7 @@
 @property (nonatomic, strong, readonly) NSNumber *humidity;
 @property (nonatomic, strong, readonly) NSNumber *transpiration;
 @property (nonatomic, strong, readonly) NSString *photoURLPathString;
-@property (nonatomic, strong, readonly) NSDate *time;
+@property (nonatomic, strong, readonly) NSString *time;
 
 - (instancetype)initWithDictionary:(NSDictionary *)dict;
 

@@ -18,6 +18,7 @@
 @property (nonatomic, weak) IBOutlet UILabel *leafTemperatureLabel;
 @property (nonatomic, weak) IBOutlet UILabel *humidityLabel;
 @property (nonatomic, weak) IBOutlet UILabel *transpirationLabel;
+@property (nonatomic, weak) IBOutlet UILabel *dateLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *photoImageView;
 
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
@@ -78,6 +79,7 @@
     [self.leafTemperatureLabel setText:[dataPoint.leafTemperature stringValue]];
     [self.humidityLabel setText:[dataPoint.humidity stringValue]];
     [self.transpirationLabel setText:[dataPoint.transpiration stringValue]];
+    [self.dateLabel setText:dataPoint.time];
     
     if (!dataPoint.isNormal) {
         [self.moistureLabel setTextColor:UIColorFromRGB(0x9E0000)];

@@ -344,6 +344,36 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" id="p0v-44-zJR">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="p0v-44-zJR" id="bg9-DC-TcM">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Date" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="awg-0u-jtE">
+                                                    <rect key="frame" x="8" y="12" width="140" height="20"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="140" id="kCT-zt-dwG"/>
+                                                    </constraints>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                                    <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="(NULL)" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JyZ-dB-Icr">
+                                                    <rect key="frame" x="168" y="11" width="424" height="21"/>
+                                                    <fontDescription key="fontDescription" name="HelveticaNeue-Light" family="Helvetica Neue" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="awg-0u-jtE" firstAttribute="leading" secondItem="bg9-DC-TcM" secondAttribute="leadingMargin" id="273-6b-dG8"/>
+                                                <constraint firstAttribute="centerY" secondItem="awg-0u-jtE" secondAttribute="centerY" id="8L2-PF-IPn"/>
+                                                <constraint firstAttribute="centerY" secondItem="JyZ-dB-Icr" secondAttribute="centerY" id="Bd0-a9-CUQ"/>
+                                                <constraint firstItem="JyZ-dB-Icr" firstAttribute="leading" secondItem="awg-0u-jtE" secondAttribute="trailing" constant="20" id="GEg-Ml-nQh"/>
+                                                <constraint firstItem="JyZ-dB-Icr" firstAttribute="trailing" secondItem="bg9-DC-TcM" secondAttribute="trailingMargin" id="pxc-6d-vai"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" rowHeight="250" id="401-HA-3h7">
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="401-HA-3h7" id="U9H-YI-bDl">
@@ -383,6 +413,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="airTemperatureLabel" destination="Qma-8f-ZxH" id="FZ0-cF-ZJk"/>
+                        <outlet property="dateLabel" destination="JyZ-dB-Icr" id="pU4-LX-Abq"/>
                         <outlet property="humidityLabel" destination="buy-3k-W6v" id="YhE-Gn-2AZ"/>
                         <outlet property="leafTemperatureLabel" destination="XUb-PG-3ME" id="NFl-ru-mQH"/>
                         <outlet property="moistureLabel" destination="ezs-HV-PwZ" id="wyN-sW-rdV"/>
