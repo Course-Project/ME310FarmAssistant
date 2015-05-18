@@ -15,6 +15,8 @@
 
 @property (nonatomic, readonly) NSUInteger pointID;
 
+@property (nonatomic, readonly) BOOL isNormal;
+
 #pragma mark - MKAnnotation Property
 @property (nonatomic, readonly) CLLocationCoordinate2D coordinate;
 @property (nonatomic, readonly, copy) NSString *title;

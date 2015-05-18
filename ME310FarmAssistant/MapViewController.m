@@ -214,10 +214,21 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         annotationView = [[MKPinAnnotationView alloc] initWithAnnotation:annotation reuseIdentifier:reuse];
     }
     
-    annotationView.pinColor = MKPinAnnotationColorRed;
-    annotationView.animatesDrop = YES;
+    if ([annotation isKindOfClass:[MKUserLocation class]]) {
+        annotationView.pinColor = MKPinAnnotationColorPurple;
+    } else {
+        DataPointAnnotation *dataPointAnnotation = (DataPointAnnotation *)annotation;
+        if (!dataPointAnnotation.isNormal) {
+            annotationView.pinColor = MKPinAnnotationColorRed;
+        } else {
+            annotationView.pinColor = MKPinAnnotationColorGreen;
+        }
+        
+        annotationView.animatesDrop = YES;
+        annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];
+    }
+    
     annotationView.canShowCallout = YES;
-    annotationView.rightCalloutAccessoryView = [UIButton buttonWithType:UIButtonTypeDetailDisclosure];;
     
     return annotationView;
 }

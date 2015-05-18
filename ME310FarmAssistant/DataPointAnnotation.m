@@ -18,6 +18,8 @@
         _coordinate = dataPoint.coordinate;
         _title = [NSString stringWithFormat:@"Point #%tu", dataPoint.pointID];
         _subtitle = [NSString stringWithFormat:@"Moisture: %@  Transpiration: %@", [dataPoint.moisture stringValue], [dataPoint.transpiration stringValue]];
+        
+        _isNormal = [dataPoint isNormal];
     }
     return self;
 }
