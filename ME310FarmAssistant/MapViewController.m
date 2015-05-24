@@ -15,6 +15,11 @@
 #import "FAMapOverlayView.h"
 #import <HSDatePickerViewController/HSDatePickerViewController.h>
 
+// MARK: Copy from website
+#define MINIMUM_ZOOM_ARC 0.014 //approximately 1 miles (1 degree of arc ~= 69 miles)
+#define ANNOTATION_REGION_PAD_FACTOR 1.15
+#define MAX_DEGREES_ARC 360
+
 static NSString *const kLatitude = @"latitude";
 static NSString *const kLongitude = @"longitude";
 static NSString *const kMagnitude = @"magnitude";
@@ -142,6 +147,12 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         [weakSelf.moistureWeights addObject:point.moisture];
         [weakSelf.transpirationWeights addObject:point.transpiration];
     }
+    
+    weakSelf.moistureHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
+    weakSelf.transpirationHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
+    
+    [weakSelf generateMoistureHeatMap];
+    [weakSelf generateTranspirationHeatMap];
 }
 
 - (void)generateMoistureHeatMap {
@@ -196,6 +207,46 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         }
         [SVProgressHUD showSuccessWithStatus:@"Success!"];
     }];
+}
+
+// MARK: Copy from website
+//size the mapView region to fit its annotations
+- (void)zoomMapViewToFitAnnotations:(MKMapView *)mapView animated:(BOOL)animated {
+    NSArray *annotations = mapView.annotations;
+    NSUInteger count = [mapView.annotations count];
+    
+    if (count == 0) return; //bail if no annotations
+    
+    //convert NSArray of id <MKAnnotation> into an MKCoordinateRegion that can be used to set the map size
+    //can't use NSArray with MKMapPoint because MKMapPoint is not an id
+    MKMapPoint points[count]; //C array of MKMapPoint struct
+    
+    //load points C array by converting coordinates to points
+    for (int i = 0; i < count; i++) {
+        CLLocationCoordinate2D coordinate = [(id <MKAnnotation>)[annotations objectAtIndex:i] coordinate];
+        points[i] = MKMapPointForCoordinate(coordinate);
+    }
+    //create MKMapRect from array of MKMapPoint
+    MKMapRect mapRect = [[MKPolygon polygonWithPoints:points count:count] boundingMapRect];
+    //convert MKCoordinateRegion from MKMapRect
+    MKCoordinateRegion region = MKCoordinateRegionForMapRect(mapRect);
+    
+    //add padding so pins aren't scrunched on the edges
+    region.span.latitudeDelta  *= ANNOTATION_REGION_PAD_FACTOR;
+    region.span.longitudeDelta *= ANNOTATION_REGION_PAD_FACTOR;
+    //but padding can't be bigger than the world
+    if(region.span.latitudeDelta > MAX_DEGREES_ARC) { region.span.latitudeDelta  = MAX_DEGREES_ARC; }
+    if(region.span.longitudeDelta > MAX_DEGREES_ARC){ region.span.longitudeDelta = MAX_DEGREES_ARC; }
+    
+    //and don't zoom in stupid-close on small samples
+    if(region.span.latitudeDelta  < MINIMUM_ZOOM_ARC) { region.span.latitudeDelta  = MINIMUM_ZOOM_ARC; }
+    if(region.span.longitudeDelta < MINIMUM_ZOOM_ARC) { region.span.longitudeDelta = MINIMUM_ZOOM_ARC; }
+    //and if there is a sample of 1 we want the max zoom-in instead of max zoom-out
+    if(count == 1) {
+        region.span.latitudeDelta = MINIMUM_ZOOM_ARC;
+        region.span.longitudeDelta = MINIMUM_ZOOM_ARC;
+    }
+    [mapView setRegion:region animated:animated];
 }
 
 #pragma mark - MKMapViewDelegate
@@ -322,8 +373,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Transpiration Switch changed");
     if ([sender isOn]) {
         NSLog(@"ON");
-        self.moistureHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
-        [self generateMoistureHeatMap];
+//        self.moistureHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
+//        [self generateMoistureHeatMap];
         [self.mapView addOverlay:self.moistureHeatMapOverlay];
     } else {
         NSLog(@"OFF");
@@ -335,8 +386,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Moisture Switch changed");
     if ([sender isOn]) {
         NSLog(@"ON");
-        self.transpirationHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
-        [self generateTranspirationHeatMap];
+//        self.transpirationHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
+//        [self generateTranspirationHeatMap];
         [self.mapView addOverlay:self.transpirationHeatMapOverlay];
     } else {
         NSLog(@"OFF");
