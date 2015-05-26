@@ -19,6 +19,10 @@
     MKMapRect theMapRect    = [self.overlay boundingMapRect];
     CGRect theRect          = [self rectForMapRect:theMapRect];
     
+    float x = theRect.origin.x + (theRect.size.width - self.widthRatio*theRect.size.width) / 2.0 ;
+    float y = theRect.origin.y - (theRect.size.height - self.heightRatio*theRect.size.height) / 2.0;
+
+    theRect = CGRectMake(x, y, theRect.size.width*self.widthRatio, theRect.size.height*self.heightRatio);
     
     // We need to flip and reposition the image here
     CGContextScaleCTM(context, 1.0, -1.0);

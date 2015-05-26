@@ -10,6 +10,8 @@
 
 @interface FAMapOverlayView : MKOverlayView
 
-@property (nonatomic,strong) UIImage *heatMapImage;
+@property (nonatomic, strong) UIImage *heatMapImage;
+@property (nonatomic, assign) float widthRatio;
+@property (nonatomic, assign) float heightRatio;
 
 @end

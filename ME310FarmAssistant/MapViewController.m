@@ -20,6 +20,8 @@
 #define ANNOTATION_REGION_PAD_FACTOR 1.15
 #define MAX_DEGREES_ARC 360
 
+#define HEAT_MAP_SIZE CGSizeMake(70, 70)
+
 static NSString *const kLatitude = @"latitude";
 static NSString *const kLongitude = @"longitude";
 static NSString *const kMagnitude = @"magnitude";
@@ -46,6 +48,14 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 // Moisture & Transpiration Heat Map Image
 @property (nonatomic, strong) UIImage *moistureHeatMapImage;
 @property (nonatomic, strong) UIImage *transpirationHeatMapImage;
+
+// Moisture & Transpiration Heat Map Image Size Ratio
+@property (nonatomic, assign) float moistureHeatMapWidthRatio;
+@property (nonatomic, assign) float moistureHeatMapHeightRatio;
+@property (nonatomic, assign) float transpirationHeatMapWidthRatio;
+@property (nonatomic, assign) float transpirationHeatMapHeightRatio;
+
+
 
 // Data Points
 @property (nonatomic, strong) NSMutableArray *dataPoints;
@@ -158,13 +168,24 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)generateMoistureHeatMap {
     NSLog(@"Generating moisture heat map...");
     float boost = 1.0f;
-    self.moistureHeatMapImage = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.moistureWeights];
+    UIImage *image = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.moistureWeights];
+    CGSize originSize = image.size;
+    UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
+    self.moistureHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
+    self.moistureHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
+    self.moistureHeatMapImage = newImage;
+    
 }
 
 - (void)generateTranspirationHeatMap {
     NSLog(@"Generating transpiration heat map...");
     float boost = 1.0f;
-    self.transpirationHeatMapImage = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.transpirationWeights];
+    UIImage *image = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.transpirationWeights];
+    CGSize originSize = image.size;
+    UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
+    self.transpirationHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
+    self.transpirationHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
+    self.transpirationHeatMapImage = newImage;
 }
 
 - (void)configureAnnotations {
@@ -298,8 +319,12 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     if ([overlay isEqual:self.moistureHeatMapOverlay]) {
         mapOverlayView.heatMapImage = self.moistureHeatMapImage;
+        mapOverlayView.widthRatio = self.moistureHeatMapWidthRatio;
+        mapOverlayView.heightRatio = self.moistureHeatMapHeightRatio;
     } else if ([overlay isEqual:self.transpirationHeatMapOverlay]) {
         mapOverlayView.heatMapImage = self.transpirationHeatMapImage;
+        mapOverlayView.widthRatio = self.transpirationHeatMapWidthRatio;
+        mapOverlayView.heightRatio = self.transpirationHeatMapHeightRatio;
     }
     
     return mapOverlayView;
@@ -446,6 +471,26 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         _dataPointAnnotationsArray = [NSMutableArray new];
     }
     return _dataPointAnnotationsArray;
+}
+
+#pragma mark - Utils
+
+- (UIImage *)imageByCroppingImage:(UIImage *)image toSize:(CGSize)size
+{
+    // not equivalent to image.size (which depends on the imageOrientation)!
+    double refWidth = CGImageGetWidth(image.CGImage);
+    double refHeight = CGImageGetHeight(image.CGImage);
+    
+    double x = (refWidth - size.width) / 2.0;
+    double y = (refHeight - size.height) / 2.0;
+    
+    CGRect cropRect = CGRectMake(x, y, size.height, size.width);
+    CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], cropRect);
+    
+    UIImage *cropped = [UIImage imageWithCGImage:imageRef scale:0.0 orientation:UIImageOrientationUp];
+    CGImageRelease(imageRef);
+    
+    return cropped;
 }
 
 @end
