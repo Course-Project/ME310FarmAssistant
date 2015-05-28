@@ -6,6 +6,8 @@ target 'ME310FarmAssistant' do
   pod 'ASMediaFocusManager'
   pod 'HSDatePickerViewController', '~> 1.0'
   pod 'SVProgressHUD'
+  pod 'REFrostedViewController', '~> 2.4'
+  pod 'MZFormSheetController', '~> 3.0'
 end
 
 target 'ME310FarmAssistantTests' do
