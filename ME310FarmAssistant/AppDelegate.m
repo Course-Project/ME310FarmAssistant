@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import <MZFormSheetController/MZFormSheetController.h>
 
 @interface AppDelegate ()
 
@@ -32,8 +33,13 @@
                                                           [UIFont fontWithName:@"HelveticaNeue-CondensedBlack" size:21.0], NSFontAttributeName,
                                                           nil]];
     
-    //Status Bar
+    // Status Bar
     [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+    
+    // MZFormSheetBackgroundWindow
+    [[MZFormSheetBackgroundWindow appearance] setBackgroundBlurEffect:YES];
+    [[MZFormSheetBackgroundWindow appearance] setBlurRadius:5.0];
+    [[MZFormSheetBackgroundWindow appearance] setBackgroundColor:[UIColor clearColor]];
     
     return YES;
 }

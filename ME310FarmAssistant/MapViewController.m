@@ -15,6 +15,7 @@
 #import "FAMapOverlayView.h"
 #import <HSDatePickerViewController/HSDatePickerViewController.h>
 #import <REFrostedViewController/REFrostedViewController.h>
+#import <MZFormSheetController/MZFormSheetController.h>
 
 // MARK: Copy from website
 #define MINIMUM_ZOOM_ARC 0.014 //approximately 1 miles (1 degree of arc ~= 69 miles)
@@ -197,6 +198,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         [self.dataPointAnnotationsArray addObject:annotation];
     }
     [self.mapView addAnnotations:self.dataPointAnnotationsArray];
+    
+    [self zoomMapViewToFitAnnotations:self.mapView animated:YES];
 }
 
 - (void)removeAnnotations {
@@ -308,9 +311,31 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
     NSLog(@"Callout accessory control tapped");
-    DetailTableViewController *vc = [[UIStoryboard storyboardWithName:@"Main" bundle:[NSBundle mainBundle]] instantiateViewControllerWithIdentifier:@"DetailViewController"];
+    DetailTableViewController *vc = [self.storyboard instantiateViewControllerWithIdentifier:@"DetailViewController"];
     vc.pointID = [(DataPointAnnotation *)view.annotation pointID];
-    [self.navigationController pushViewController:vc animated:YES];
+    
+    MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:vc];
+    
+    formSheet.shouldDismissOnBackgroundViewTap = YES;
+    formSheet.transitionStyle = MZFormSheetTransitionStyleSlideFromBottom;
+    formSheet.cornerRadius = 8.0;
+    formSheet.portraitTopInset = 6.0;
+    formSheet.landscapeTopInset = 6.0;
+    formSheet.shouldCenterVertically = YES;
+    formSheet.presentedFormSheetSize = CGSizeMake(640, 600);
+    
+    formSheet.didTapOnBackgroundViewCompletionHandler = ^(CGPoint location) {
+        NSLog(@"Did tap on %@", NSStringFromCGPoint(location));
+    };
+    
+    formSheet.willPresentCompletionHandler = ^(UIViewController *presentedFSViewController) {
+        NSLog(@"Presented View Controller Frame: %@", NSStringFromCGRect(presentedFSViewController.view.frame));
+        NSLog(@"Presented View Controller Class: %@", NSStringFromClass(presentedFSViewController.class));
+    };
+    
+    [self mz_presentFormSheetController:formSheet animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+        NSLog(@"Presented!");
+    }];
 }
 
 // Overlay Delegate

@@ -19,6 +19,14 @@
     self.menuViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"menuController"];
     
     self.direction = REFrostedViewControllerDirectionRight;
+    self.limitMenuViewSize = YES;
+    NSLog(@"%@", NSStringFromCGSize(self.menuViewSize));
+    
+    CGSize size = [UIScreen mainScreen].bounds.size;
+    size.width *= 0.33;
+    size.height = 0;
+    
+    self.menuViewSize = size;
 }
 
 @end

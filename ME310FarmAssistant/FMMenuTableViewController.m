@@ -7,94 +7,125 @@
 //
 
 #import "FMMenuTableViewController.h"
+#import "DataPoint.h"
+#import "FAIndexTableViewCell.h"
+#import "DetailTableViewController.h"
+#import <MZFormSheetController/MZFormSheetController.h>
 
 @interface FMMenuTableViewController ()
+
+@property (nonatomic, strong) NSMutableArray *importantDataPoints;
+
+@property (nonatomic, strong) UIRefreshControl *refreshControl;
 
 @end
 
 @implementation FMMenuTableViewController
 
+#pragma mark - Properties
+- (NSMutableArray *)importantDataPoints {
+    if (!_importantDataPoints) {
+        _importantDataPoints = [NSMutableArray new];
+    }
+    return _importantDataPoints;
+}
+
+#pragma mark - Life Circle
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
+    // Configure Refresh Control
+    [self configureRefreshControl];
     
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
+    // Load Data
+    [self refreshData:nil];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+#pragma mark - UI Methods
+- (void)configureRefreshControl {
+    self.refreshControl = [[UIRefreshControl alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.tableView.frame.size.width, 100.0f)];
+    [self.refreshControl addTarget:self action:@selector(refreshData:) forControlEvents:UIControlEventValueChanged];
+    self.tableView.tableHeaderView = [[UIView alloc] init];
+    [self.tableView.tableHeaderView addSubview:self.refreshControl];
 }
 
-#pragma mark - Table view data source
-
-- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-#warning Potentially incomplete method implementation.
-    // Return the number of sections.
-    return 0;
+- (void)refreshData:(id)sender {
+    [self.refreshControl beginRefreshing];
+    WEAKSELF_T weakSelf = self;
+    [self configureDataPointWithCompletion:^ {
+        [weakSelf.tableView reloadData];
+        [self.refreshControl endRefreshing];
+    }];
 }
 
+- (void)configureDataPointWithCompletion:(void (^)(void))completed{
+    AssistantClient *client = [AssistantClient sharedClient];
+    WEAKSELF_T weakSelf = self;
+    [SVProgressHUD showWithStatus:@"Loading..."];
+    [client getDataPointsWithSuccessBlock:^(NSArray *points) {
+        [weakSelf.importantDataPoints removeAllObjects];
+        for (id obj in points) {
+            double moisture = [obj[@"moisture"] doubleValue];
+            double transpiration = [obj[@"transpiration"] doubleValue];
+            
+            // (moisture < 30, moisture >60, transpiration < 20, transpiration > 50)
+            if ((moisture >= 30.0f && moisture <= 60.0f) &&
+                (transpiration >= 20.0f && transpiration <= 50.0f))
+                continue; // Filter
+            
+            DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
+            [weakSelf.importantDataPoints addObject:point];
+        }
+        
+        if (completed) {
+            completed();
+        }
+        
+        [SVProgressHUD showSuccessWithStatus:@"Success!"];
+    }];
+}
+
+#pragma mark - UITableViewDelegate
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 70;
+}
+
+#pragma mark - UITableViewDataSource
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-#warning Incomplete method implementation.
-    // Return the number of rows in the section.
-    return 0;
+    if (0 == [self.importantDataPoints count]) {
+        return 1;
+    }
+    
+    return [self.importantDataPoints count];
 }
 
-/*
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
+    // No Data
+    if (0 == [self.importantDataPoints count]) {
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"NoPointCell" forIndexPath:indexPath];
+        if (!cell) {
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"NoPointCell"];
+        }
+        return cell;
+    }
     
-    // Configure the cell...
+    static NSString *reuseIdentifier = @"ImportantPointCell";
+    FAIndexTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reuseIdentifier forIndexPath:indexPath];
+    
+    if (!cell) {
+        cell = [[FAIndexTableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reuseIdentifier];
+    }
+    
+    [cell configureWithDataPoint:self.importantDataPoints[indexPath.row]];
     
     return cell;
 }
-*/
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
+    // TODO: Pop up Callout Accessory Control
+    
 }
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    } else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath {
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath {
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
-
-/*
-#pragma mark - Navigation
-
-// In a storyboard-based application, you will often want to do a little preparation before navigation
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-}
-*/
 
 @end
