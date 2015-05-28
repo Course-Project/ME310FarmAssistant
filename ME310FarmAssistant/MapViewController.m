@@ -14,6 +14,7 @@
 #import "FAMapOverlay.h"
 #import "FAMapOverlayView.h"
 #import <HSDatePickerViewController/HSDatePickerViewController.h>
+#import <REFrostedViewController/REFrostedViewController.h>
 
 // MARK: Copy from website
 #define MINIMUM_ZOOM_ARC 0.014 //approximately 1 miles (1 degree of arc ~= 69 miles)
@@ -456,6 +457,17 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         
         [SVProgressHUD showSuccessWithStatus:@"Success!"];
     }];
+}
+
+- (IBAction)didClickMenuButton:(id)sender {
+    // Dismiss keyboard (optional)
+    //
+    [self.view endEditing:YES];
+    [self.frostedViewController.view endEditing:YES];
+    
+    // Present the view controller
+    //
+    [self.frostedViewController presentMenuViewController];
 }
 
 #pragma mark - Properties

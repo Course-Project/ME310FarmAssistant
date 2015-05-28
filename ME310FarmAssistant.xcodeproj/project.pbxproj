@@ -21,6 +21,9 @@
 		2074E6461AD2AFA100C992B6 /* DetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 2074E6451AD2AFA100C992B6 /* DetailTableViewController.m */; };
 		2079FE781AD262C000193190 /* PopupInfoView.m in Sources */ = {isa = PBXBuildFile; fileRef = 2079FE771AD262C000193190 /* PopupInfoView.m */; };
 		2079FE7A1AD262E700193190 /* PopupInfoView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2079FE791AD262E700193190 /* PopupInfoView.xib */; };
+		207A200E1B178A1000CEBFC7 /* FMRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 207A200D1B178A1000CEBFC7 /* FMRootViewController.m */; };
+		207A20111B178A9800CEBFC7 /* FMRootNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 207A20101B178A9800CEBFC7 /* FMRootNavigationController.m */; };
+		207A20141B178BD700CEBFC7 /* FMMenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 207A20131B178BD700CEBFC7 /* FMMenuTableViewController.m */; };
 		20CFBE8F1ACFE2EC00289A17 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CFBE8E1ACFE2EC00289A17 /* main.m */; };
 		20CFBE921ACFE2EC00289A17 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CFBE911ACFE2EC00289A17 /* AppDelegate.m */; };
 		20CFBE981ACFE2EC00289A17 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20CFBE961ACFE2EC00289A17 /* Main.storyboard */; };
@@ -70,6 +73,12 @@
 		2079FE761AD262C000193190 /* PopupInfoView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupInfoView.h; sourceTree = "<group>"; };
 		2079FE771AD262C000193190 /* PopupInfoView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupInfoView.m; sourceTree = "<group>"; };
 		2079FE791AD262E700193190 /* PopupInfoView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopupInfoView.xib; sourceTree = "<group>"; };
+		207A200C1B178A1000CEBFC7 /* FMRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMRootViewController.h; sourceTree = "<group>"; };
+		207A200D1B178A1000CEBFC7 /* FMRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMRootViewController.m; sourceTree = "<group>"; };
+		207A200F1B178A9800CEBFC7 /* FMRootNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMRootNavigationController.h; sourceTree = "<group>"; };
+		207A20101B178A9800CEBFC7 /* FMRootNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMRootNavigationController.m; sourceTree = "<group>"; };
+		207A20121B178BD700CEBFC7 /* FMMenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMMenuTableViewController.h; sourceTree = "<group>"; };
+		207A20131B178BD700CEBFC7 /* FMMenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMMenuTableViewController.m; sourceTree = "<group>"; };
 		20CFBE891ACFE2EC00289A17 /* ME310FarmAssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ME310FarmAssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20CFBE8D1ACFE2EC00289A17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20CFBE8E1ACFE2EC00289A17 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -165,6 +174,12 @@
 		2074E6431AD2AF6D00C992B6 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				207A200C1B178A1000CEBFC7 /* FMRootViewController.h */,
+				207A200D1B178A1000CEBFC7 /* FMRootViewController.m */,
+				207A200F1B178A9800CEBFC7 /* FMRootNavigationController.h */,
+				207A20101B178A9800CEBFC7 /* FMRootNavigationController.m */,
+				207A20121B178BD700CEBFC7 /* FMMenuTableViewController.h */,
+				207A20131B178BD700CEBFC7 /* FMMenuTableViewController.m */,
 				2074E6441AD2AFA100C992B6 /* DetailTableViewController.h */,
 				2074E6451AD2AFA100C992B6 /* DetailTableViewController.m */,
 				202447241AED1AE800BCD2B5 /* MapViewController.h */,
@@ -423,7 +438,9 @@
 				D88898CC1AF7A1E9006620D8 /* FAMapOverlay.m in Sources */,
 				2074E6461AD2AFA100C992B6 /* DetailTableViewController.m in Sources */,
 				200B01331AF64301008A52AB /* DataPointAnnotation.m in Sources */,
+				207A20111B178A9800CEBFC7 /* FMRootNavigationController.m in Sources */,
 				D88898CF1AF7A210006620D8 /* FAMapOverlayView.m in Sources */,
+				207A20141B178BD700CEBFC7 /* FMMenuTableViewController.m in Sources */,
 				2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */,
 				2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */,
 				202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */,
@@ -431,6 +448,7 @@
 				20236F5E1AFF3BE800BB5ADA /* LFHeatMap.m in Sources */,
 				2079FE781AD262C000193190 /* PopupInfoView.m in Sources */,
 				20634B501AFE3C2E005A06F1 /* FAIndexTableViewController.m in Sources */,
+				207A200E1B178A1000CEBFC7 /* FMRootViewController.m in Sources */,
 				20CFBE921ACFE2EC00289A17 /* AppDelegate.m in Sources */,
 				20CFBE8F1ACFE2EC00289A17 /* main.m in Sources */,
 			);
@@ -491,6 +509,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: JIAN XU (HJ7Z5MW5GU)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -511,7 +530,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PROVISIONING_PROFILE = "fb383b3d-190a-41b7-961e-0bb0ebd54a17";
+				PROVISIONING_PROFILE = "85cf34d6-6d56-4c59-845c-2969e2a72ea0";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -533,6 +552,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: JIAN XU (HJ7Z5MW5GU)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -546,7 +566,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				PROVISIONING_PROFILE = "fb383b3d-190a-41b7-961e-0bb0ebd54a17";
+				PROVISIONING_PROFILE = "85cf34d6-6d56-4c59-845c-2969e2a72ea0";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -557,13 +577,13 @@
 			baseConfigurationReference = 130AF8342476709697BABBB3 /* Pods-ME310FarmAssistant.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Hongming Zhu (H5SJ56Z88P)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: JIAN XU (HJ7Z5MW5GU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ME310FarmAssistant/ME310FarmAssistant-Prefix.pch";
 				INFOPLIST_FILE = ME310FarmAssistant/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "fb383b3d-190a-41b7-961e-0bb0ebd54a17";
+				PROVISIONING_PROFILE = "85cf34d6-6d56-4c59-845c-2969e2a72ea0";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -573,13 +593,13 @@
 			baseConfigurationReference = 03E5A902E9D6F750EDD95FE9 /* Pods-ME310FarmAssistant.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Hongming Zhu (H5SJ56Z88P)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: JIAN XU (HJ7Z5MW5GU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ME310FarmAssistant/ME310FarmAssistant-Prefix.pch";
 				INFOPLIST_FILE = ME310FarmAssistant/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "fb383b3d-190a-41b7-961e-0bb0ebd54a17";
+				PROVISIONING_PROFILE = "85cf34d6-6d56-4c59-845c-2969e2a72ea0";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -588,6 +608,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: JIAN XU (HJ7Z5MW5GU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -607,6 +628,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_IDENTITY = "iPhone Developer: JIAN XU (HJ7Z5MW5GU)";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
