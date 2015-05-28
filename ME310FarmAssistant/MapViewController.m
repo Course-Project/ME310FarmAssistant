@@ -175,7 +175,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
     self.moistureHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
     self.moistureHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
-    self.moistureHeatMapImage = newImage;
+//    self.moistureHeatMapImage = newImage;
+    self.moistureHeatMapImage = image;
     
 }
 
@@ -187,7 +188,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
     self.transpirationHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
     self.transpirationHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
-    self.transpirationHeatMapImage = newImage;
+//    self.transpirationHeatMapImage = newImage;
+    self.transpirationHeatMapImage = image;
 }
 
 - (void)configureAnnotations {
