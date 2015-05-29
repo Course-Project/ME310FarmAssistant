@@ -11,6 +11,9 @@
 #import "FAIndexTableViewCell.h"
 #import "DetailTableViewController.h"
 #import <MZFormSheetController/MZFormSheetController.h>
+#import "MenuHeader.h"
+#import "SquareCashStyleBehaviorDefiner.h"
+#import "BLKDelegateSplitter.h"
 
 @interface FAMenuViewController ()<UITableViewDelegate,UITableViewDataSource>
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -33,6 +36,9 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    // Configure Header Bar
+//    [self configureHeader];
+    
     // Configure Refresh Control
     [self configureRefreshControl];
     
@@ -41,6 +47,29 @@
 }
 
 #pragma mark - UI Methods
+- (void)configureHeader{
+    // Setup the bar
+    MenuHeader *menuHeader = [[MenuHeader alloc] initWithFrame:CGRectMake(0.0, 0.0, CGRectGetWidth(self.view.frame), 100.0)];
+    
+    SquareCashStyleBehaviorDefiner *behaviorDefiner = [[SquareCashStyleBehaviorDefiner alloc] init];
+    [behaviorDefiner addSnappingPositionProgress:0.0 forProgressRangeStart:0.0 end:0.5];
+    [behaviorDefiner addSnappingPositionProgress:1.0 forProgressRangeStart:0.5 end:1.0];
+    behaviorDefiner.snappingEnabled = YES;
+    behaviorDefiner.elasticMaximumHeightAtTop = YES;
+    menuHeader.behaviorDefiner = behaviorDefiner;
+    
+    // Configure a separate UITableViewDelegate and UIScrollViewDelegate (optional)
+    BLKDelegateSplitter *delegateSplitter = [[BLKDelegateSplitter alloc] initWithFirstDelegate:behaviorDefiner secondDelegate:self];
+    self.tableView.delegate = (id<UITableViewDelegate>)delegateSplitter;
+    
+    [self.view addSubview:menuHeader];
+    
+    // Setup the table view
+    self.tableView.contentInset = UIEdgeInsetsMake(menuHeader.maximumBarHeight, 0.0, 0.0, 0.0);
+    
+}
+
+
 - (void)configureRefreshControl {
     self.refreshControl = [[UIRefreshControl alloc] initWithFrame:CGRectMake(0.0f, 0.0f, self.tableView.frame.size.width, 100.0f)];
     [self.refreshControl addTarget:self action:@selector(refreshData:) forControlEvents:UIControlEventValueChanged];

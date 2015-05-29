@@ -8,6 +8,7 @@ target 'ME310FarmAssistant' do
   pod 'SVProgressHUD'
   pod 'REFrostedViewController', '~> 2.4'
   pod 'MZFormSheetController', '~> 3.0'
+  pod 'BLKFlexibleHeightBar'
 end
 
 target 'ME310FarmAssistantTests' do

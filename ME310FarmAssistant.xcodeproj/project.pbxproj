@@ -33,6 +33,7 @@
 		D88898CC1AF7A1E9006620D8 /* FAMapOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */; };
 		D88898CF1AF7A210006620D8 /* FAMapOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */; };
 		D8954EEE1B18CEEE00E53467 /* FAMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8954EED1B18CEEE00E53467 /* FAMenuViewController.m */; };
+		D8954EF11B18D3DC00E53467 /* MenuHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = D8954EF01B18D3DC00E53467 /* MenuHeader.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +98,8 @@
 		D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMapOverlayView.m; sourceTree = "<group>"; };
 		D8954EEC1B18CEEE00E53467 /* FAMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAMenuViewController.h; sourceTree = "<group>"; };
 		D8954EED1B18CEEE00E53467 /* FAMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMenuViewController.m; sourceTree = "<group>"; };
+		D8954EEF1B18D3DC00E53467 /* MenuHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuHeader.h; sourceTree = "<group>"; };
+		D8954EF01B18D3DC00E53467 /* MenuHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuHeader.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -195,6 +198,8 @@
 			children = (
 				D88898CD1AF7A210006620D8 /* FAMapOverlayView.h */,
 				D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */,
+				D8954EEF1B18D3DC00E53467 /* MenuHeader.h */,
+				D8954EF01B18D3DC00E53467 /* MenuHeader.m */,
 				2079FE761AD262C000193190 /* PopupInfoView.h */,
 				2079FE771AD262C000193190 /* PopupInfoView.m */,
 				2079FE791AD262E700193190 /* PopupInfoView.xib */,
@@ -442,6 +447,7 @@
 				D88898CF1AF7A210006620D8 /* FAMapOverlayView.m in Sources */,
 				207A20141B178BD700CEBFC7 /* FMMenuTableViewController.m in Sources */,
 				2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */,
+				D8954EF11B18D3DC00E53467 /* MenuHeader.m in Sources */,
 				2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */,
 				202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */,
 				20634B531AFE4B4B005A06F1 /* FAIndexTableViewCell.m in Sources */,
