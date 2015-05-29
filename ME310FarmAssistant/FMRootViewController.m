@@ -16,7 +16,7 @@
 
 - (void)awakeFromNib {
     self.contentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"contentController"];
-    self.menuViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"menuController"];
+    self.menuViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"menuViewController"];
     
     self.direction = REFrostedViewControllerDirectionRight;
     self.limitMenuViewSize = YES;
