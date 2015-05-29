@@ -48,20 +48,20 @@
 }
 
 #pragma mark - Network
-- (void)getDataPointsWithSuccessBlock:(void (^)(NSArray *dataPoints))success {
+- (void)getDataPointsWithSuccessBlock:(void (^)(id dataPoints))success {
     [self GET:[baseURL stringByAppendingString:getData] parameters:nil success:success];
 }
 
-- (void)getImportantDataPointWithSuccessBlock:(void (^)(NSArray *importantDataPoints))success {
+- (void)getImportantDataPointWithSuccessBlock:(void (^)(id importantDataPoints))success {
     [self GET:[baseURL stringByAppendingString:getImportantData] parameters:nil success:success];
 }
 
-- (void)getDetailWithDataPointID:(NSUInteger)dataPointID success:(void (^)(NSDictionary *dataDict))success {
+- (void)getDetailWithDataPointID:(NSUInteger)dataPointID success:(void (^)(id dataDict))success {
     NSDictionary *parameters = @{@"id": [NSNumber numberWithUnsignedInteger:dataPointID]};
     [self GET:[baseURL stringByAppendingString:getDetail] parameters:parameters success:success];
 }
 
-- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(NSArray *historyDataPoints))success {
+- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(id historyDataPoints))success {
     NSDictionary *parameters = @{@"time_from": fromTime, @"time_to": toTime};
     [self GET:[baseURL stringByAppendingString:getHistory] parameters:parameters success:success];
 }

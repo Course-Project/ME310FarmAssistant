@@ -26,7 +26,7 @@
  *
  *  @param success callback block
  */
-- (void)getDataPointsWithSuccessBlock:(void (^)(NSArray *dataPoints))success;
+- (void)getDataPointsWithSuccessBlock:(void (^)(id dataPoints))success;
 
 /**
  *  Fetch data points (moisture < 30, moisture >60, transpiration < 20, transpiration > 50)
@@ -34,7 +34,7 @@
  *
  *  @param success callback block
  */
-- (void)getImportantDataPointWithSuccessBlock:(void (^)(NSArray *importantDataPoints))success;
+- (void)getImportantDataPointWithSuccessBlock:(void (^)(id importantDataPoints))success;
 
 /**
  *  Fetch detail information of a specific data point
@@ -42,7 +42,7 @@
  *  @param dataPointID each data points have different ID
  *  @param success     callback block
  */
-- (void)getDetailWithDataPointID:(NSUInteger)dataPointID success:(void (^)(NSDictionary *dataDict))success;
+- (void)getDetailWithDataPointID:(NSUInteger)dataPointID success:(void (^)(id dataDict))success;
 
 /**
  *  Fetch data points in a certain time range
@@ -51,6 +51,6 @@
  *  @param toTime   end time
  *  @param success  callback block
  */
-- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(NSArray *historyDataPoints))success;
+- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(id historyDataPoints))success;
 
 @end

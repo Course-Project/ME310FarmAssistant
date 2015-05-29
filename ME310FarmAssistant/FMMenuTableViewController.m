@@ -62,7 +62,9 @@
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
     [SVProgressHUD showWithStatus:@"Loading..."];
-    [client getDataPointsWithSuccessBlock:^(NSArray *points) {
+    [client getDataPointsWithSuccessBlock:^(NSDictionary *res) {
+        NSArray *points = res[@"data"];
+        
         [weakSelf.importantDataPoints removeAllObjects];
         for (id obj in points) {
             double moisture = [obj[@"moisture"] doubleValue];
@@ -124,8 +126,10 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     
-    // TODO: Pop up Callout Accessory Control
-    
+    // Solution: Send notification
+    FAIndexTableViewCell *cell = (FAIndexTableViewCell *)[tableView cellForRowAtIndexPath:indexPath];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ShowAnnotationCalloutView"
+                                                        object:[NSNumber numberWithUnsignedInteger:cell.pointID]];
 }
 
 @end

@@ -51,13 +51,25 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 @property (nonatomic, strong) UIImage *moistureHeatMapImage;
 @property (nonatomic, strong) UIImage *transpirationHeatMapImage;
 
+// Moisture & Transpiration Heat Map Bit Image Data
+@property (nonatomic, strong) NSArray *moistureHeatMapBitArray;
+@property (nonatomic, strong) NSArray *transpirationHeatMapBitArray;
+
+// Moisture & Transpiration Heat Map Coordinate
+@property (nonatomic) CLLocationCoordinate2D topRightCoordinate;
+@property (nonatomic) CLLocationCoordinate2D bottomLeftCoordinate;
+
+// Moisture & Transpiration Heat Map Extreme Value
+@property (nonatomic, assign) double maxMoistureValue;
+@property (nonatomic, assign) double minMoistureValue;
+@property (nonatomic, assign) double maxTranspirationValue;
+@property (nonatomic, assign) double minTranspirationValue;
+
 // Moisture & Transpiration Heat Map Image Size Ratio
 @property (nonatomic, assign) float moistureHeatMapWidthRatio;
 @property (nonatomic, assign) float moistureHeatMapHeightRatio;
 @property (nonatomic, assign) float transpirationHeatMapWidthRatio;
 @property (nonatomic, assign) float transpirationHeatMapHeightRatio;
-
-
 
 // Data Points
 @property (nonatomic, strong) NSMutableArray *dataPoints;
@@ -102,11 +114,16 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         // Add Annotations
         [weakSelf configureAnnotations];
     }];
+    
+    // Add Observer
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveShowCalloutNotification:)
+                                                 name:@"ShowAnnotationCalloutView"
+                                               object:nil];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - UI Methods
@@ -141,12 +158,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 - (void)configureHeatMap {
-    
     WEAKSELF_T weakSelf = self;
-    
-    MKCoordinateSpan span = MKCoordinateSpanMake(0.05, 0.05);
-    CLLocationCoordinate2D center = CLLocationCoordinate2DMake(37.4263, -122.1720);
-    weakSelf.mapView.region = MKCoordinateRegionMake(center, span);
     
     // Crete location array & weight array (moisture & transipiration)
     weakSelf.locations = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
@@ -169,26 +181,45 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)generateMoistureHeatMap {
     NSLog(@"Generating moisture heat map...");
-    float boost = 1.0f;
-    UIImage *image = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.moistureWeights];
-    CGSize originSize = image.size;
-    UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
-    self.moistureHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
-    self.moistureHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
+//    float boost = 1.0f;
+//    UIImage *image = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.moistureWeights];
+//    CGSize originSize = image.size;
+//    UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
+//    self.moistureHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
+//    self.moistureHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
 //    self.moistureHeatMapImage = newImage;
+    NSArray *colors = @[
+                        (__bridge id) [UIColor yellowColor].CGColor,
+                        (__bridge id) [UIColor redColor].CGColor,
+                        (__bridge id) [UIColor purpleColor].CGColor
+                        ];
+    CGFloat locations[] = {0.0f, 0.2f, 0.8f};
+    
+    UIImage *image = [self generateHeatMapImageWithBitInfoArray:_moistureHeatMapBitArray
+                                             withGradientColors:colors locations:locations
+                                                   withMaxValue:_maxMoistureValue minValue:_minMoistureValue];
     self.moistureHeatMapImage = image;
     
 }
 
 - (void)generateTranspirationHeatMap {
     NSLog(@"Generating transpiration heat map...");
-    float boost = 1.0f;
-    UIImage *image = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.transpirationWeights];
-    CGSize originSize = image.size;
-    UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
-    self.transpirationHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
-    self.transpirationHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
+//    float boost = 1.0f;
+//    UIImage *image = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.transpirationWeights];
+//    CGSize originSize = image.size;
+//    UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
+//    self.transpirationHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
+//    self.transpirationHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
 //    self.transpirationHeatMapImage = newImage;
+    NSArray *colors = @[
+                        (__bridge id) [UIColor redColor].CGColor,
+                        (__bridge id) [UIColor blueColor].CGColor
+                        ];
+    CGFloat locations[] = {0.0f, 0.3f};
+    
+    UIImage *image = [self generateHeatMapImageWithBitInfoArray:_transpirationHeatMapBitArray
+                                             withGradientColors:colors locations:locations
+                                                   withMaxValue:_maxTranspirationValue minValue:_minTranspirationValue];
     self.transpirationHeatMapImage = image;
 }
 
@@ -224,11 +255,32 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
     [SVProgressHUD showWithStatus:@"Loading..."];
-    [client getDataPointsWithSuccessBlock:^(NSArray *points) {
+    [client getDataPointsWithSuccessBlock:^(NSDictionary *res) {
+        // Get Data Points
+        NSArray *points = res[@"data"];
         for (id obj in points) {
             DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
             [weakSelf.dataPoints addObject:point];
         }
+        
+        // Get Moisture Bit Info
+        weakSelf.moistureHeatMapBitArray = res[@"all-moist"];
+        
+        // Get Transpiration Bit Info
+        weakSelf.transpirationHeatMapBitArray = res[@"all-trans"];
+        
+        // Get Top-right Point
+        weakSelf.topRightCoordinate = CLLocationCoordinate2DMake([res[@"max-x"] doubleValue], [res[@"max-y"] doubleValue]);
+        
+        // Get Bottom-left Point
+        weakSelf.bottomLeftCoordinate = CLLocationCoordinate2DMake([res[@"min-x"] doubleValue], [res[@"min-y"] doubleValue]);
+        
+        // Get Extreme Value
+        weakSelf.maxMoistureValue = [res[@"max-m"] doubleValue];
+        weakSelf.minMoistureValue = [res[@"min-m"] doubleValue];
+        weakSelf.maxTranspirationValue = [res[@"max-t"] doubleValue];
+        weakSelf.minTranspirationValue = [res[@"min-t"] doubleValue];
+        
         if (completed) {
             completed();
         }
@@ -309,6 +361,11 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     annotationView.canShowCallout = YES;
     
     return annotationView;
+}
+
+- (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
+    MKCoordinateSpan span = MKCoordinateSpanMake(MINIMUM_ZOOM_ARC, MINIMUM_ZOOM_ARC);
+    [mapView setRegion:MKCoordinateRegionMake([view.annotation coordinate], span) animated:YES];
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
@@ -422,16 +479,17 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 #pragma mark - Actions
+// TODO: Update Heat Map Overlay
 - (IBAction)didChangeTranspirationSwitch:(UISwitch *)sender {
     NSLog(@"Transpiration Switch changed");
     if ([sender isOn]) {
         NSLog(@"ON");
 //        self.moistureHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
 //        [self generateMoistureHeatMap];
-        [self.mapView addOverlay:self.moistureHeatMapOverlay];
+//        [self.mapView addOverlay:self.moistureHeatMapOverlay];
     } else {
         NSLog(@"OFF");
-        [self.mapView removeOverlay:self.moistureHeatMapOverlay];
+//        [self.mapView removeOverlay:self.moistureHeatMapOverlay];
     }
 }
 
@@ -441,10 +499,19 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         NSLog(@"ON");
 //        self.transpirationHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
 //        [self generateTranspirationHeatMap];
-        [self.mapView addOverlay:self.transpirationHeatMapOverlay];
+//        [self.mapView addOverlay:self.transpirationHeatMapOverlay];
+        UIImageView *imageView = [[UIImageView alloc] initWithImage:_moistureHeatMapImage];
+        CGRect rect = imageView.frame;
+        rect.size.width += 30;
+        rect.size.height += 40;
+        UIView *view = [[UIView alloc] initWithFrame:rect];
+        view.backgroundColor = [UIColor blackColor];
+        [view addSubview:imageView];
+        
+        [self.view insertSubview:view aboveSubview:_mapView];
     } else {
         NSLog(@"OFF");
-        [self.mapView removeOverlay:self.transpirationHeatMapOverlay];
+//        [self.mapView removeOverlay:self.transpirationHeatMapOverlay];
     }
 }
 
@@ -513,9 +580,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 #pragma mark - Utils
-
-- (UIImage *)imageByCroppingImage:(UIImage *)image toSize:(CGSize)size
-{
+- (UIImage *)imageByCroppingImage:(UIImage *)image toSize:(CGSize)size {
     // not equivalent to image.size (which depends on the imageOrientation)!
     double refWidth = CGImageGetWidth(image.CGImage);
     double refHeight = CGImageGetHeight(image.CGImage);
@@ -530,6 +595,141 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     CGImageRelease(imageRef);
     
     return cropped;
+}
+
+- (UIImage *)generateHeatMapImageWithBitInfoArray:(NSArray *)bitInfo
+                               withGradientColors:(NSArray *)colors locations:(const CGFloat[])locations
+                                     withMaxValue:(double)max minValue:(double)min {
+    int width = 512, height = [bitInfo count];
+    unsigned char *rgba = (unsigned char *)calloc(width * height * 4, sizeof(unsigned char));
+    
+    // Convert
+    NSArray *colorRGBA;
+    int i = 0;
+    UInt32 indexOrigin;
+    for (int y = height - 1; y >= 0; y--) {
+        for (int x = 0; x < width; x++, i++) {
+            NSNumber *number = [[bitInfo objectAtIndex:y] objectAtIndex:x];
+            if ([number isKindOfClass:[NSNull class]]) continue;
+            double val = [number doubleValue];
+            
+            indexOrigin = 4 * i;
+            
+            val = (val - min) / (max - min);
+            colorRGBA = [self calculateColorInGradientColors:colors locations:locations atPosition:val];
+            
+            rgba[indexOrigin + 0] = [[colorRGBA objectAtIndex:0] unsignedCharValue]; // r
+            rgba[indexOrigin + 1] = [[colorRGBA objectAtIndex:1] unsignedCharValue]; // g
+            rgba[indexOrigin + 2] = [[colorRGBA objectAtIndex:2] unsignedCharValue]; // b
+            rgba[indexOrigin + 3] = [[colorRGBA objectAtIndex:3] unsignedCharValue]; // a
+        }
+    }
+    
+    // Create image from rendered raw data
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef bitmapContext = CGBitmapContextCreate(rgba,
+                                                       width,
+                                                       height,
+                                                       8, // bitsPerComponent
+                                                       4 * width, // bytesPerRow
+                                                       colorSpace,
+                                                       kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault);
+    
+    CFRelease(colorSpace);
+    
+    CGImageRef cgImage = CGBitmapContextCreateImage(bitmapContext);
+    
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    
+    CFRelease(cgImage);
+    CFRelease(bitmapContext);
+    
+    free(rgba);
+    
+    return image;
+}
+
+- (NSArray *)calculateColorInGradientColors:(NSArray *)colors locations:(const CGFloat[])locations atPosition:(double)position {
+    position = position < 0 ? 0 : position;
+    position = position > 1 ? 1 : position;
+    
+    CGFloat tmpImagewidth = 1000.0f; // Make this bigger or smaller if you need more or less resolution (number of different colors).
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    
+    // create a gradient
+//    CGFloat locations[] = { 0.0,
+//        0.35,
+//        0.55,
+//        0.8,
+//        1.0 };
+//    NSArray *colors = @[(__bridge id) [UIColor redColor].CGColor,
+//                        (__bridge id) [UIColor greenColor].CGColor,
+//                        (__bridge id) [UIColor blueColor].CGColor,
+//                        (__bridge id) [UIColor yellowColor].CGColor,
+//                        (__bridge id) [UIColor redColor].CGColor,
+//                        ];
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
+    CGPoint startPoint = CGPointMake(0, 0);
+    CGPoint endPoint = CGPointMake(tmpImagewidth, 0);
+    
+    // create a bitmap context to draw the gradient to, 1 pixel high.
+    CGContextRef context = CGBitmapContextCreate(NULL, tmpImagewidth, 1, 8, 0, colorSpace, kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault);
+    
+    // draw the gradient into it
+    CGContextAddRect(context, CGRectMake(0, 0, tmpImagewidth, 1));
+    CGContextClip(context);
+    CGContextDrawLinearGradient(context, gradient, startPoint, endPoint, 0);
+    
+    // Get our RGB bytes into a buffer with a couple of intermediate steps...
+    //      CGImageRef -> CFDataRef -> byte array
+    CGImageRef cgImage = CGBitmapContextCreateImage(context);
+    CGDataProviderRef provider = CGImageGetDataProvider(cgImage);
+    CFDataRef pixelData = CGDataProviderCopyData(provider);
+    
+    // cleanup:
+    CGGradientRelease(gradient);
+    CGColorSpaceRelease(colorSpace);
+    CGImageRelease(cgImage);
+    CGContextRelease(context);
+    
+    const UInt8* data = CFDataGetBytePtr(pixelData);
+    
+    // we got all the data we need.
+    // bytes in the data buffer are a succession of R G B A bytes
+    
+    // For instance, the color of the point 27% in our gradient is:
+    CGFloat x = tmpImagewidth * position;
+    int pixelIndex = (int)x * 4; // 4 bytes per color
+//    UIColor *color = [UIColor colorWithRed:data[pixelIndex + 0]/255.0f
+//                                     green:data[pixelIndex + 1]/255.0f
+//                                      blue:data[pixelIndex + 2]/255.0f
+//                                     alpha:data[pixelIndex + 3]/255.0f];
+    NSArray *colorRGBA = @[
+                           [NSNumber numberWithUnsignedChar:data[pixelIndex + 0]],
+                           [NSNumber numberWithUnsignedChar:data[pixelIndex + 1]],
+                           [NSNumber numberWithUnsignedChar:data[pixelIndex + 2]],
+                           [NSNumber numberWithUnsignedChar:data[pixelIndex + 3]]
+                           ];
+    
+    // done fetching color data, finally release the buffer
+    CGDataProviderRelease(provider);
+    
+    return colorRGBA;
+}
+
+#pragma mark - Observers
+- (void)didReceiveShowCalloutNotification:(NSNotification *)notification {
+    NSUInteger pointID = [notification.object unsignedIntegerValue];
+    for (DataPointAnnotation *annotation in self.mapView.annotations) {
+        if (pointID == annotation.pointID) {
+            [self.mapView selectAnnotation:annotation animated:YES];
+            
+            // Re-center
+            [self.mapView setCenterCoordinate:annotation.coordinate animated:YES];
+            
+            break;
+        }
+    }
 }
 
 @end

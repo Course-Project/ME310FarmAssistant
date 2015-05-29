@@ -540,7 +540,7 @@
                                     <outlet property="transpirationLable" destination="OPK-ys-i7J" id="AXn-m1-knl"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="NoPointCell" rowHeight="70" id="4LR-Ks-8us">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="NoPointCell" rowHeight="70" id="4LR-Ks-8us">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="4LR-Ks-8us" id="SOx-KL-UWp">
                                     <autoresizingMask key="autoresizingMask"/>
