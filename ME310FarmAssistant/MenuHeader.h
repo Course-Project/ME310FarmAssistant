@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ARSegmentPageController.h"
 @interface MenuHeader : UIView<ARSegmentPageControllerHeaderProtocol>
+@property (weak, nonatomic) IBOutlet UIView *contentView;
+@property (weak, nonatomic) IBOutlet UILabel *settingsLabel;
 
 @end
