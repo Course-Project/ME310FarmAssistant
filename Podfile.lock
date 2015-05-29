@@ -20,6 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - ARSegmentPager (1.0)
   - ASBPlayerScrubbing (0.1)
   - ASMediaFocusManager (0.5):
     - ASBPlayerScrubbing (~> 0.1)
@@ -36,6 +37,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
+  - ARSegmentPager (from `https://github.com/AugustRush/ARSegmentPager.git`)
   - ASMediaFocusManager
   - BLKFlexibleHeightBar
   - HSDatePickerViewController (~> 1.0)
@@ -43,8 +45,18 @@ DEPENDENCIES:
   - REFrostedViewController (~> 2.4)
   - SVProgressHUD
 
+EXTERNAL SOURCES:
+  ARSegmentPager:
+    :git: https://github.com/AugustRush/ARSegmentPager.git
+
+CHECKOUT OPTIONS:
+  ARSegmentPager:
+    :commit: a645ca25da5a2aea246130ef6200e382ee71169f
+    :git: https://github.com/AugustRush/ARSegmentPager.git
+
 SPEC CHECKSUMS:
   AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  ARSegmentPager: bd7bbe2e54fe6d832be600d98987647656440331
   ASBPlayerScrubbing: 0fc5e76aad6fdbcf14380734fb7f2c127cd28b66
   ASMediaFocusManager: 5a071038ada1a79abf9d0c95b6b2b1c1e5cd3a87
   BLKFlexibleHeightBar: b27572a69633d8e33f1f2bbc486b04d8e86f742d

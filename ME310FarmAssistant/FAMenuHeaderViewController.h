@@ -1,5 +1,5 @@
 //
-//  FAMenuViewController.h
+//  FAMenuHeaderViewController.h
 //  ME310FarmAssistant
 //
 //  Created by Nathan on 5/29/15.
@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ARSegmentPageController.h"
 
-@interface FAMenuViewController : UIViewController
+@interface FAMenuHeaderViewController : ARSegmentPageController
 
 @end

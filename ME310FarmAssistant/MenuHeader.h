@@ -6,8 +6,8 @@
 //  Copyright (c) 2015 Tom Hu. All rights reserved.
 //
 
-#import "BLKFlexibleHeightBar.h"
-
-@interface MenuHeader : BLKFlexibleHeightBar
+#import <UIKit/UIKit.h>
+#import "ARSegmentPageController.h"
+@interface MenuHeader : UIView<ARSegmentPageControllerHeaderProtocol>
 
 @end

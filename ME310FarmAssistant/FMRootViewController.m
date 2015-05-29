@@ -7,6 +7,7 @@
 //
 
 #import "FMRootViewController.h"
+#import "FAMenuHeaderViewController.h"
 
 @interface FMRootViewController ()
 
@@ -16,7 +17,7 @@
 
 - (void)awakeFromNib {
     self.contentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"contentController"];
-    self.menuViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"menuViewController"];
+    self.menuViewController = [[FAMenuHeaderViewController alloc]init];
     
     self.direction = REFrostedViewControllerDirectionRight;
     self.limitMenuViewSize = YES;

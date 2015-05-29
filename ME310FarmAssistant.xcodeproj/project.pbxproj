@@ -32,8 +32,9 @@
 		A7CD0AF3B5FB0E87C322F543 /* libPods-ME310FarmAssistant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEF3B7A44564767B65C1F8F0 /* libPods-ME310FarmAssistant.a */; };
 		D88898CC1AF7A1E9006620D8 /* FAMapOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */; };
 		D88898CF1AF7A210006620D8 /* FAMapOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */; };
-		D8954EEE1B18CEEE00E53467 /* FAMenuViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8954EED1B18CEEE00E53467 /* FAMenuViewController.m */; };
-		D8954EF11B18D3DC00E53467 /* MenuHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = D8954EF01B18D3DC00E53467 /* MenuHeader.m */; };
+		D8954EF41B18DD3300E53467 /* FAMenuHeaderViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = D8954EF31B18DD3300E53467 /* FAMenuHeaderViewController.m */; };
+		D8954EF71B18DE5E00E53467 /* MenuHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = D8954EF61B18DE5E00E53467 /* MenuHeader.m */; };
+		D8954EF91B18DECA00E53467 /* MenuHeader.xib in Resources */ = {isa = PBXBuildFile; fileRef = D8954EF81B18DECA00E53467 /* MenuHeader.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,10 +97,11 @@
 		D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMapOverlay.m; sourceTree = "<group>"; };
 		D88898CD1AF7A210006620D8 /* FAMapOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAMapOverlayView.h; sourceTree = "<group>"; };
 		D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMapOverlayView.m; sourceTree = "<group>"; };
-		D8954EEC1B18CEEE00E53467 /* FAMenuViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAMenuViewController.h; sourceTree = "<group>"; };
-		D8954EED1B18CEEE00E53467 /* FAMenuViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMenuViewController.m; sourceTree = "<group>"; };
-		D8954EEF1B18D3DC00E53467 /* MenuHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuHeader.h; sourceTree = "<group>"; };
-		D8954EF01B18D3DC00E53467 /* MenuHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuHeader.m; sourceTree = "<group>"; };
+		D8954EF21B18DD3300E53467 /* FAMenuHeaderViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAMenuHeaderViewController.h; sourceTree = "<group>"; };
+		D8954EF31B18DD3300E53467 /* FAMenuHeaderViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMenuHeaderViewController.m; sourceTree = "<group>"; };
+		D8954EF51B18DE5E00E53467 /* MenuHeader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuHeader.h; sourceTree = "<group>"; };
+		D8954EF61B18DE5E00E53467 /* MenuHeader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuHeader.m; sourceTree = "<group>"; };
+		D8954EF81B18DECA00E53467 /* MenuHeader.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MenuHeader.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,8 +185,8 @@
 				207A20101B178A9800CEBFC7 /* FMRootNavigationController.m */,
 				207A20121B178BD700CEBFC7 /* FMMenuTableViewController.h */,
 				207A20131B178BD700CEBFC7 /* FMMenuTableViewController.m */,
-				D8954EEC1B18CEEE00E53467 /* FAMenuViewController.h */,
-				D8954EED1B18CEEE00E53467 /* FAMenuViewController.m */,
+				D8954EF21B18DD3300E53467 /* FAMenuHeaderViewController.h */,
+				D8954EF31B18DD3300E53467 /* FAMenuHeaderViewController.m */,
 				2074E6441AD2AFA100C992B6 /* DetailTableViewController.h */,
 				2074E6451AD2AFA100C992B6 /* DetailTableViewController.m */,
 				202447241AED1AE800BCD2B5 /* MapViewController.h */,
@@ -198,8 +200,9 @@
 			children = (
 				D88898CD1AF7A210006620D8 /* FAMapOverlayView.h */,
 				D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */,
-				D8954EEF1B18D3DC00E53467 /* MenuHeader.h */,
-				D8954EF01B18D3DC00E53467 /* MenuHeader.m */,
+				D8954EF51B18DE5E00E53467 /* MenuHeader.h */,
+				D8954EF61B18DE5E00E53467 /* MenuHeader.m */,
+				D8954EF81B18DECA00E53467 /* MenuHeader.xib */,
 				2079FE761AD262C000193190 /* PopupInfoView.h */,
 				2079FE771AD262C000193190 /* PopupInfoView.m */,
 				2079FE791AD262E700193190 /* PopupInfoView.xib */,
@@ -388,6 +391,7 @@
 				20CFBE981ACFE2EC00289A17 /* Main.storyboard in Resources */,
 				2079FE7A1AD262E700193190 /* PopupInfoView.xib in Resources */,
 				202447201AED07C800BCD2B5 /* quake.plist in Resources */,
+				D8954EF91B18DECA00E53467 /* MenuHeader.xib in Resources */,
 				20CFBE9D1ACFE2EC00289A17 /* LaunchScreen.xib in Resources */,
 				20CFBE9A1ACFE2EC00289A17 /* Images.xcassets in Resources */,
 			);
@@ -441,19 +445,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				D88898CC1AF7A1E9006620D8 /* FAMapOverlay.m in Sources */,
+				D8954EF71B18DE5E00E53467 /* MenuHeader.m in Sources */,
 				2074E6461AD2AFA100C992B6 /* DetailTableViewController.m in Sources */,
 				200B01331AF64301008A52AB /* DataPointAnnotation.m in Sources */,
 				207A20111B178A9800CEBFC7 /* FMRootNavigationController.m in Sources */,
 				D88898CF1AF7A210006620D8 /* FAMapOverlayView.m in Sources */,
 				207A20141B178BD700CEBFC7 /* FMMenuTableViewController.m in Sources */,
 				2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */,
-				D8954EF11B18D3DC00E53467 /* MenuHeader.m in Sources */,
 				2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */,
 				202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */,
 				20634B531AFE4B4B005A06F1 /* FAIndexTableViewCell.m in Sources */,
+				D8954EF41B18DD3300E53467 /* FAMenuHeaderViewController.m in Sources */,
 				20236F5E1AFF3BE800BB5ADA /* LFHeatMap.m in Sources */,
 				2079FE781AD262C000193190 /* PopupInfoView.m in Sources */,
-				D8954EEE1B18CEEE00E53467 /* FAMenuViewController.m in Sources */,
 				207A200E1B178A1000CEBFC7 /* FMRootViewController.m in Sources */,
 				20CFBE921ACFE2EC00289A17 /* AppDelegate.m in Sources */,
 				20CFBE8F1ACFE2EC00289A17 /* main.m in Sources */,
