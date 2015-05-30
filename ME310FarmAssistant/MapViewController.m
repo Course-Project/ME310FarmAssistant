@@ -286,6 +286,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)generateMoistureHeatMapWithCompletion:(dispatch_block_t)success {
     NSLog(@"Generating moisture heat map...");
     self.isConfiguringMoistureHeatMap = YES;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WillGenerateMoistureHeatMap" object:nil];
+    
     NSArray *colors = @[
                         (__bridge id) UIColorFromRGB(0xFE1016).CGColor,
                         (__bridge id) UIColorFromRGB(0xFF7F10).CGColor,
@@ -299,12 +302,18 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     WEAKSELF_T weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^ {
-        CGFloat locations[] = {0.0f, weakSelf.moistureThreshold, 0.3f, 0.4f, 0.5f, 0.6f, 0.7f, 0.8f};
+        double threshold = weakSelf.moistureThreshold;
+        double step = (1 - threshold) / 7.0f;
+        
+        CGFloat locations[] = {0.0f, threshold, threshold + step, threshold + step * 2, threshold + step * 3, threshold + step * 4, threshold + step * 5, threshold + step * 6};
         UIImage *image = [weakSelf generateHeatMapImageWithBitInfoArray:weakSelf.moistureHeatMapBitArray
                                                      withGradientColors:colors locations:locations
                                                            withMaxValue:weakSelf.maxMoistureValue minValue:weakSelf.minMoistureValue];
         weakSelf.moistureHeatMapImage = image;
         weakSelf.isConfiguringMoistureHeatMap = NO;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DidGenerateMoistureHeatMap" object:nil];
+        
         dispatch_async(dispatch_get_main_queue(), success);
     });
 }
@@ -312,6 +321,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)generateTranspirationHeatMapWithCompletion:(dispatch_block_t)success {
     NSLog(@"Generating transpiration heat map...");
     self.isConfiguringTranspirationHeatMap = YES;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WillGenerateTranspirationHeatMap" object:nil];
+    
     NSArray *colors = @[
                         (__bridge id) UIColorFromRGB(0xFFB45F).CGColor,
                         (__bridge id) UIColorFromRGB(0x9BD27B).CGColor
@@ -325,6 +337,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
                                                            withMaxValue:weakSelf.maxTranspirationValue minValue:weakSelf.minTranspirationValue];
         weakSelf.transpirationHeatMapImage = image;
         self.isConfiguringTranspirationHeatMap = NO;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DidGenerateTranspirationHeatMap" object:nil];
+        
         dispatch_async(dispatch_get_main_queue(), success);
     });
 }
@@ -622,6 +637,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     int width = [[bitInfo firstObject] count], height = [bitInfo count];
     unsigned char *rgba = (unsigned char *)calloc(width * height * 4, sizeof(unsigned char));
     
+    clock_t start = clock();
+    
     // Convert
     NSArray *colorRGBA;
     int i = 0;
@@ -643,6 +660,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
             rgba[indexOrigin + 3] = [[colorRGBA objectAtIndex:3] unsignedCharValue]; // a
         }
     }
+    
+    clock_t endLoop = clock();
+    
+    NSLog(@"Loop Time: %lu", endLoop - start);
     
     // Create image from rendered raw data
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -736,10 +757,13 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     }
 }
 
-// TODO: New Observers
 - (void)didReceiveMoistureSliderNotification:(NSNotification *)notification {
     NSLog(@"Moisture Threshold Changed!");
     NSLog(@"Moisture Threshold: %@", notification.object);
+    
+    self.moistureThreshold = [notification.object doubleValue] / 100.0f;
+    
+    if ([self isConfiguringMoistureHeatMap]) return;
     
     if (![self.switchView.subviews containsObject:self.switchOverlayView]) {
         [self.switchView addSubview:self.switchOverlayView];
@@ -762,6 +786,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)didReceiveTranspirationSliderNotification:(NSNotification *)notification {
     NSLog(@"Transpiration Threshold Changed!");
     NSLog(@"Transpiration Threshold: %@", notification.object);
+    
+    self.transpirationThreshold = [notification.object doubleValue] / 100.0f;
+    
+    if ([self isConfiguringTranspirationHeatMap]) return;
     
     if (![self.switchView.subviews containsObject:self.switchOverlayView]) {
         [self.switchView addSubview:self.switchOverlayView];
