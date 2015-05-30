@@ -26,7 +26,7 @@
 }
 
 #pragma mark - Basic HTTP Method
-- (void)GET:(NSString *)api parameters:(id)parameters success:(void (^)(id obj))success {
+- (void)GET:(NSString *)api parameters:(id)parameters callback:(responseBlock)callback {
     // Show network activity indicator
     [UIApplication sharedApplication].networkActivityIndicatorVisible = YES;
     
@@ -39,35 +39,38 @@
              // Hide network activity indicator
              [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
              
-             if (success) {
-                 success(responseObjecct);
+             if (callback) {
+                 callback(responseObjecct, nil);
              }
          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
              NSLog(@"Error: %@", error);
+             if (callback) {
+                callback(nil, error);
+             }
              [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
          }];
 }
 
 #pragma mark - Network
-- (void)getDataPointsWithSuccessBlock:(void (^)(id dataPoints))success {
-    [self GET:[baseURL stringByAppendingString:getData] parameters:nil success:success];
+- (void)getDataPointsWithCallback:(responseBlock)callback {
+    [self GET:[baseURL stringByAppendingString:getData] parameters:nil callback:callback];
 }
 
-- (void)getImportantDataPointWithSuccessBlock:(void (^)(id importantDataPoints))success {
-    [self GET:[baseURL stringByAppendingString:getImportantData] parameters:nil success:success];
+- (void)getImportantDataPointWithCallback:(responseBlock)callback {
+    [self GET:[baseURL stringByAppendingString:getImportantData] parameters:nil callback:callback];
 }
 
-- (void)getDetailWithDataPointID:(NSUInteger)dataPointID success:(void (^)(id dataDict))success {
+- (void)getDetailWithDataPointID:(NSUInteger)dataPointID callback:(responseBlock)callback {
     NSDictionary *parameters = @{@"id": [NSNumber numberWithUnsignedInteger:dataPointID]};
-    [self GET:[baseURL stringByAppendingString:getDetail] parameters:parameters success:success];
+    [self GET:[baseURL stringByAppendingString:getDetail] parameters:parameters callback:callback];
 }
 
-- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(id historyDataPoints))success {
+- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime callback:(responseBlock)callback {
     NSDictionary *parameters = @{@"time_from": fromTime, @"time_to": toTime};
-    [self GET:[baseURL stringByAppendingString:getHistory] parameters:parameters success:success];
+    [self GET:[baseURL stringByAppendingString:getHistory] parameters:parameters callback:callback];
 }
 
-- (void)getHeatMapWithType:(FAHeatMapType)type success:(void (^)(id heatMapData))success {
+- (void)getHeatMapWithType:(FAHeatMapType)type callback:(responseBlock)callback {
     NSString *heatMapType;
     switch (type) {
         case FAHeatMapTypeMoisture:
@@ -84,7 +87,7 @@
             break;
     }
     NSDictionary *parameters = @{@"type": heatMapType};
-    [self GET:[baseURL stringByAppendingString:getHeatMap] parameters:parameters success:success];
+    [self GET:[baseURL stringByAppendingString:getHeatMap] parameters:parameters callback:callback];
 }
 
 @end

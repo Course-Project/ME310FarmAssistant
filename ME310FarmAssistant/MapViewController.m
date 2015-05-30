@@ -197,7 +197,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Configuring moisture heat map...");
     [self.moistureSwitch setEnabled:NO];
     WEAKSELF_T weakSelf = self;
-    [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMoisture success:^(NSDictionary *res) {
+    [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMoisture callback:^(NSDictionary *res, NSError *err) {
+        // TODO: Error Handle
+        
         // Get Moisture Bit Info
         weakSelf.moistureHeatMapBitArray = res[@"all-image"];
         
@@ -230,7 +232,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Configuring transpiration heat map...");
     [self.transpirationSwitch setEnabled:NO];
     WEAKSELF_T weakSelf = self;
-    [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeTranspiration success:^(NSDictionary *res) {
+    [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeTranspiration callback:^(NSDictionary *res, NSError *err) {
+        // TODO: Error Handle
         
         // Get Transpiration Bit Info
         weakSelf.transpirationHeatMapBitArray = res[@"all-image"];
@@ -259,7 +262,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)configureMixedHeatMap {
     NSLog(@"Configuring mixed heat map...");
     WEAKSELF_T weakSelf = self;
-    [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMixed success:^(NSDictionary *res) {
+    [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMixed callback:^(NSDictionary *res, NSError *err) {
+        // TODO: Error Handle
         
         // Get Transpiration Bit Info
         weakSelf.mixedHeatMapBitArray = res[@"all-image"];
@@ -402,7 +406,13 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
     [SVProgressHUD showWithStatus:@"Loading..."];
-    [client getDataPointsWithSuccessBlock:^(NSDictionary *res) {
+    [client getDataPointsWithCallback:^(NSDictionary *res, NSError *err) {
+        // Error Handle
+        if (err) {
+            [SVProgressHUD showErrorWithStatus:@"Network Error!"];
+            return;
+        }
+        
         // Get Data Points
         NSArray *points = res[@"data"];
         for (id obj in points) {
