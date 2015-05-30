@@ -62,7 +62,12 @@
     AssistantClient *client = [AssistantClient sharedClient];
     WEAKSELF_T weakSelf = self;
     [SVProgressHUD showWithStatus:@"Loading..."];
-    [client getDataPointsWithSuccessBlock:^(NSDictionary *res) {
+    [client getDataPointsWithCallback:^(NSDictionary *res, NSError *err) {
+        if (err) {
+            [SVProgressHUD showErrorWithStatus:@"Network Error!"];
+            return;
+        }
+        
         NSArray *points = res[@"data"];
         
         [weakSelf.importantDataPoints removeAllObjects];

@@ -7,7 +7,6 @@
 //
 
 #import "MenuHeader.h"
-#import "NMRangeSlider.h"
 
 
 @interface MenuHeader()<UITextFieldDelegate>

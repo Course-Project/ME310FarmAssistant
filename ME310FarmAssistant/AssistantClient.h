@@ -15,6 +15,8 @@ typedef NS_ENUM(NSUInteger, FAHeatMapType) {
     FAHeatMapTypeNone,
 };
 
+typedef void(^responseBlock)(id res, NSError *err);
+
 @class DataPoint;
 
 @interface AssistantClient : NSObject
@@ -28,38 +30,10 @@ typedef NS_ENUM(NSUInteger, FAHeatMapType) {
 + (AssistantClient *)sharedClient;
 
 #pragma mark - Network
-/**
- *  Fetch data points collected within xxx hours
- *
- *  @param success callback block
- */
-- (void)getDataPointsWithSuccessBlock:(void (^)(id dataPoints))success;
-
-/**
- *  Fetch data points (moisture < 30, moisture >60, transpiration < 20, transpiration > 50)
- *  (Fetch abnormal data points)
- *
- *  @param success callback block
- */
-- (void)getImportantDataPointWithSuccessBlock:(void (^)(id importantDataPoints))success;
-
-/**
- *  Fetch detail information of a specific data point
- *
- *  @param dataPointID each data points have different ID
- *  @param success     callback block
- */
-- (void)getDetailWithDataPointID:(NSUInteger)dataPointID success:(void (^)(id dataDict))success;
-
-/**
- *  Fetch data points in a certain time range
- *
- *  @param fromTime begin time
- *  @param toTime   end time
- *  @param success  callback block
- */
-- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(id historyDataPoints))success;
-
-- (void)getHeatMapWithType:(FAHeatMapType)type success:(void (^)(id heatMapData))success;
+- (void)getDataPointsWithCallback:(responseBlock)callback;
+- (void)getImportantDataPointWithCallback:(responseBlock)callback;
+- (void)getDetailWithDataPointID:(NSUInteger)dataPointID callback:(responseBlock)callback;
+- (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime callback:(responseBlock)callback;
+- (void)getHeatMapWithType:(FAHeatMapType)type callback:(responseBlock)callback;
 
 @end

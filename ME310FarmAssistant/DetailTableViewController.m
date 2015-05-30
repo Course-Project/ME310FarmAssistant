@@ -61,7 +61,12 @@
     [self.refreshControl beginRefreshing];
     WEAKSELF_T weakSelf = self;
     [SVProgressHUD showWithStatus:@"Loading..."];
-    [[AssistantClient sharedClient] getDetailWithDataPointID:self.pointID success:^(NSDictionary *dict) {
+    [[AssistantClient sharedClient] getDetailWithDataPointID:self.pointID callback:^(NSDictionary *dict, NSError *err) {
+        if (err) {
+            [SVProgressHUD showErrorWithStatus:@"Network Error!"];
+            return;
+        }
+        
         weakSelf.dataPoint = [[DataPoint alloc] initWithDictionary:dict];
         
         // Updating UI
