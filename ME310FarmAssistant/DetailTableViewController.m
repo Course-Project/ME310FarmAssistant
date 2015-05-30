@@ -8,7 +8,7 @@
 
 #import "DetailTableViewController.h"
 #import "DataPoint.h"
-#import <UIImageView+AFNetworking.h>
+#import "UIImageView+AFNetworking.h"
 #import <ASMediaFocusManager/ASMediaFocusManager.h>
 
 @interface DetailTableViewController () <ASMediasFocusDelegate>

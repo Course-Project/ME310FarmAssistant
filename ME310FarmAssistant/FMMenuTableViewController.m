@@ -132,4 +132,17 @@
                                                         object:[NSNumber numberWithUnsignedInteger:cell.pointID]];
 }
 
+#pragma mark - Header View Delegate
+
+-(NSString *)segmentTitle
+{
+    return nil;
+}
+
+-(UIScrollView *)streachScrollView
+{
+    return self.tableView;
+}
+
+
 @end

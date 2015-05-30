@@ -7,7 +7,8 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ARSegmentPageController.h"
 
-@interface FMMenuTableViewController : UITableViewController
+@interface FMMenuTableViewController : UITableViewController<ARSegmentControllerDelegate>
 
 @end

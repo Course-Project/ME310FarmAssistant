@@ -1,25 +1,26 @@
 PODS:
-  - AFNetworking (2.5.3):
-    - AFNetworking/NSURLConnection (= 2.5.3)
-    - AFNetworking/NSURLSession (= 2.5.3)
-    - AFNetworking/Reachability (= 2.5.3)
-    - AFNetworking/Security (= 2.5.3)
-    - AFNetworking/Serialization (= 2.5.3)
-    - AFNetworking/UIKit (= 2.5.3)
-  - AFNetworking/NSURLConnection (2.5.3):
+  - AFNetworking (2.5.4):
+    - AFNetworking/NSURLConnection (= 2.5.4)
+    - AFNetworking/NSURLSession (= 2.5.4)
+    - AFNetworking/Reachability (= 2.5.4)
+    - AFNetworking/Security (= 2.5.4)
+    - AFNetworking/Serialization (= 2.5.4)
+    - AFNetworking/UIKit (= 2.5.4)
+  - AFNetworking/NSURLConnection (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.3):
+  - AFNetworking/NSURLSession (2.5.4):
     - AFNetworking/Reachability
     - AFNetworking/Security
     - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.3)
-  - AFNetworking/Security (2.5.3)
-  - AFNetworking/Serialization (2.5.3)
-  - AFNetworking/UIKit (2.5.3):
+  - AFNetworking/Reachability (2.5.4)
+  - AFNetworking/Security (2.5.4)
+  - AFNetworking/Serialization (2.5.4)
+  - AFNetworking/UIKit (2.5.4):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - ARSegmentPager (1.0)
   - ASBPlayerScrubbing (0.1)
   - ASMediaFocusManager (0.5):
     - ASBPlayerScrubbing (~> 0.1)
@@ -30,25 +31,42 @@ PODS:
     - MZFormSheetController/Core (= 3.0.3)
   - MZFormSheetController/Core (3.0.3):
     - MZAppearance
+  - NMRangeSlider (1.2.1)
   - REFrostedViewController (2.4.8)
   - SVProgressHUD (1.1.3)
+  - TTRangeSlider (1.0.2)
 
 DEPENDENCIES:
   - AFNetworking (~> 2.0)
+  - ARSegmentPager (from `https://github.com/AugustRush/ARSegmentPager.git`)
   - ASMediaFocusManager
   - HSDatePickerViewController (~> 1.0)
   - MZFormSheetController (~> 3.0)
+  - NMRangeSlider
   - REFrostedViewController (~> 2.4)
   - SVProgressHUD
+  - TTRangeSlider
+
+EXTERNAL SOURCES:
+  ARSegmentPager:
+    :git: https://github.com/AugustRush/ARSegmentPager.git
+
+CHECKOUT OPTIONS:
+  ARSegmentPager:
+    :commit: a645ca25da5a2aea246130ef6200e382ee71169f
+    :git: https://github.com/AugustRush/ARSegmentPager.git
 
 SPEC CHECKSUMS:
-  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
+  AFNetworking: 05edc0ac4c4c8cf57bcf4b84be5b0744b6d8e71e
+  ARSegmentPager: 3c30624c9d2abf240dedec214dc4506555958b43
   ASBPlayerScrubbing: 0fc5e76aad6fdbcf14380734fb7f2c127cd28b66
   ASMediaFocusManager: 5a071038ada1a79abf9d0c95b6b2b1c1e5cd3a87
   HSDatePickerViewController: b292f2a53b2644a68aa5e1343053d2f3554de64c
   MZAppearance: 6e9dc64e42074c0a19812a327f590746c3283bab
   MZFormSheetController: 36771856696eeef2eaec9b18c75791d3c95cb661
+  NMRangeSlider: 317ded652431eb90501c8421d9cddc3930d891e6
   REFrostedViewController: a893b4979ba1f200c547aef9ff4c3fd5a18f5923
   SVProgressHUD: 748080e4f36e603f6c02aec292664239df5279c1
+  TTRangeSlider: e41d992cc0047da48884ad507f968db5ab08441b
 
-COCOAPODS: 0.35.0
+COCOAPODS: 0.37.2
