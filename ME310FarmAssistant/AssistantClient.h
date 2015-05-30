@@ -8,6 +8,13 @@
 
 #import <Foundation/Foundation.h>
 
+typedef NS_ENUM(NSUInteger, FAHeatMapType) {
+    FAHeatMapTypeMoisture,
+    FAHeatMapTypeTranspiration,
+    FAHeatMapTypeMixed,
+    FAHeatMapTypeNone,
+};
+
 @class DataPoint;
 
 @interface AssistantClient : NSObject
@@ -52,5 +59,7 @@
  *  @param success  callback block
  */
 - (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(id historyDataPoints))success;
+
+- (void)getHeatMapWithType:(FAHeatMapType)type success:(void (^)(id heatMapData))success;
 
 @end

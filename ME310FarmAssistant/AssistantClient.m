@@ -44,6 +44,7 @@
              }
          } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
              NSLog(@"Error: %@", error);
+             [UIApplication sharedApplication].networkActivityIndicatorVisible = NO;
          }];
 }
 
@@ -64,6 +65,26 @@
 - (void)getHistoryFrom:(NSString *)fromTime To:(NSString *)toTime success:(void (^)(id historyDataPoints))success {
     NSDictionary *parameters = @{@"time_from": fromTime, @"time_to": toTime};
     [self GET:[baseURL stringByAppendingString:getHistory] parameters:parameters success:success];
+}
+
+- (void)getHeatMapWithType:(FAHeatMapType)type success:(void (^)(id heatMapData))success {
+    NSString *heatMapType;
+    switch (type) {
+        case FAHeatMapTypeMoisture:
+            heatMapType = @"moisture";
+            break;
+        case FAHeatMapTypeTranspiration:
+            heatMapType = @"transpiration";
+            break;
+        case FAHeatMapTypeMixed:
+            heatMapType = @"both";
+            break;
+        default:
+            heatMapType = @"none";
+            break;
+    }
+    NSDictionary *parameters = @{@"type": heatMapType};
+    [self GET:[baseURL stringByAppendingString:getHeatMap] parameters:parameters success:success];
 }
 
 @end
