@@ -120,20 +120,25 @@
 #pragma mark - Util
 
 - (void)openUserInteraction{
-    self.shadowView.hidden = YES;
-    self.soilMoistureSlider.userInteractionEnabled = YES;
-    self.transpirationSlider.userInteractionEnabled = YES;
-    self.dateEndTextField.userInteractionEnabled = YES;
-    self.dateStartTextField.userInteractionEnabled = YES;
-    [self.indicator stopAnimating];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.shadowView.hidden = YES;
+        self.soilMoistureSlider.userInteractionEnabled = YES;
+        self.transpirationSlider.userInteractionEnabled = YES;
+        self.dateEndTextField.userInteractionEnabled = YES;
+        self.dateStartTextField.userInteractionEnabled = YES;
+        [self.indicator stopAnimating];
+    });
 }
 
 - (void)closeUserInteraction{
-    self.shadowView.hidden = NO;
-    self.soilMoistureSlider.userInteractionEnabled = NO;
-    self.transpirationSlider.userInteractionEnabled = NO;
-    self.dateEndTextField.userInteractionEnabled = NO;
-    self.dateStartTextField.userInteractionEnabled = NO;
-    [self.indicator startAnimating];
+    dispatch_async(dispatch_get_main_queue(), ^{
+        self.shadowView.hidden = NO;
+        self.soilMoistureSlider.userInteractionEnabled = NO;
+        self.transpirationSlider.userInteractionEnabled = NO;
+        self.dateEndTextField.userInteractionEnabled = NO;
+        self.dateStartTextField.userInteractionEnabled = NO;
+        [self.indicator startAnimating];
+    });
+
 }
 @end
