@@ -13,7 +13,6 @@
 #import "DataPoint.h"
 #import "FAMapOverlay.h"
 #import "FAMapOverlayView.h"
-#import <HSDatePickerViewController/HSDatePickerViewController.h>
 #import <REFrostedViewController/REFrostedViewController.h>
 #import <MZFormSheetController/MZFormSheetController.h>
 
@@ -34,42 +33,45 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     TimeRangeNone,
 };
 
-@interface MapViewController () <CLLocationManagerDelegate, HSDatePickerViewControllerDelegate, UITextFieldDelegate>
+@interface MapViewController () <CLLocationManagerDelegate, UITextFieldDelegate>
 
-// Point location for annotations
+@property (nonatomic, assign) BOOL isHistory;
+@property (nonatomic, assign) double moistureThreshold;
+@property (nonatomic, assign) double transpirationThreshold;
+
+// Point Location for Annotations
 @property (nonatomic, strong) NSMutableArray *locations;
 
-// Moisture Weights & Transpiration Weights
-@property (nonatomic, strong) NSMutableArray *moistureWeights;
-@property (nonatomic, strong) NSMutableArray *transpirationWeights;
-
-// Moisture & Transpiration Heat Map Overlay
+// Moisture & Transpiration & Mixed Heat Map Overlay
 @property (nonatomic, strong) FAMapOverlay *moistureHeatMapOverlay;
 @property (nonatomic, strong) FAMapOverlay *transpirationHeatMapOverlay;
+@property (nonatomic, strong) FAMapOverlay *mixedHeatMapOverlay;
 
-// Moisture & Transpiration Heat Map Image
+// Moisture & Transpiration & Mixed Heat Map Image
 @property (nonatomic, strong) UIImage *moistureHeatMapImage;
 @property (nonatomic, strong) UIImage *transpirationHeatMapImage;
+@property (nonatomic, strong) UIImage *mixedHeatMapImage;
 
-// Moisture & Transpiration Heat Map Bit Image Data
+// Moisture & Transpiration & Mixed Heat Map Bit Image Data
 @property (nonatomic, strong) NSArray *moistureHeatMapBitArray;
 @property (nonatomic, strong) NSArray *transpirationHeatMapBitArray;
+@property (nonatomic, strong) NSArray *mixedHeatMapBitArray;
 
-// Moisture & Transpiration Heat Map Coordinate
+@property (nonatomic, assign) BOOL isConfiguringMoistureHeatMap;
+@property (nonatomic, assign) BOOL isConfiguringTranspirationHeatMap;
+@property (nonatomic, assign) BOOL isConfiguringMixedHeatMap;
+
+// Heat Map Coordinate
 @property (nonatomic) CLLocationCoordinate2D topRightCoordinate;
 @property (nonatomic) CLLocationCoordinate2D bottomLeftCoordinate;
 
-// Moisture & Transpiration Heat Map Extreme Value
+// Moisture & Transpiration & Mixed Heat Map Extreme Value
 @property (nonatomic, assign) double maxMoistureValue;
 @property (nonatomic, assign) double minMoistureValue;
 @property (nonatomic, assign) double maxTranspirationValue;
 @property (nonatomic, assign) double minTranspirationValue;
-
-// Moisture & Transpiration Heat Map Image Size Ratio
-@property (nonatomic, assign) float moistureHeatMapWidthRatio;
-@property (nonatomic, assign) float moistureHeatMapHeightRatio;
-@property (nonatomic, assign) float transpirationHeatMapWidthRatio;
-@property (nonatomic, assign) float transpirationHeatMapHeightRatio;
+@property (nonatomic, assign) double maxMixedValue;
+@property (nonatomic, assign) double minMixedValue;
 
 // Data Points
 @property (nonatomic, strong) NSMutableArray *dataPoints;
@@ -77,15 +79,15 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 // Annotations Array
 @property (nonatomic, strong) NSMutableArray *dataPointAnnotationsArray;
 
+// Location Manager
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
 // Wigets - UI
 @property (nonatomic, weak) IBOutlet UISwitch *moistureSwitch;
 @property (nonatomic, weak) IBOutlet UISwitch *transpirationSwitch;
-
-@property (nonatomic, weak) IBOutlet UITextField *startTimeTextField;
-@property (nonatomic, weak) IBOutlet UITextField *endTimeTextField;
-@property (nonatomic, weak) IBOutlet UIButton *searchHistoryButton;
+@property (nonatomic, weak) IBOutlet UIView *switchView;
+@property (nonatomic, strong) UIView *switchOverlayView;
+@property (nonatomic, strong) UIActivityIndicatorView *heatMapSwitchIndicatorView;
 
 @property (nonatomic, assign) TimeRange currentTimeRange;
 
@@ -97,7 +99,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self.searchHistoryButton setEnabled:NO];
+    self.isHistory = NO;
+    self.moistureThreshold = 0.2f;
+    self.transpirationThreshold = 0.2f;
     
     // Configure Location Manager
     [self configureLocationManager];
@@ -105,20 +109,37 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     // Configure Map
     [self configureMap];
     
+    // Configure Switch Overlay View
+    [self configureSwitchOverlayView];
+    
     // Configure Data
     WEAKSELF_T weakSelf = self;
     [self configureDataPointWithCompletion:^{
-        // Configure Heat Map
-        [weakSelf configureHeatMap];
-        
         // Add Annotations
         [weakSelf configureAnnotations];
     }];
     
-    // Add Observer
+    // Configure Heat Map
+    [self configureMoistureHeatMap];
+    [self configureTranspirationHeatMap];
+    [self configureMixedHeatMap];
+    
+    // Add Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveShowCalloutNotification:)
                                                  name:@"ShowAnnotationCalloutView"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveMoistureSliderNotification:)
+                                                 name:@"SoilMoisureSliderValue"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveTranspirationSliderNotification:)
+                                                 name:@"TranspirationSliderValue"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveDatePickerNotification:)
+                                                 name:@"HistoryDateSelected"
                                                object:nil];
 }
 
@@ -132,6 +153,21 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     self.mapView.showsUserLocation = YES;
     
     [self.mapView setCenterCoordinate:self.mapView.userLocation.coordinate animated:YES];
+}
+
+- (void)configureSwitchOverlayView {
+    self.switchOverlayView = [[UIView alloc] initWithFrame:self.switchView.bounds];
+    
+    self.heatMapSwitchIndicatorView = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake(0, 0, 15, 15)];
+    self.heatMapSwitchIndicatorView.center = self.switchOverlayView.center;
+    
+    [self.switchOverlayView addSubview:self.heatMapSwitchIndicatorView];
+    
+    [self.switchView addSubview:self.switchOverlayView];
+    
+    [self.heatMapSwitchIndicatorView startAnimating];
+    
+    [self.switchView setUserInteractionEnabled:NO];
 }
 
 - (void)configureLocationManager {
@@ -157,70 +193,175 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     }
 }
 
-- (void)configureHeatMap {
+- (void)configureMoistureHeatMap {
+    NSLog(@"Configuring moisture heat map...");
+    [self.moistureSwitch setEnabled:NO];
     WEAKSELF_T weakSelf = self;
+    [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMoisture success:^(NSDictionary *res) {
+        // Get Moisture Bit Info
+        weakSelf.moistureHeatMapBitArray = res[@"all-image"];
+        
+        // Get Top-right Point
+        weakSelf.topRightCoordinate = CLLocationCoordinate2DMake([res[@"max-x"] doubleValue], [res[@"max-y"] doubleValue]);
+        
+        // Get Bottom-left Point
+        weakSelf.bottomLeftCoordinate = CLLocationCoordinate2DMake([res[@"min-x"] doubleValue], [res[@"min-y"] doubleValue]);
+        
+        // Get Extreme Value
+        weakSelf.maxMoistureValue = [res[@"max-z"] doubleValue];
+        weakSelf.minMoistureValue = [res[@"min-z"] doubleValue];
+        
+        [weakSelf generateMoistureHeatMapWithCompletion:^ {
+            [weakSelf.moistureSwitch setEnabled:YES];
+            NSLog(@"Moisture heat map finished!");
+            
+            if (!(weakSelf.isConfiguringMoistureHeatMap || weakSelf.isConfiguringTranspirationHeatMap || weakSelf.isConfiguringMixedHeatMap)) {
+                [weakSelf removeSwitchOverlayView];
+            }
+        }];
+    }];
     
-    // Crete location array & weight array (moisture & transipiration)
-    weakSelf.locations = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
-    weakSelf.moistureWeights = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
-    weakSelf.transpirationWeights = [NSMutableArray arrayWithCapacity:weakSelf.dataPoints.count];
-    
-    for (DataPoint *point in weakSelf.dataPoints) {
-         CLLocation *location = [[CLLocation alloc] initWithLatitude:point.coordinate.latitude longitude:point.coordinate.longitude];
-        [weakSelf.locations addObject:location];
-        [weakSelf.moistureWeights addObject:point.moisture];
-        [weakSelf.transpirationWeights addObject:point.transpiration];
-    }
-    
-    weakSelf.moistureHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
-    weakSelf.transpirationHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
-    
-    [weakSelf generateMoistureHeatMap];
-    [weakSelf generateTranspirationHeatMap];
+//    CLLocationCoordinate2D heatMapCenter = CLLocationCoordinate2DMake((_topRightCoordinate.latitude + _bottomLeftCoordinate.latitude) / 2, (_topRightCoordinate.longitude + _bottomLeftCoordinate.longitude) / 2);
+//    weakSelf.moistureHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView centerCoordinate:heatMapCenter];
+//    weakSelf.transpirationHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView centerCoordinate:heatMapCenter];
 }
 
-- (void)generateMoistureHeatMap {
+- (void)configureTranspirationHeatMap {
+    NSLog(@"Configuring transpiration heat map...");
+    [self.transpirationSwitch setEnabled:NO];
+    WEAKSELF_T weakSelf = self;
+    [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeTranspiration success:^(NSDictionary *res) {
+        
+        // Get Transpiration Bit Info
+        weakSelf.transpirationHeatMapBitArray = res[@"all-image"];
+        
+        // Get Top-right Point
+        weakSelf.topRightCoordinate = CLLocationCoordinate2DMake([res[@"max-x"] doubleValue], [res[@"max-y"] doubleValue]);
+        
+        // Get Bottom-left Point
+        weakSelf.bottomLeftCoordinate = CLLocationCoordinate2DMake([res[@"min-x"] doubleValue], [res[@"min-y"] doubleValue]);
+        
+        // Get Extreme Value
+        weakSelf.maxTranspirationValue = [res[@"max-z"] doubleValue];
+        weakSelf.minTranspirationValue = [res[@"min-z"] doubleValue];
+        
+        [weakSelf generateTranspirationHeatMapWithCompletion:^ {
+            [weakSelf.transpirationSwitch setEnabled:YES];
+            NSLog(@"Transpiration heat map finished!");
+            
+            if (!(weakSelf.isConfiguringMoistureHeatMap || weakSelf.isConfiguringTranspirationHeatMap || weakSelf.isConfiguringMixedHeatMap)) {
+                [weakSelf removeSwitchOverlayView];
+            }
+        }];
+    }];
+}
+
+- (void)configureMixedHeatMap {
+    NSLog(@"Configuring mixed heat map...");
+    WEAKSELF_T weakSelf = self;
+    [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMixed success:^(NSDictionary *res) {
+        
+        // Get Transpiration Bit Info
+        weakSelf.mixedHeatMapBitArray = res[@"all-image"];
+        
+        // Get Top-right Point
+        weakSelf.topRightCoordinate = CLLocationCoordinate2DMake([res[@"max-x"] doubleValue], [res[@"max-y"] doubleValue]);
+        
+        // Get Bottom-left Point
+        weakSelf.bottomLeftCoordinate = CLLocationCoordinate2DMake([res[@"min-x"] doubleValue], [res[@"min-y"] doubleValue]);
+        
+        // Get Extreme Value
+        weakSelf.maxMixedValue = [res[@"max-z"] doubleValue];
+        weakSelf.minMixedValue = [res[@"min-z"] doubleValue];
+        
+        [weakSelf generateMixedHeatMapWithCompletion:^ {
+            NSLog(@"Mixed heat map finished!");
+            if (!(weakSelf.isConfiguringMoistureHeatMap || weakSelf.isConfiguringTranspirationHeatMap || weakSelf.isConfiguringMixedHeatMap)) {
+                [weakSelf removeSwitchOverlayView];
+            }
+        }];
+    }];
+}
+
+- (void)generateMoistureHeatMapWithCompletion:(dispatch_block_t)success {
     NSLog(@"Generating moisture heat map...");
-//    float boost = 1.0f;
-//    UIImage *image = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.moistureWeights];
-//    CGSize originSize = image.size;
-//    UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
-//    self.moistureHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
-//    self.moistureHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
-//    self.moistureHeatMapImage = newImage;
+    self.isConfiguringMoistureHeatMap = YES;
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WillGenerateMoistureHeatMap" object:nil];
+    
     NSArray *colors = @[
-                        (__bridge id) [UIColor yellowColor].CGColor,
-                        (__bridge id) [UIColor redColor].CGColor,
-                        (__bridge id) [UIColor purpleColor].CGColor
+                        (__bridge id) UIColorFromRGB(0xFE1016).CGColor,
+                        (__bridge id) UIColorFromRGB(0xFF7F10).CGColor,
+                        (__bridge id) UIColorFromRGB(0xFFB610).CGColor,
+                        (__bridge id) UIColorFromRGB(0xFFE010).CGColor,
+                        (__bridge id) UIColorFromRGB(0xE8FC10).CGColor,
+                        (__bridge id) UIColorFromRGB(0x6BED0F).CGColor,
+                        (__bridge id) UIColorFromRGB(0x0DCB96).CGColor,
+                        (__bridge id) UIColorFromRGB(0x1D69CB).CGColor
                         ];
-    CGFloat locations[] = {0.0f, 0.2f, 0.8f};
     
-    UIImage *image = [self generateHeatMapImageWithBitInfoArray:_moistureHeatMapBitArray
-                                             withGradientColors:colors locations:locations
-                                                   withMaxValue:_maxMoistureValue minValue:_minMoistureValue];
-    self.moistureHeatMapImage = image;
-    
+    WEAKSELF_T weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^ {
+        double threshold = weakSelf.moistureThreshold;
+        double step = (1 - threshold) / 7.0f;
+        
+        CGFloat locations[] = {0.0f, threshold, threshold + step, threshold + step * 2, threshold + step * 3, threshold + step * 4, threshold + step * 5, threshold + step * 6};
+        UIImage *image = [weakSelf generateHeatMapImageWithBitInfoArray:weakSelf.moistureHeatMapBitArray
+                                                     withGradientColors:colors locations:locations
+                                                           withMaxValue:weakSelf.maxMoistureValue minValue:weakSelf.minMoistureValue];
+        weakSelf.moistureHeatMapImage = image;
+        weakSelf.isConfiguringMoistureHeatMap = NO;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DidGenerateMoistureHeatMap" object:nil];
+        
+        dispatch_async(dispatch_get_main_queue(), success);
+    });
 }
 
-- (void)generateTranspirationHeatMap {
+- (void)generateTranspirationHeatMapWithCompletion:(dispatch_block_t)success {
     NSLog(@"Generating transpiration heat map...");
-//    float boost = 1.0f;
-//    UIImage *image = [LFHeatMap heatMapForMapView:self.mapView boost:boost locations:self.locations weights:self.transpirationWeights];
-//    CGSize originSize = image.size;
-//    UIImage *newImage = [self imageByCroppingImage:image toSize:HEAT_MAP_SIZE];
-//    self.transpirationHeatMapWidthRatio = (float)newImage.size.width/originSize.width;
-//    self.transpirationHeatMapHeightRatio = (float)newImage.size.height/originSize.height;
-//    self.transpirationHeatMapImage = newImage;
-    NSArray *colors = @[
-                        (__bridge id) [UIColor redColor].CGColor,
-                        (__bridge id) [UIColor blueColor].CGColor
-                        ];
-    CGFloat locations[] = {0.0f, 0.3f};
+    self.isConfiguringTranspirationHeatMap = YES;
     
-    UIImage *image = [self generateHeatMapImageWithBitInfoArray:_transpirationHeatMapBitArray
-                                             withGradientColors:colors locations:locations
-                                                   withMaxValue:_maxTranspirationValue minValue:_minTranspirationValue];
-    self.transpirationHeatMapImage = image;
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"WillGenerateTranspirationHeatMap" object:nil];
+    
+    NSArray *colors = @[
+                        (__bridge id) UIColorFromRGB(0xFFB45F).CGColor,
+                        (__bridge id) UIColorFromRGB(0x9BD27B).CGColor
+                        ];
+    
+    WEAKSELF_T weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^ {
+        CGFloat locations[] = {0.0f, weakSelf.transpirationThreshold};
+        UIImage *image = [weakSelf generateHeatMapImageWithBitInfoArray:weakSelf.transpirationHeatMapBitArray
+                                                     withGradientColors:colors locations:locations
+                                                           withMaxValue:weakSelf.maxTranspirationValue minValue:weakSelf.minTranspirationValue];
+        weakSelf.transpirationHeatMapImage = image;
+        self.isConfiguringTranspirationHeatMap = NO;
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"DidGenerateTranspirationHeatMap" object:nil];
+        
+        dispatch_async(dispatch_get_main_queue(), success);
+    });
+}
+
+- (void)generateMixedHeatMapWithCompletion:(dispatch_block_t)success {
+    NSLog(@"Generating mixed heat map...");
+    self.isConfiguringMixedHeatMap = YES;
+    NSArray *colors = @[
+                        (__bridge id) UIColorFromRGB(0xFFB45F).CGColor,
+                        (__bridge id) UIColorFromRGB(0x9BD27B).CGColor
+                        ];
+    
+    WEAKSELF_T weakSelf = self;
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^ {
+        CGFloat locations[] = {0.0f, 0.3f};
+        UIImage *image = [weakSelf generateHeatMapImageWithBitInfoArray:weakSelf.mixedHeatMapBitArray
+                                                     withGradientColors:colors locations:locations
+                                                           withMaxValue:weakSelf.maxMixedValue minValue:weakSelf.minMixedValue];
+        weakSelf.mixedHeatMapImage = image;
+        self.isConfiguringMixedHeatMap = NO;
+        dispatch_async(dispatch_get_main_queue(), success);
+    });
 }
 
 - (void)configureAnnotations {
@@ -232,7 +373,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     }
     [self.mapView addAnnotations:self.dataPointAnnotationsArray];
     
-    [self zoomMapViewToFitAnnotations:self.mapView animated:YES];
+    [self.mapView setRegion:[self regionForAnnotations:_dataPointAnnotationsArray]];
+    self.moistureHeatMapOverlay = [[FAMapOverlay alloc] initWithView:_mapView];
+    self.transpirationHeatMapOverlay = [[FAMapOverlay alloc] initWithView:_mapView];
+    self.mixedHeatMapOverlay = [[FAMapOverlay alloc] initWithView:_mapView];
 }
 
 - (void)removeAnnotations {
@@ -244,11 +388,14 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Remove Overlays...");
     [self.mapView removeOverlay:self.moistureHeatMapOverlay];
     [self.mapView removeOverlay:self.transpirationHeatMapOverlay];
+    [self.mapView removeOverlay:self.mixedHeatMapOverlay];
 }
 
-- (void)configureTextFields {
-    self.startTimeTextField.enabled = YES;
-    self.endTimeTextField.enabled = NO;
+- (void)removeSwitchOverlayView {
+    NSLog(@"Remove Switch Overlay...");
+    [self.heatMapSwitchIndicatorView stopAnimating];
+    [self.switchOverlayView removeFromSuperview];
+    [self.switchView setUserInteractionEnabled:YES];
 }
 
 - (void)configureDataPointWithCompletion:(void (^)(void))completed {
@@ -263,29 +410,23 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
             [weakSelf.dataPoints addObject:point];
         }
         
-        // Get Moisture Bit Info
-        weakSelf.moistureHeatMapBitArray = res[@"all-moist"];
-        
-        // Get Transpiration Bit Info
-        weakSelf.transpirationHeatMapBitArray = res[@"all-trans"];
-        
-        // Get Top-right Point
-        weakSelf.topRightCoordinate = CLLocationCoordinate2DMake([res[@"max-x"] doubleValue], [res[@"max-y"] doubleValue]);
-        
-        // Get Bottom-left Point
-        weakSelf.bottomLeftCoordinate = CLLocationCoordinate2DMake([res[@"min-x"] doubleValue], [res[@"min-y"] doubleValue]);
-        
-        // Get Extreme Value
-        weakSelf.maxMoistureValue = [res[@"max-m"] doubleValue];
-        weakSelf.minMoistureValue = [res[@"min-m"] doubleValue];
-        weakSelf.maxTranspirationValue = [res[@"max-t"] doubleValue];
-        weakSelf.minTranspirationValue = [res[@"min-t"] doubleValue];
-        
         if (completed) {
             completed();
         }
         [SVProgressHUD showSuccessWithStatus:@"Success!"];
     }];
+}
+
+- (void)updateOverlays {
+    [self.mapView removeOverlays:self.mapView.overlays];
+    
+    if ([_moistureSwitch isOn] && [_transpirationSwitch isOn]) {
+        [self.mapView addOverlay:self.mixedHeatMapOverlay];
+    } else if (![_moistureSwitch isOn] && [_transpirationSwitch isOn]) {
+        [self.mapView addOverlay:self.transpirationHeatMapOverlay];
+    } else if ([_moistureSwitch isOn] && ![_transpirationSwitch isOn]) {
+        [self.mapView addOverlay:self.moistureHeatMapOverlay];
+    }
 }
 
 // MARK: Copy from website
@@ -328,16 +469,28 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     [mapView setRegion:region animated:animated];
 }
 
-#pragma mark - MKMapViewDelegate
-//- (void)mapView:(MKMapView *)mapView regionWillChangeAnimated:(BOOL)animated {
-//    NSLog(@"Region will change");
-//}
-//
-//- (void)mapView:(MKMapView *)mapView regionDidChangeAnimated:(BOOL)animated {
-//    NSLog(@"Region did change");
-//}
+// MARK: Copy from website
+- (MKCoordinateRegion)regionForAnnotations:(NSArray*) annotations {
+    double minLat=90.0f, maxLat=-90.0f;
+    double minLon=180.0f, maxLon=-180.0f;
+    
+    for (id<MKAnnotation> mka in annotations) {
+        if ( mka.coordinate.latitude  < minLat ) minLat = mka.coordinate.latitude;
+        if ( mka.coordinate.latitude  > maxLat ) maxLat = mka.coordinate.latitude;
+        if ( mka.coordinate.longitude < minLon ) minLon = mka.coordinate.longitude;
+        if ( mka.coordinate.longitude > maxLon ) maxLon = mka.coordinate.longitude;
+    }
+    
+    CLLocationCoordinate2D center = CLLocationCoordinate2DMake((minLat+maxLat)/2.0, (minLon+maxLon)/2.0);
+    MKCoordinateSpan span = MKCoordinateSpanMake(maxLat-minLat, maxLon-minLon);
+    MKCoordinateRegion region = MKCoordinateRegionMake (center, span);
+    
+    return region;
+}
 
+#pragma mark - MKMapViewDelegate
 - (MKAnnotationView *)mapView:(MKMapView *)mapView viewForAnnotation:(id<MKAnnotation>)annotation {
+    NSLog(@"Annotation View");
     static NSString *reuse = @"PIN_ANNOTATION";
     MKPinAnnotationView *annotationView = (MKPinAnnotationView *)[self.mapView dequeueReusableAnnotationViewWithIdentifier:reuse];
     if (!annotationView) {
@@ -364,7 +517,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-    MKCoordinateSpan span = MKCoordinateSpanMake(MINIMUM_ZOOM_ARC, MINIMUM_ZOOM_ARC);
+    MKCoordinateSpan currentSpan = mapView.region.span;
+    MKCoordinateSpan span = MKCoordinateSpanMake(MAX(currentSpan.latitudeDelta, MINIMUM_ZOOM_ARC), MAX(currentSpan.longitudeDelta, MINIMUM_ZOOM_ARC));
     [mapView setRegion:MKCoordinateRegionMake([view.annotation coordinate], span) animated:YES];
 }
 
@@ -398,19 +552,21 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 // Overlay Delegate
-- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay{
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id<MKOverlay>)overlay {
+    NSLog(@"Overlay View");
     FAMapOverlay *mapOverlay = (FAMapOverlay *)overlay;
     FAMapOverlayView *mapOverlayView = [[FAMapOverlayView alloc] initWithOverlay:mapOverlay];
     
     if ([overlay isEqual:self.moistureHeatMapOverlay]) {
         mapOverlayView.heatMapImage = self.moistureHeatMapImage;
-        mapOverlayView.widthRatio = self.moistureHeatMapWidthRatio;
-        mapOverlayView.heightRatio = self.moistureHeatMapHeightRatio;
     } else if ([overlay isEqual:self.transpirationHeatMapOverlay]) {
         mapOverlayView.heatMapImage = self.transpirationHeatMapImage;
-        mapOverlayView.widthRatio = self.transpirationHeatMapWidthRatio;
-        mapOverlayView.heightRatio = self.transpirationHeatMapHeightRatio;
+    } else if ([overlay isEqual:self.mixedHeatMapOverlay]) {
+        mapOverlayView.heatMapImage = self.mixedHeatMapImage;
     }
+    
+    mapOverlayView.topRightCoordinate = _topRightCoordinate;
+    mapOverlayView.bottomLeftCoordinate = _bottomLeftCoordinate;
     
     return mapOverlayView;
 }
@@ -420,137 +576,15 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Did update location");
 }
 
-#pragma mark - HSDatePickerViewControllerDelegate
-- (void)hsDatePickerPickedDate:(NSDate *)date {
-    NSLog(@"Selected date: %@", date);
-    NSDateFormatter *dateFormatter = [NSDateFormatter new];
-    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
-    
-    // Display date
-    switch (self.currentTimeRange) {
-        case TimeRangeStart:
-            self.startTimeTextField.text = [dateFormatter stringFromDate:date];
-            
-            self.endTimeTextField.enabled = YES;
-            break;
-        case TimeRangeEnd:
-            self.endTimeTextField.text = [dateFormatter stringFromDate:date];
-            
-            [self.searchHistoryButton setEnabled:YES];
-            break;
-        case TimeRangeNone:
-            
-            break;
-        default:
-            break;
-    }
-}
-
-- (void)hsDatePickerWillDismissWithQuitMethod:(HSDatePickerQuitMethod)method {
-    NSLog(@"Date picker will dismiss");
-}
-
-- (void)hsDatePickerDidDismissWithQuitMethod:(HSDatePickerQuitMethod)method {
-    NSLog(@"Date picker did dismiss");
-}
-
-#pragma mark - UITextFieldDelegate
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    HSDatePickerViewController *datePickerViewController = [HSDatePickerViewController new];
-    datePickerViewController.delegate = self;
-    
-    if ([textField isEqual:self.startTimeTextField]) {
-        self.currentTimeRange = TimeRangeStart;
-    } else if ([textField isEqual:self.endTimeTextField]) {
-        NSDateFormatter *dateFormatter = [NSDateFormatter new];
-        dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm:ss";
-        datePickerViewController.minDate = [dateFormatter dateFromString:self.startTimeTextField.text];
-        self.currentTimeRange = TimeRangeEnd;
-    } else {
-        self.currentTimeRange = TimeRangeNone;
-    }
-    
-    datePickerViewController.maxDate = [NSDate date];
-    [self presentViewController:datePickerViewController animated:YES completion:^{
-        NSLog(@"Presented");
-    }];
-    
-    return NO;
-}
-
 #pragma mark - Actions
-// TODO: Update Heat Map Overlay
-- (IBAction)didChangeTranspirationSwitch:(UISwitch *)sender {
-    NSLog(@"Transpiration Switch changed");
-    if ([sender isOn]) {
-        NSLog(@"ON");
-//        self.moistureHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
-//        [self generateMoistureHeatMap];
-//        [self.mapView addOverlay:self.moistureHeatMapOverlay];
-    } else {
-        NSLog(@"OFF");
-//        [self.mapView removeOverlay:self.moistureHeatMapOverlay];
-    }
-}
-
 - (IBAction)didChangeMoistureSwitch:(UISwitch *)sender {
     NSLog(@"Moisture Switch changed");
-    if ([sender isOn]) {
-        NSLog(@"ON");
-//        self.transpirationHeatMapOverlay = [[FAMapOverlay alloc] initWithView:self.mapView];
-//        [self generateTranspirationHeatMap];
-//        [self.mapView addOverlay:self.transpirationHeatMapOverlay];
-        UIImageView *imageView = [[UIImageView alloc] initWithImage:_moistureHeatMapImage];
-        CGRect rect = imageView.frame;
-        rect.size.width += 30;
-        rect.size.height += 40;
-        UIView *view = [[UIView alloc] initWithFrame:rect];
-        view.backgroundColor = [UIColor blackColor];
-        [view addSubview:imageView];
-        
-        [self.view insertSubview:view aboveSubview:_mapView];
-    } else {
-        NSLog(@"OFF");
-//        [self.mapView removeOverlay:self.transpirationHeatMapOverlay];
-    }
+    [self updateOverlays];
 }
 
-- (IBAction)didClickSearchHistoryButton:(UIButton *)sender {
-    // Remove old data points
-    [self.dataPoints removeAllObjects];
-    
-    // Get start & end date
-    NSString *startDate = [NSString stringWithFormat:@"%@:00", self.startTimeTextField.text];
-    NSString *endDate = [NSString stringWithFormat:@"%@:59", self.endTimeTextField.text];
-    
-    AssistantClient *client = [AssistantClient sharedClient];
-    WEAKSELF_T weakSelf = self;
-    
-    [SVProgressHUD showWithStatus:@"Loading..."];
-    [client getHistoryFrom:startDate To:endDate success:^(NSArray *points) {
-        // Remove Old Data Points
-        [weakSelf.dataPoints removeAllObjects];
-        
-        for (id obj in points) {
-            DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
-            [weakSelf.dataPoints addObject:point];
-        }
-        
-        // Remove Annotations
-        [weakSelf removeAnnotations];
-        
-        // TODO: Disable Heat Map
-        [weakSelf.moistureSwitch setOn:NO animated:YES];
-        [weakSelf.transpirationSwitch setOn:NO animated:YES];
-        
-        // Configure Heat Map
-        [weakSelf configureHeatMap];
-        
-        // Add Annotations
-        [weakSelf configureAnnotations];
-        
-        [SVProgressHUD showSuccessWithStatus:@"Success!"];
-    }];
+- (IBAction)didChangeTranspirationSwitch:(UISwitch *)sender {
+    NSLog(@"Transpiration Switch changed");
+    [self updateOverlays];
 }
 
 - (IBAction)didClickMenuButton:(id)sender {
@@ -600,15 +634,17 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (UIImage *)generateHeatMapImageWithBitInfoArray:(NSArray *)bitInfo
                                withGradientColors:(NSArray *)colors locations:(const CGFloat[])locations
                                      withMaxValue:(double)max minValue:(double)min {
-    int width = 512, height = [bitInfo count];
+    int width = [[bitInfo firstObject] count], height = [bitInfo count];
     unsigned char *rgba = (unsigned char *)calloc(width * height * 4, sizeof(unsigned char));
+    
+    clock_t start = clock();
     
     // Convert
     NSArray *colorRGBA;
     int i = 0;
     UInt32 indexOrigin;
-    for (int y = height - 1; y >= 0; y--) {
-        for (int x = 0; x < width; x++, i++) {
+    for (int x = width - 1; x >= 0; x--) {
+        for (int y = 0; y < height; y++, i++) {
             NSNumber *number = [[bitInfo objectAtIndex:y] objectAtIndex:x];
             if ([number isKindOfClass:[NSNull class]]) continue;
             double val = [number doubleValue];
@@ -624,6 +660,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
             rgba[indexOrigin + 3] = [[colorRGBA objectAtIndex:3] unsignedCharValue]; // a
         }
     }
+    
+    clock_t endLoop = clock();
+    
+    NSLog(@"Loop Time: %lu", endLoop - start);
     
     // Create image from rendered raw data
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
@@ -655,19 +695,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     CGFloat tmpImagewidth = 1000.0f; // Make this bigger or smaller if you need more or less resolution (number of different colors).
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-    
-    // create a gradient
-//    CGFloat locations[] = { 0.0,
-//        0.35,
-//        0.55,
-//        0.8,
-//        1.0 };
-//    NSArray *colors = @[(__bridge id) [UIColor redColor].CGColor,
-//                        (__bridge id) [UIColor greenColor].CGColor,
-//                        (__bridge id) [UIColor blueColor].CGColor,
-//                        (__bridge id) [UIColor yellowColor].CGColor,
-//                        (__bridge id) [UIColor redColor].CGColor,
-//                        ];
+
     CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef) colors, locations);
     CGPoint startPoint = CGPointMake(0, 0);
     CGPoint endPoint = CGPointMake(tmpImagewidth, 0);
@@ -700,10 +728,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     // For instance, the color of the point 27% in our gradient is:
     CGFloat x = tmpImagewidth * position;
     int pixelIndex = (int)x * 4; // 4 bytes per color
-//    UIColor *color = [UIColor colorWithRed:data[pixelIndex + 0]/255.0f
-//                                     green:data[pixelIndex + 1]/255.0f
-//                                      blue:data[pixelIndex + 2]/255.0f
-//                                     alpha:data[pixelIndex + 3]/255.0f];
+
     NSArray *colorRGBA = @[
                            [NSNumber numberWithUnsignedChar:data[pixelIndex + 0]],
                            [NSNumber numberWithUnsignedChar:data[pixelIndex + 1]],
@@ -730,6 +755,71 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
             break;
         }
     }
+}
+
+- (void)didReceiveMoistureSliderNotification:(NSNotification *)notification {
+    NSLog(@"Moisture Threshold Changed!");
+    NSLog(@"Moisture Threshold: %@", notification.object);
+    
+    self.moistureThreshold = [notification.object doubleValue] / 100.0f;
+    
+    if ([self isConfiguringMoistureHeatMap]) return;
+    
+    if (![self.switchView.subviews containsObject:self.switchOverlayView]) {
+        [self.switchView addSubview:self.switchOverlayView];
+        [self.heatMapSwitchIndicatorView startAnimating];
+        [self.switchView setUserInteractionEnabled:NO];
+    }
+    
+    WEAKSELF_T weakSelf = self;
+    [self generateMoistureHeatMapWithCompletion:^ {
+        NSLog(@"Moisture heat map updated!");
+        
+        [weakSelf updateOverlays];
+        
+        if (!(weakSelf.isConfiguringMoistureHeatMap || weakSelf.isConfiguringTranspirationHeatMap || weakSelf.isConfiguringMixedHeatMap)) {
+            [weakSelf removeSwitchOverlayView];
+        }
+    }];
+}
+
+- (void)didReceiveTranspirationSliderNotification:(NSNotification *)notification {
+    NSLog(@"Transpiration Threshold Changed!");
+    NSLog(@"Transpiration Threshold: %@", notification.object);
+    
+    self.transpirationThreshold = [notification.object doubleValue] / 100.0f;
+    
+    if ([self isConfiguringTranspirationHeatMap]) return;
+    
+    if (![self.switchView.subviews containsObject:self.switchOverlayView]) {
+        [self.switchView addSubview:self.switchOverlayView];
+        [self.heatMapSwitchIndicatorView startAnimating];
+        [self.switchView setUserInteractionEnabled:NO];
+    }
+    
+    WEAKSELF_T weakSelf = self;
+    [self generateTranspirationHeatMapWithCompletion:^ {
+        NSLog(@"Moisture heat map updated!");
+        
+        [weakSelf updateOverlays];
+        
+        if (!(weakSelf.isConfiguringMoistureHeatMap || weakSelf.isConfiguringTranspirationHeatMap || weakSelf.isConfiguringMixedHeatMap)) {
+            [weakSelf removeSwitchOverlayView];
+        }
+    }];
+}
+
+- (void)didReceiveDatePickerNotification:(NSNotification *)notification {
+    NSLog(@"Date Range Changed!");
+    NSLog(@"Date Range: %@", notification.object);
+    
+    self.isHistory = YES;
+    
+//    if (![self.switchView.subviews containsObject:self.switchOverlayView]) {
+//        [self.switchView addSubview:self.switchOverlayView];
+//        [self.heatMapSwitchIndicatorView startAnimating];
+//        [self.switchView setUserInteractionEnabled:NO];
+//    }
 }
 
 @end

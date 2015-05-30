@@ -16,6 +16,7 @@ static NSString *getHistory = @"/farm/gethistory";
 static NSString *getDetail = @"/farm/getdetail";
 static NSString *getData = @"/farm/getdata";
 static NSString *getImportantData = @"/farm/getimpodata";
+static NSString *getHeatMap = @"/farm/getheatmap";
 
 static NSString *photoBaseURL = @"http://film.h1994st.com:8899/media/";
 

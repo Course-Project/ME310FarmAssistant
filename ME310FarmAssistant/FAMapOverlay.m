@@ -10,7 +10,16 @@
 
 @implementation FAMapOverlay
 
-- (id)initWithView:(MKMapView *)mapView{
+- (instancetype)initWithView:(MKMapView *)mapView centerCoordinate:(CLLocationCoordinate2D)coordinate {
+    if (self = [super init]) {
+        _mapView = mapView;
+        _mapRect = mapView.visibleMapRect;
+        _coordinate = coordinate;
+    }
+    return self;
+}
+
+- (id)initWithView:(MKMapView *)mapView {
     if (self = [super init]) {
         _mapView = mapView;
         _coordinate = mapView.centerCoordinate;
@@ -23,10 +32,8 @@
     return _coordinate;
 }
 
-- (MKMapRect)boundingMapRect
-{
+- (MKMapRect)boundingMapRect {
     return _mapRect;
 }
-
 
 @end
