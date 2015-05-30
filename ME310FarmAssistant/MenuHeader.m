@@ -35,6 +35,17 @@
     self.dateEndTextField.delegate = self;
     
     [self configureDatePicker];
+    [self configureNotification];
+}
+
+#pragma mark - Notification
+
+- (void)configureNotification{
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(moistureHeatMapWillGenerate:) name:@"WillGenerateMoistureHeatMap" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(moistureHeatMapDidGenerate:) name:@"DidGenerateMoistureHeatMap" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(transpirationHeatMapWillGenerate:) name:@"WillGenerateTranspirationHeatMap" object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(transpirationHeatMapDidGenerate:) name:@"DidGenerateTranspirationHeatMap" object:nil];
+    
 }
 
 #pragma mark - UI Configure
@@ -89,5 +100,38 @@
 }
 - (IBAction)transpirationSliderTouchUpInside:(UISlider *)slider {
     [[NSNotificationCenter defaultCenter]postNotificationName:@"TranspirationSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
+}
+
+- (void)moistureHeatMapWillGenerate:(id)sender{
+    [self closeUserInteraction];
+}
+- (void)moistureHeatMapDidGenerate:(id)sender{
+    [self openUserInteraction];
+}
+- (void)transpirationHeatMapWillGenerate:(id)sender{
+    [self closeUserInteraction];
+}
+- (void)transpirationHeatMapDidGenerate:(id)sender{
+    [self openUserInteraction];
+}
+
+#pragma mark - Util
+
+- (void)openUserInteraction{
+    self.shadowView.hidden = YES;
+    self.soilMoistureSlider.userInteractionEnabled = YES;
+    self.transpirationSlider.userInteractionEnabled = YES;
+    self.dateEndTextField.userInteractionEnabled = YES;
+    self.dateStartTextField.userInteractionEnabled = YES;
+    [self.indicator stopAnimating];
+}
+
+- (void)closeUserInteraction{
+    self.shadowView.hidden = NO;
+    self.soilMoistureSlider.userInteractionEnabled = NO;
+    self.transpirationSlider.userInteractionEnabled = NO;
+    self.dateEndTextField.userInteractionEnabled = NO;
+    self.dateStartTextField.userInteractionEnabled = NO;
+    [self.indicator startAnimating];
 }
 @end
