@@ -97,6 +97,7 @@
                     <connections>
                         <outlet property="mapView" destination="yxQ-e5-BIh" id="yGQ-oO-ia0"/>
                         <outlet property="moistureSwitch" destination="YPS-ck-NC5" id="LE3-ad-B6c"/>
+                        <outlet property="switchView" destination="JoE-Iq-lZD" id="PXu-gl-BEZ"/>
                         <outlet property="transpirationSwitch" destination="HXB-oj-sj0" id="jqS-M5-fQi"/>
                     </connections>
                 </viewController>

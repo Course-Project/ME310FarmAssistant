@@ -101,6 +101,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     self.isHistory = NO;
     self.moistureThreshold = 0.2f;
     self.transpirationThreshold = 0.2f;
+    [self.moistureSwitch setEnabled:NO];
+    [self.transpirationSwitch setEnabled:NO];
     
     // Configure Location Manager
     [self configureLocationManager];
@@ -119,9 +121,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     }];
     
     // Configure Heat Map
-    [self configureMoistureHeatMap];
-    [self configureTranspirationHeatMap];
-    [self configureMixedHeatMap];
+    [weakSelf configureMoistureHeatMap];
+    [weakSelf configureTranspirationHeatMap];
+    [weakSelf configureMixedHeatMap];
     
     // Add Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -194,10 +196,13 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)configureMoistureHeatMap {
     NSLog(@"Configuring moisture heat map...");
-    [self.moistureSwitch setEnabled:NO];
     WEAKSELF_T weakSelf = self;
     [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMoisture callback:^(NSDictionary *res, NSError *err) {
         // TODO: Error Handle
+        if (err) {
+            NSLog(@"Moisture heat map error: %@", err);
+            return;
+        }
         
         // Get Moisture Bit Info
         weakSelf.moistureHeatMapBitArray = res[@"all-image"];
@@ -213,7 +218,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         weakSelf.minMoistureValue = [res[@"min-z"] doubleValue];
         
         [weakSelf generateMoistureHeatMapWithCompletion:^ {
-            [weakSelf.moistureSwitch setEnabled:YES];
             NSLog(@"Moisture heat map finished!");
             
             if (!(weakSelf.isConfiguringMoistureHeatMap || weakSelf.isConfiguringTranspirationHeatMap || weakSelf.isConfiguringMixedHeatMap)) {
@@ -229,10 +233,13 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 - (void)configureTranspirationHeatMap {
     NSLog(@"Configuring transpiration heat map...");
-    [self.transpirationSwitch setEnabled:NO];
     WEAKSELF_T weakSelf = self;
     [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeTranspiration callback:^(NSDictionary *res, NSError *err) {
         // TODO: Error Handle
+        if (err) {
+            NSLog(@"Transpiration heat map error: %@", err);
+            return;
+        }
         
         // Get Transpiration Bit Info
         weakSelf.transpirationHeatMapBitArray = res[@"all-image"];
@@ -248,7 +255,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         weakSelf.minTranspirationValue = [res[@"min-z"] doubleValue];
         
         [weakSelf generateTranspirationHeatMapWithCompletion:^ {
-            [weakSelf.transpirationSwitch setEnabled:YES];
             NSLog(@"Transpiration heat map finished!");
             
             if (!(weakSelf.isConfiguringMoistureHeatMap || weakSelf.isConfiguringTranspirationHeatMap || weakSelf.isConfiguringMixedHeatMap)) {
@@ -263,6 +269,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     WEAKSELF_T weakSelf = self;
     [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMixed callback:^(NSDictionary *res, NSError *err) {
         // TODO: Error Handle
+        if (err) {
+            NSLog(@"Mixed heat map error: %@", err);
+            return;
+        }
         
         // Get Transpiration Bit Info
         weakSelf.mixedHeatMapBitArray = res[@"all-image"];
@@ -289,6 +299,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)generateMoistureHeatMapWithCompletion:(dispatch_block_t)success {
     NSLog(@"Generating moisture heat map...");
     self.isConfiguringMoistureHeatMap = YES;
+    [self.moistureSwitch setEnabled:NO];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"WillGenerateMoistureHeatMap" object:nil];
     
@@ -314,6 +325,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
                                                            withMaxValue:weakSelf.maxMoistureValue minValue:weakSelf.minMoistureValue];
         weakSelf.moistureHeatMapImage = image;
         weakSelf.isConfiguringMoistureHeatMap = NO;
+        dispatch_async(dispatch_get_main_queue(), ^ {
+            [weakSelf.moistureSwitch setEnabled:YES];
+        });
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DidGenerateMoistureHeatMap" object:nil];
         
@@ -324,6 +338,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)generateTranspirationHeatMapWithCompletion:(dispatch_block_t)success {
     NSLog(@"Generating transpiration heat map...");
     self.isConfiguringTranspirationHeatMap = YES;
+    [self.transpirationSwitch setEnabled:NO];
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"WillGenerateTranspirationHeatMap" object:nil];
     
@@ -339,7 +354,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
                                                      withGradientColors:colors locations:locations
                                                            withMaxValue:weakSelf.maxTranspirationValue minValue:weakSelf.minTranspirationValue];
         weakSelf.transpirationHeatMapImage = image;
-        self.isConfiguringTranspirationHeatMap = NO;
+        weakSelf.isConfiguringTranspirationHeatMap = NO;
+        dispatch_async(dispatch_get_main_queue(), ^ {
+            [weakSelf.transpirationSwitch setEnabled:YES];
+        });
         
         [[NSNotificationCenter defaultCenter] postNotificationName:@"DidGenerateTranspirationHeatMap" object:nil];
         
@@ -427,6 +445,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 - (void)updateOverlays {
+    NSLog(@"Update Overlays!");
     [self.mapView removeOverlays:self.mapView.overlays];
     
     if ([_moistureSwitch isOn] && [_transpirationSwitch isOn]) {
@@ -436,6 +455,13 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     } else if ([_moistureSwitch isOn] && ![_transpirationSwitch isOn]) {
         [self.mapView addOverlay:self.moistureHeatMapOverlay];
     }
+}
+
+- (void)updateAnnotations {
+    NSLog(@"Update Annotations!");
+    [self.mapView removeAnnotations:self.dataPointAnnotationsArray];
+    [self.mapView addAnnotations:self.dataPointAnnotationsArray];
+//    [self.mapView showAnnotations:self.mapView.annotations animated:YES];
 }
 
 // MARK: Copy from website
@@ -526,9 +552,11 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 - (void)mapView:(MKMapView *)mapView didSelectAnnotationView:(MKAnnotationView *)view {
-    MKCoordinateSpan currentSpan = mapView.region.span;
-    MKCoordinateSpan span = MKCoordinateSpanMake(MAX(currentSpan.latitudeDelta, MINIMUM_ZOOM_ARC), MAX(currentSpan.longitudeDelta, MINIMUM_ZOOM_ARC));
-    [mapView setRegion:MKCoordinateRegionMake([view.annotation coordinate], span) animated:YES];
+//    MKCoordinateSpan currentSpan = mapView.region.span;
+//    MKCoordinateSpan span = MKCoordinateSpanMake(MAX(currentSpan.latitudeDelta, MINIMUM_ZOOM_ARC), MAX(currentSpan.longitudeDelta, MINIMUM_ZOOM_ARC));
+//    [mapView setRegion:MKCoordinateRegionMake([view.annotation coordinate], span) animated:YES];
+    
+    [mapView setCenterCoordinate:[view.annotation coordinate] animated:YES];
 }
 
 - (void)mapView:(MKMapView *)mapView annotationView:(MKAnnotationView *)view calloutAccessoryControlTapped:(UIControl *)control {
@@ -755,6 +783,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (void)didReceiveShowCalloutNotification:(NSNotification *)notification {
     NSUInteger pointID = [notification.object unsignedIntegerValue];
     for (DataPointAnnotation *annotation in self.mapView.annotations) {
+        if ([annotation isKindOfClass:[MKUserLocation class]]) continue;
+        
         if (pointID == annotation.pointID) {
             [self.mapView selectAnnotation:annotation animated:YES];
             
@@ -771,6 +801,16 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Moisture Threshold: %@", notification.object);
     
     self.moistureThreshold = [notification.object doubleValue] / 100.0f;
+    
+    [self updateAnnotations];
+    
+    if (![self.mapView.overlays containsObject:self.moistureHeatMapOverlay]) {
+        [self generateMoistureHeatMapWithCompletion:^ {
+            NSLog(@"Moisture heat map updated!");
+        }];
+        
+        return;
+    }
     
     if ([self isConfiguringMoistureHeatMap]) return;
     
@@ -798,6 +838,16 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     self.transpirationThreshold = [notification.object doubleValue] / 100.0f;
     
+    [self updateAnnotations];
+    
+    if (![self.mapView.overlays containsObject:self.transpirationHeatMapOverlay]) {
+        [self generateTranspirationHeatMapWithCompletion:^ {
+            NSLog(@"Transpiration heat map updated!");
+        }];
+        
+        return;
+    }
+    
     if ([self isConfiguringTranspirationHeatMap]) return;
     
     if (![self.switchView.subviews containsObject:self.switchOverlayView]) {
@@ -808,7 +858,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     WEAKSELF_T weakSelf = self;
     [self generateTranspirationHeatMapWithCompletion:^ {
-        NSLog(@"Moisture heat map updated!");
+        NSLog(@"Transpiration heat map updated!");
         
         [weakSelf updateOverlays];
         

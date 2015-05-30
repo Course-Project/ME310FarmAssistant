@@ -86,10 +86,11 @@
     [self.transpirationLabel setText:[dataPoint.transpiration stringValue]];
     [self.dateLabel setText:dataPoint.time];
     
-    if (!dataPoint.isNormal) {
-        [self.moistureLabel setTextColor:UIColorFromRGB(0x9E0000)];
-        [self.transpirationLabel setTextColor:UIColorFromRGB(0x9E0000)];
-    }
+    // TODO: Update Color
+//    if (!dataPoint.isNormal) {
+//        [self.moistureLabel setTextColor:UIColorFromRGB(0x9E0000)];
+//        [self.transpirationLabel setTextColor:UIColorFromRGB(0x9E0000)];
+//    }
     
     // Updating Image
     NSString *imagePath = dataPoint.photoURLPathString;

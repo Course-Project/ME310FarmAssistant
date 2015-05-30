@@ -23,6 +23,8 @@
 @property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
 
+@property (weak, nonatomic) IBOutlet UILabel *moistureLabel;
+@property (weak, nonatomic) IBOutlet UILabel *transpirationLabel;
 
 @end
 
@@ -94,11 +96,12 @@
     
 }
 - (IBAction)soilMoistureSliderTouchUpInside:(UISlider *)slider {
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"SoilMoisureSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"SoilMoisureSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
+    [self.moistureLabel setText:[NSString stringWithFormat:@"%d", (int)slider.value]];
 }
 - (IBAction)transpirationSliderTouchUpInside:(UISlider *)slider {
     [[NSNotificationCenter defaultCenter]postNotificationName:@"TranspirationSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
+    [self.transpirationLabel setText:[NSString stringWithFormat:@"%d", (int)slider.value]];
 }
 
 - (void)moistureHeatMapWillGenerate:(id)sender{
