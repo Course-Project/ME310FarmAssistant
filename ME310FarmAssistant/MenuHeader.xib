@@ -79,17 +79,11 @@
                             <rect key="frame" x="59" y="108" width="214" height="30"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
-                            <connections>
-                                <outlet property="delegate" destination="-1" id="AhQ-xX-1L4"/>
-                            </connections>
                         </textField>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="9a6-d9-7J2">
                             <rect key="frame" x="59" y="159" width="214" height="30"/>
                             <fontDescription key="fontDescription" type="system" pointSize="14"/>
                             <textInputTraits key="textInputTraits"/>
-                            <connections>
-                                <outlet property="delegate" destination="-1" id="Dey-rg-wMD"/>
-                            </connections>
                         </textField>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -119,6 +113,8 @@
             </constraints>
             <connections>
                 <outlet property="contentView" destination="3Wz-P6-VK4" id="lbA-lv-Pbp"/>
+                <outlet property="dateEndTextField" destination="9a6-d9-7J2" id="nRi-4i-ghN"/>
+                <outlet property="dateStartTextField" destination="pWg-f1-lKG" id="zuX-GO-Z5R"/>
                 <outlet property="settingTitleLabel" destination="Yce-Oq-hI3" id="fXD-k1-XRV"/>
                 <outlet property="soilMoistureSlider" destination="DDe-lw-8uc" id="qvD-E4-sSl"/>
                 <outlet property="transpirationSlider" destination="EuX-Kd-sRB" id="azn-bb-WPq"/>
