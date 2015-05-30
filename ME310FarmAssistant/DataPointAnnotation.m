@@ -9,19 +9,29 @@
 #import "DataPointAnnotation.h"
 #import "DataPoint.h"
 
+@interface DataPointAnnotation ()
+
+@property (nonatomic, strong) DataPoint *dataPoint;
+
+@end
+
 @implementation DataPointAnnotation
 
 - (instancetype)initWithDataPoint:(DataPoint *)dataPoint {
     self = [super init];
     if (self) {
+        _dataPoint = dataPoint;
+        
         _pointID = dataPoint.pointID;
         _coordinate = dataPoint.coordinate;
         _title = [NSString stringWithFormat:@"Point #%tu", dataPoint.pointID];
         _subtitle = [NSString stringWithFormat:@"Moisture: %@  Transpiration: %@", [dataPoint.moisture stringValue], [dataPoint.transpiration stringValue]];
-        
-        _isNormal = [dataPoint isNormal];
     }
     return self;
+}
+
+- (BOOL)isNormal {
+    return [self.dataPoint isNormal];
 }
 
 @end

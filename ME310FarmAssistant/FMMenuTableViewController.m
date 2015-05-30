@@ -14,6 +14,12 @@
 
 @interface FMMenuTableViewController ()
 
+@property (nonatomic, assign) BOOL isHistory;
+@property (nonatomic, assign) double moistureThreshold;
+@property (nonatomic, assign) double transpirationThreshold;
+
+@property (nonatomic, strong) NSArray *originalDataPoints;
+
 @property (nonatomic, strong) NSMutableArray *importantDataPoints;
 
 @property (nonatomic, strong) UIRefreshControl *refreshControl;
@@ -34,11 +40,35 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.isHistory = NO;
+    self.moistureThreshold = 20;
+    self.transpirationThreshold = 30;
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:20.0f] forKey:@"MoistureThreshold"];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:30.0f] forKey:@"TranspirationThreshold"];
+    
     // Configure Refresh Control
     [self configureRefreshControl];
     
     // Load Data
     [self refreshData:nil];
+    
+    // Add Observers
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveMoistureSliderNotification:)
+                                                 name:@"SoilMoisureSliderValue"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveTranspirationSliderNotification:)
+                                                 name:@"TranspirationSliderValue"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveDatePickerNotification:)
+                                                 name:@"HistoryDateSelected"
+                                               object:nil];
+}
+
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 #pragma mark - UI Methods
@@ -69,20 +99,9 @@
         }
         
         NSArray *points = res[@"data"];
+        weakSelf.originalDataPoints = points;
         
-        [weakSelf.importantDataPoints removeAllObjects];
-        for (id obj in points) {
-            double moisture = [obj[@"moisture"] doubleValue];
-            double transpiration = [obj[@"transpiration"] doubleValue];
-            
-            // (moisture < 30, moisture >60, transpiration < 20, transpiration > 50)
-            if ((moisture >= 30.0f && moisture <= 60.0f) &&
-                (transpiration >= 20.0f && transpiration <= 50.0f))
-                continue; // Filter
-            
-            DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
-            [weakSelf.importantDataPoints addObject:point];
-        }
+        [weakSelf filterDataPoints];
         
         if (completed) {
             completed();
@@ -90,6 +109,23 @@
         
         [SVProgressHUD showSuccessWithStatus:@"Success!"];
     }];
+}
+
+#pragma mark - Utils
+- (void)filterDataPoints {
+    NSLog(@"Filtering...");
+    [self.importantDataPoints removeAllObjects];
+    for (id obj in self.originalDataPoints) {
+        double moisture = [obj[@"moisture"] doubleValue];
+        double transpiration = [obj[@"transpiration"] doubleValue];
+        
+        if ((moisture >= _moistureThreshold) &&
+            (transpiration >= _transpirationThreshold))
+            continue; // Filter
+        
+        DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
+        [self.importantDataPoints addObject:point];
+    }
 }
 
 #pragma mark - UITableViewDelegate
@@ -149,5 +185,39 @@
     return self.tableView;
 }
 
+#pragma mark - Observers
+- (void)didReceiveMoistureSliderNotification:(NSNotification *)notification {
+    NSLog(@"Moisture Threshold Changed!");
+    NSLog(@"Moisture Threshold: %@", notification.object);
+    
+    self.moistureThreshold = [notification.object doubleValue];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:notification.object forKey:@"MoistureThreshold"];
+    
+    [self filterDataPoints];
+    
+    [self.tableView reloadData];
+}
+
+- (void)didReceiveTranspirationSliderNotification:(NSNotification *)notification {
+    NSLog(@"Transpiration Threshold Changed!");
+    NSLog(@"Transpiration Threshold: %@", notification.object);
+    
+    self.transpirationThreshold = [notification.object doubleValue];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:notification.object forKey:@"TranspirationThreshold"];
+    
+    [self filterDataPoints];
+    
+    [self.tableView reloadData];
+}
+
+- (void)didReceiveDatePickerNotification:(NSNotification *)notification {
+    NSLog(@"Date Range Changed!");
+    NSLog(@"Date Range: %@", notification.object);
+    
+    self.isHistory = YES;
+    
+}
 
 @end
