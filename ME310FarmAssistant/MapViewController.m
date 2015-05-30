@@ -36,7 +36,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 
 @interface MapViewController () <CLLocationManagerDelegate, HSDatePickerViewControllerDelegate, UITextFieldDelegate>
 
-// Point location for annotations
+@property (nonatomic, assign) BOOL isHistory;
+
+// Point Location for Annotations
 @property (nonatomic, strong) NSMutableArray *locations;
 
 // Moisture & Transpiration & Mixed Heat Map Overlay
@@ -76,6 +78,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 // Annotations Array
 @property (nonatomic, strong) NSMutableArray *dataPointAnnotationsArray;
 
+// Location Manager
 @property (nonatomic, strong) CLLocationManager *locationManager;
 
 // Wigets - UI
@@ -98,6 +101,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 #pragma mark Life Circle
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    self.isHistory = NO;
     
     [self.searchHistoryButton setEnabled:NO];
     
@@ -122,10 +127,22 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     [self configureTranspirationHeatMap];
     [self configureMixedHeatMap];
     
-    // Add Observer
+    // Add Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveShowCalloutNotification:)
                                                  name:@"ShowAnnotationCalloutView"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveMoistureSliderNotification:)
+                                                 name:@"SoilMoisureSliderValue"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveTranspirationSliderNotification:)
+                                                 name:@"TranspirationSliderValue"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveDatePickerNotification:)
+                                                 name:@"HistoryDateSelected"
                                                object:nil];
 }
 
@@ -230,7 +247,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     }];
 }
 
-// TODO: Mixed heat map
 - (void)configureMixedHeatMap {
     NSLog(@"Configuring mixed heat map...");
     self.isConfiguringMixedHeatMap = YES;
@@ -601,7 +617,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 #pragma mark - Actions
-// TODO: Update Heat Map Overlay
 - (IBAction)didChangeMoistureSwitch:(UISwitch *)sender {
     NSLog(@"Moisture Switch changed");
     [self.mapView removeOverlays:self.mapView.overlays];
@@ -842,6 +857,19 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
             break;
         }
     }
+}
+
+// TODO: New Observers
+- (void)didReceiveMoistureSliderNotification:(NSNotification *)notification {
+    
+}
+
+- (void)didReceiveTranspirationSliderNotification:(NSNotification *)notification {
+    
+}
+
+- (void)didReceiveDatePickerNotification:(NSNotification *)notification {
+    
 }
 
 @end
