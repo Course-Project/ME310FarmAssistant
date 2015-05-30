@@ -35,15 +35,7 @@
     [self configureDatePicker];
 }
 
-- (IBAction)soilMoisureSliderValueChanged:(UISlider *)slider {
-    [[NSNotificationCenter defaultCenter]postNotificationName:@"SoilMoisureSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
-    
-}
-- (IBAction)transpirationSliderValueChnaged:(UISlider *)slider {
-   [[NSNotificationCenter defaultCenter]postNotificationName:@"TranspirationSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
-    
-}
-
+#pragma mark - UI Configure
 - (void)configureDatePicker{
     UIDatePicker *startDatePicker = [[UIDatePicker alloc]init];
     startDatePicker.datePickerMode = UIDatePickerModeDateAndTime;
@@ -65,7 +57,7 @@
 }
 
 
-
+#pragma mark - Action
 - (void)startDatePickerValueChanged:(UIDatePicker *)picker{
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
@@ -89,5 +81,12 @@
     }
     
 }
-
+- (IBAction)soilMoisureSliderValueChanged:(UISlider *)slider {
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"SoilMoisureSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
+    
+}
+- (IBAction)transpirationSliderValueChnaged:(UISlider *)slider {
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"TranspirationSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
+    
+}
 @end
