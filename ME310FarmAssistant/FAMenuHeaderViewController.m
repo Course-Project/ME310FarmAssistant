@@ -28,6 +28,7 @@ void *CusomHeaderInsetObserver = &CusomHeaderInsetObserver;
     if (self) {
         // your code
         self.segmentMiniTopInset = 64;
+        self.headerHeight = 300;
         self.segmentHeight = 0;
         self.freezenHeaderWhenReachMaxHeaderHeight = YES;
     }

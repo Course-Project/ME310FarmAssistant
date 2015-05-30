@@ -11,7 +11,8 @@ target 'ME310FarmAssistant' do
   pod 'REFrostedViewController', '~> 2.4'
   pod 'MZFormSheetController', '~> 3.0'
   pod 'ARSegmentPager', :git => 'https://github.com/AugustRush/ARSegmentPager.git'
-  pod "TTRangeSlider"
+  pod 'TTRangeSlider'
+  pod 'NMRangeSlider'
 end
 
 target 'ME310FarmAssistantTests' do
