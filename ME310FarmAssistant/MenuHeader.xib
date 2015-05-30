@@ -82,6 +82,7 @@
             </constraints>
             <connections>
                 <outlet property="contentView" destination="3Wz-P6-VK4" id="lbA-lv-Pbp"/>
+                <outlet property="settingTitleLabel" destination="Yce-Oq-hI3" id="fXD-k1-XRV"/>
             </connections>
             <point key="canvasLocation" x="398" y="159"/>
         </view>

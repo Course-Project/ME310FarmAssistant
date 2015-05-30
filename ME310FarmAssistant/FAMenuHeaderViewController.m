@@ -60,13 +60,13 @@ void *CusomHeaderInsetObserver = &CusomHeaderInsetObserver;
         if (inset < 120) {
             if (!self.headerView.contentView.hidden) {
                 self.headerView.contentView.hidden = YES;
-//                self.headerView.settingLabel.hidden = NO;
+                self.headerView.settingTitleLabel.hidden = NO;
             }
         }
         else{
             if (self.headerView.contentView.hidden) {
                 self.headerView.contentView.hidden = NO;
-//                self.headerView.settingLabel.hidden = YES;
+                self.headerView.settingTitleLabel.hidden = YES;
             }
         }
     }
