@@ -11,7 +11,6 @@
 		2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2008DD541AD3C437002C13E5 /* AssistantClient.m */; };
 		2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 2008DD571AD3C71A002C13E5 /* DataPoint.m */; };
 		200B01331AF64301008A52AB /* DataPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 200B01321AF64301008A52AB /* DataPointAnnotation.m */; };
-		20236F5E1AFF3BE800BB5ADA /* LFHeatMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 20236F5D1AFF3BE800BB5ADA /* LFHeatMap.m */; };
 		20236F601AFF3C9500BB5ADA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20236F5F1AFF3C9500BB5ADA /* Foundation.framework */; };
 		202447201AED07C800BCD2B5 /* quake.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2024471F1AED07C800BCD2B5 /* quake.plist */; };
 		202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202447251AED1AE800BCD2B5 /* MapViewController.m */; };
@@ -57,10 +56,6 @@
 		2008DD571AD3C71A002C13E5 /* DataPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPoint.m; sourceTree = "<group>"; };
 		200B01311AF64301008A52AB /* DataPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPointAnnotation.h; sourceTree = "<group>"; };
 		200B01321AF64301008A52AB /* DataPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPointAnnotation.m; sourceTree = "<group>"; };
-		20236F581AFF3BD700BB5ADA /* LFHeatMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFHeatMap.h; sourceTree = "<group>"; };
-		20236F591AFF3BD700BB5ADA /* LFHeatMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFHeatMap.m; sourceTree = "<group>"; };
-		20236F5C1AFF3BE800BB5ADA /* LFHeatMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFHeatMap.h; sourceTree = "<group>"; };
-		20236F5D1AFF3BE800BB5ADA /* LFHeatMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFHeatMap.m; sourceTree = "<group>"; };
 		20236F5F1AFF3C9500BB5ADA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		2024471F1AED07C800BCD2B5 /* quake.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = quake.plist; path = ME310FarmAssistant/quake.plist; sourceTree = "<group>"; };
 		202447241AED1AE800BCD2B5 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
@@ -137,34 +132,6 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
-		20236F561AFF3BD700BB5ADA /* External */ = {
-			isa = PBXGroup;
-			children = (
-				20236F5B1AFF3BE800BB5ADA /* LFHeatMap */,
-			);
-			name = External;
-			path = ME310FarmAssistant/External;
-			sourceTree = "<group>";
-		};
-		20236F571AFF3BD700BB5ADA /* LFHeatMap */ = {
-			isa = PBXGroup;
-			children = (
-				20236F581AFF3BD700BB5ADA /* LFHeatMap.h */,
-				20236F591AFF3BD700BB5ADA /* LFHeatMap.m */,
-			);
-			name = LFHeatMap;
-			path = ME310FarmAssistant/External/LFHeatMap;
-			sourceTree = "<group>";
-		};
-		20236F5B1AFF3BE800BB5ADA /* LFHeatMap */ = {
-			isa = PBXGroup;
-			children = (
-				20236F5C1AFF3BE800BB5ADA /* LFHeatMap.h */,
-				20236F5D1AFF3BE800BB5ADA /* LFHeatMap.m */,
-			);
-			path = LFHeatMap;
-			sourceTree = "<group>";
-		};
 		20634B541AFE5F52005A06F1 /* MapObject */ = {
 			isa = PBXGroup;
 			children = (
@@ -219,8 +186,6 @@
 				20CFBE8B1ACFE2EC00289A17 /* ME310FarmAssistant */,
 				20CFBEA51ACFE2ED00289A17 /* ME310FarmAssistantTests */,
 				20CFBE8A1ACFE2EC00289A17 /* Products */,
-				20236F571AFF3BD700BB5ADA /* LFHeatMap */,
-				20236F561AFF3BD700BB5ADA /* External */,
 				EF3C606120BA9C120BC57085 /* Pods */,
 				2ED15708898199E59A6AB6D0 /* Frameworks */,
 			);
@@ -472,7 +437,6 @@
 				202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */,
 				20634B531AFE4B4B005A06F1 /* FAIndexTableViewCell.m in Sources */,
 				D8954EF41B18DD3300E53467 /* FAMenuHeaderViewController.m in Sources */,
-				20236F5E1AFF3BE800BB5ADA /* LFHeatMap.m in Sources */,
 				2079FE781AD262C000193190 /* PopupInfoView.m in Sources */,
 				207A200E1B178A1000CEBFC7 /* FMRootViewController.m in Sources */,
 				20CFBE921ACFE2EC00289A17 /* AppDelegate.m in Sources */,
