@@ -15,7 +15,9 @@
 @property (weak, nonatomic) IBOutlet UISlider *soilMoistureSlider;
 @property (weak, nonatomic) IBOutlet UISlider *transpirationSlider;
 
-@property (weak, nonatomic) NSDate *selectedDate;
+@property (strong, nonatomic) NSDate *startDate;
+@property (strong, nonatomic) NSDate *endDate;
+
 @property (weak, nonatomic) IBOutlet UITextField *dateStartTextField;
 @property (weak, nonatomic) IBOutlet UITextField *dateEndTextField;
 
@@ -65,24 +67,27 @@
 
 
 - (void)startDatePickerValueChanged:(UIDatePicker *)picker{
-    NSLog(@"%@",picker.date);
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
     self.dateStartTextField.text = [dateFormatter stringFromDate:picker.date];
+    self.startDate = picker.date;
 }
 
 - (void)endDatePickerValueChanged:(UIDatePicker *)picker{
-    NSLog(@"%@",picker.date);
     NSDateFormatter *dateFormatter = [NSDateFormatter new];
     dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
     self.dateEndTextField.text = [dateFormatter stringFromDate:picker.date];
+    self.endDate = picker.date;
 }
 
 - (void)barbuttonDidPressed: (UIBarButtonItem *)button{
-    
-    
     [self.dateStartTextField resignFirstResponder];
     [self.dateEndTextField resignFirstResponder];
+    
+    if (self.startDate && self.endDate) {
+        [[NSNotificationCenter defaultCenter]postNotificationName:@"HistoryDateSelected" object:[NSArray arrayWithObjects:self.startDate,self.endDate,nil]];
+    }
+    
 }
 
 @end
