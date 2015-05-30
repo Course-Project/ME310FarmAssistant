@@ -81,12 +81,11 @@
     }
     
 }
-- (IBAction)soilMoisureSliderValueChanged:(UISlider *)slider {
+- (IBAction)soilMoistureSliderTouchUpInside:(UISlider *)slider {
     [[NSNotificationCenter defaultCenter]postNotificationName:@"SoilMoisureSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
     
 }
-- (IBAction)transpirationSliderValueChnaged:(UISlider *)slider {
+- (IBAction)transpirationSliderTouchUpInside:(UISlider *)slider {
     [[NSNotificationCenter defaultCenter]postNotificationName:@"TranspirationSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
-    
 }
 @end

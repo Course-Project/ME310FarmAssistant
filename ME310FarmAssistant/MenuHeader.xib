@@ -61,7 +61,7 @@
                             <color key="minimumTrackTintColor" red="0.50196081399917603" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="maximumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="soilMoisureSliderValueChanged:" destination="iN0-l3-epB" eventType="valueChanged" id="u6J-j8-mrJ"/>
+                                <action selector="soilMoistureSliderTouchUpInside:" destination="iN0-l3-epB" eventType="touchUpInside" id="zQo-C1-TEz"/>
                             </connections>
                         </slider>
                         <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="30" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="EuX-Kd-sRB">
@@ -72,7 +72,7 @@
                             <color key="minimumTrackTintColor" red="0.50196081399917603" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="maximumTrackTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>
-                                <action selector="transpirationSliderValueChnaged:" destination="iN0-l3-epB" eventType="valueChanged" id="pvg-Yp-Anc"/>
+                                <action selector="transpirationSliderTouchUpInside:" destination="iN0-l3-epB" eventType="touchUpInside" id="i7S-Wu-63k"/>
                             </connections>
                         </slider>
                         <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="pWg-f1-lKG">
