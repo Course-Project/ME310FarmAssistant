@@ -21,6 +21,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *dateStartTextField;
 @property (weak, nonatomic) IBOutlet UITextField *dateEndTextField;
 
+@property (weak, nonatomic) IBOutlet UIView *shadowView;
+@property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
 
 
 @end
