@@ -11,7 +11,6 @@
 		2008DD551AD3C437002C13E5 /* AssistantClient.m in Sources */ = {isa = PBXBuildFile; fileRef = 2008DD541AD3C437002C13E5 /* AssistantClient.m */; };
 		2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 2008DD571AD3C71A002C13E5 /* DataPoint.m */; };
 		200B01331AF64301008A52AB /* DataPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 200B01321AF64301008A52AB /* DataPointAnnotation.m */; };
-		20236F5E1AFF3BE800BB5ADA /* LFHeatMap.m in Sources */ = {isa = PBXBuildFile; fileRef = 20236F5D1AFF3BE800BB5ADA /* LFHeatMap.m */; };
 		20236F601AFF3C9500BB5ADA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20236F5F1AFF3C9500BB5ADA /* Foundation.framework */; };
 		202447201AED07C800BCD2B5 /* quake.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2024471F1AED07C800BCD2B5 /* quake.plist */; };
 		202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202447251AED1AE800BCD2B5 /* MapViewController.m */; };
@@ -27,7 +26,7 @@
 		20CFBE9A1ACFE2EC00289A17 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20CFBE991ACFE2EC00289A17 /* Images.xcassets */; };
 		20CFBE9D1ACFE2EC00289A17 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 20CFBE9B1ACFE2EC00289A17 /* LaunchScreen.xib */; };
 		20CFBEA91ACFE2ED00289A17 /* ME310FarmAssistantTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 20CFBEA81ACFE2ED00289A17 /* ME310FarmAssistantTests.m */; };
-		A7CD0AF3B5FB0E87C322F543 /* libPods-ME310FarmAssistant.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BEF3B7A44564767B65C1F8F0 /* libPods-ME310FarmAssistant.a */; };
+		3AA86631D0321E01AC52AB36 /* Pods_ME310FarmAssistant.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9DC612B8AE517675B462140B /* Pods_ME310FarmAssistant.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D88898CC1AF7A1E9006620D8 /* FAMapOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */; };
 		D88898CF1AF7A210006620D8 /* FAMapOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = D88898CE1AF7A210006620D8 /* FAMapOverlayView.m */; };
 /* End PBXBuildFile section */
@@ -52,10 +51,6 @@
 		2008DD571AD3C71A002C13E5 /* DataPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPoint.m; sourceTree = "<group>"; };
 		200B01311AF64301008A52AB /* DataPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPointAnnotation.h; sourceTree = "<group>"; };
 		200B01321AF64301008A52AB /* DataPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPointAnnotation.m; sourceTree = "<group>"; };
-		20236F581AFF3BD700BB5ADA /* LFHeatMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFHeatMap.h; sourceTree = "<group>"; };
-		20236F591AFF3BD700BB5ADA /* LFHeatMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFHeatMap.m; sourceTree = "<group>"; };
-		20236F5C1AFF3BE800BB5ADA /* LFHeatMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LFHeatMap.h; sourceTree = "<group>"; };
-		20236F5D1AFF3BE800BB5ADA /* LFHeatMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LFHeatMap.m; sourceTree = "<group>"; };
 		20236F5F1AFF3C9500BB5ADA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		2024471F1AED07C800BCD2B5 /* quake.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = quake.plist; path = ME310FarmAssistant/quake.plist; sourceTree = "<group>"; };
 		202447241AED1AE800BCD2B5 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
@@ -83,7 +78,7 @@
 		20CFBEA81ACFE2ED00289A17 /* ME310FarmAssistantTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ME310FarmAssistantTests.m; sourceTree = "<group>"; };
 		20CFBEB21ACFEADA00289A17 /* ME310FarmAssistant-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ME310FarmAssistant-Prefix.pch"; sourceTree = "<group>"; };
 		20D8AD8C1AF752AE0070483A /* API.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
-		BEF3B7A44564767B65C1F8F0 /* libPods-ME310FarmAssistant.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ME310FarmAssistant.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9DC612B8AE517675B462140B /* Pods_ME310FarmAssistant.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ME310FarmAssistant.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D88898CA1AF7A1E9006620D8 /* FAMapOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAMapOverlay.h; sourceTree = "<group>"; };
 		D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMapOverlay.m; sourceTree = "<group>"; };
 		D88898CD1AF7A210006620D8 /* FAMapOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAMapOverlayView.h; sourceTree = "<group>"; };
@@ -98,7 +93,7 @@
 				20236F601AFF3C9500BB5ADA /* Foundation.framework in Frameworks */,
 				202447281AED1EF400BCD2B5 /* MapKit.framework in Frameworks */,
 				2008DD511AD3B08F002C13E5 /* CoreLocation.framework in Frameworks */,
-				A7CD0AF3B5FB0E87C322F543 /* libPods-ME310FarmAssistant.a in Frameworks */,
+				3AA86631D0321E01AC52AB36 /* Pods_ME310FarmAssistant.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,34 +116,6 @@
 				2008DD571AD3C71A002C13E5 /* DataPoint.m */,
 			);
 			name = Model;
-			sourceTree = "<group>";
-		};
-		20236F561AFF3BD700BB5ADA /* External */ = {
-			isa = PBXGroup;
-			children = (
-				20236F5B1AFF3BE800BB5ADA /* LFHeatMap */,
-			);
-			name = External;
-			path = ME310FarmAssistant/External;
-			sourceTree = "<group>";
-		};
-		20236F571AFF3BD700BB5ADA /* LFHeatMap */ = {
-			isa = PBXGroup;
-			children = (
-				20236F581AFF3BD700BB5ADA /* LFHeatMap.h */,
-				20236F591AFF3BD700BB5ADA /* LFHeatMap.m */,
-			);
-			name = LFHeatMap;
-			path = ME310FarmAssistant/External/LFHeatMap;
-			sourceTree = "<group>";
-		};
-		20236F5B1AFF3BE800BB5ADA /* LFHeatMap */ = {
-			isa = PBXGroup;
-			children = (
-				20236F5C1AFF3BE800BB5ADA /* LFHeatMap.h */,
-				20236F5D1AFF3BE800BB5ADA /* LFHeatMap.m */,
-			);
-			path = LFHeatMap;
 			sourceTree = "<group>";
 		};
 		20634B541AFE5F52005A06F1 /* MapObject */ = {
@@ -196,8 +163,6 @@
 				20CFBE8B1ACFE2EC00289A17 /* ME310FarmAssistant */,
 				20CFBEA51ACFE2ED00289A17 /* ME310FarmAssistantTests */,
 				20CFBE8A1ACFE2EC00289A17 /* Products */,
-				20236F571AFF3BD700BB5ADA /* LFHeatMap */,
-				20236F561AFF3BD700BB5ADA /* External */,
 				EF3C606120BA9C120BC57085 /* Pods */,
 				2ED15708898199E59A6AB6D0 /* Frameworks */,
 			);
@@ -263,7 +228,7 @@
 				20236F5F1AFF3C9500BB5ADA /* Foundation.framework */,
 				202447271AED1EF400BCD2B5 /* MapKit.framework */,
 				2008DD501AD3B08F002C13E5 /* CoreLocation.framework */,
-				BEF3B7A44564767B65C1F8F0 /* libPods-ME310FarmAssistant.a */,
+				9DC612B8AE517675B462140B /* Pods_ME310FarmAssistant.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -289,6 +254,7 @@
 				20CFBE861ACFE2EC00289A17 /* Frameworks */,
 				20CFBE871ACFE2EC00289A17 /* Resources */,
 				7BD710153EEE3FD32C01FAF1 /* Copy Pods Resources */,
+				3B89DF4CA6046E99F3109E60 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -383,6 +349,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3B89DF4CA6046E99F3109E60 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-ME310FarmAssistant/Pods-ME310FarmAssistant-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 		6B367480706DE6F512702748 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -428,7 +409,6 @@
 				2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */,
 				202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */,
 				20634B531AFE4B4B005A06F1 /* FAIndexTableViewCell.m in Sources */,
-				20236F5E1AFF3BE800BB5ADA /* LFHeatMap.m in Sources */,
 				2079FE781AD262C000193190 /* PopupInfoView.m in Sources */,
 				20634B501AFE3C2E005A06F1 /* FAIndexTableViewController.m in Sources */,
 				20CFBE921ACFE2EC00289A17 /* AppDelegate.m in Sources */,
