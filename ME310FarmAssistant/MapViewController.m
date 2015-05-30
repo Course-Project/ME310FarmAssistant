@@ -101,6 +101,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     self.isHistory = NO;
     self.moistureThreshold = 0.2f;
     self.transpirationThreshold = 0.2f;
+    [self.moistureSwitch setEnabled:NO];
+    [self.transpirationSwitch setEnabled:NO];
     
     // Configure Location Manager
     [self configureLocationManager];
@@ -119,9 +121,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     }];
     
     // Configure Heat Map
-    [self configureMoistureHeatMap];
-    [self configureTranspirationHeatMap];
-    [self configureMixedHeatMap];
+    [weakSelf configureMoistureHeatMap];
+    [weakSelf configureTranspirationHeatMap];
+    [weakSelf configureMixedHeatMap];
     
     // Add Observers
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -197,6 +199,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     WEAKSELF_T weakSelf = self;
     [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMoisture callback:^(NSDictionary *res, NSError *err) {
         // TODO: Error Handle
+        if (err) {
+            NSLog(@"Moisture heat map error: %@", err);
+            return;
+        }
         
         // Get Moisture Bit Info
         weakSelf.moistureHeatMapBitArray = res[@"all-image"];
@@ -230,6 +236,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     WEAKSELF_T weakSelf = self;
     [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeTranspiration callback:^(NSDictionary *res, NSError *err) {
         // TODO: Error Handle
+        if (err) {
+            NSLog(@"Transpiration heat map error: %@", err);
+            return;
+        }
         
         // Get Transpiration Bit Info
         weakSelf.transpirationHeatMapBitArray = res[@"all-image"];
@@ -259,6 +269,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     WEAKSELF_T weakSelf = self;
     [[AssistantClient sharedClient] getHeatMapWithType:FAHeatMapTypeMixed callback:^(NSDictionary *res, NSError *err) {
         // TODO: Error Handle
+        if (err) {
+            NSLog(@"Mixed heat map error: %@", err);
+            return;
+        }
         
         // Get Transpiration Bit Info
         weakSelf.mixedHeatMapBitArray = res[@"all-image"];
