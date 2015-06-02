@@ -29,10 +29,11 @@
 - (BOOL)isNormal {
     double moisture = [_moisture doubleValue];
     double transpiration = [_transpiration doubleValue];
-    double moistureThreshold = [[[NSUserDefaults standardUserDefaults] objectForKey:@"MoistureThreshold"] doubleValue];
+    double moistureDryThreshold = [[[NSUserDefaults standardUserDefaults] objectForKey:@"MoistureDryThreshold"] doubleValue];
+    double moistureWetThreshold = [[[NSUserDefaults standardUserDefaults] objectForKey:@"MoistureWetThreshold"] doubleValue];
     double transpirationThreshold = [[[NSUserDefaults standardUserDefaults] objectForKey:@"TranspirationThreshold"] doubleValue];
 
-    return ((moisture >= moistureThreshold) &&
+    return ((moisture >= moistureDryThreshold && moisture <= moistureWetThreshold) &&
             (transpiration >= transpirationThreshold));
 }
 

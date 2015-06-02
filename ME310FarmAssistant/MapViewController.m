@@ -316,10 +316,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     WEAKSELF_T weakSelf = self;
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_HIGH, 0), ^ {
-        double threshold = weakSelf.moistureThreshold;
-        double step = (1 - threshold) / 2.0f;
+        double dryThreshold = weakSelf.moistureDryThreshold;
+        double wetThreshold = weakSelf.moistureWetThreshold;
         
-        CGFloat locations[] = {0.0f, threshold, 0.8f};
+        CGFloat locations[] = {0.0f, dryThreshold, wetThreshold};
         UIImage *image = [weakSelf generateHeatMapImageWithBitInfoArray:weakSelf.moistureHeatMapBitArray
                                                      withGradientColors:colors locations:locations
                                                            withMaxValue:weakSelf.maxMoistureValue minValue:weakSelf.minMoistureValue];
@@ -846,7 +846,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Moisture Threshold Changed!");
     NSLog(@"Moisture Threshold: %@", notification.object);
     
-    self.moistureThreshold = [notification.object doubleValue] / 100.0f;
+    NSArray *threshold = notification.object;
+    
+    self.moistureDryThreshold = [[threshold objectAtIndex:0] doubleValue] / 100.0f;
+    self.moistureWetThreshold = [[threshold objectAtIndex:1] doubleValue] / 100.0f;
     
     [self updateAnnotations];
     

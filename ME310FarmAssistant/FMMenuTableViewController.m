@@ -40,10 +40,11 @@
     [super viewDidLoad];
     
     self.isHistory = NO;
-    self.moistureWetThreshold = 20;
-    self.moistureDryThreshold = 80;
+    self.moistureWetThreshold = 80;
+    self.moistureDryThreshold = 20;
     self.transpirationThreshold = 30;
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:20.0f] forKey:@"MoistureThreshold"];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:20.0f] forKey:@"MoistureDryThreshold"];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:80.0f] forKey:@"MoistureWetThreshold"];
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:30.0f] forKey:@"TranspirationThreshold"];
     
     // Configure Refresh Control
@@ -119,7 +120,7 @@
         double moisture = [obj[@"moisture"] doubleValue];
         double transpiration = [obj[@"transpiration"] doubleValue];
         
-        if ((moisture >= _moistureWetThreshold && moisture <= _moistureDryThreshold) &&
+        if ((moisture >= _moistureDryThreshold && moisture <= _moistureWetThreshold) &&
             (transpiration >= _transpirationThreshold))
             continue; // Filter
         
@@ -195,7 +196,8 @@
     self.moistureDryThreshold = [[threshold objectAtIndex:0] doubleValue];
     self.moistureWetThreshold = [[threshold objectAtIndex:1] doubleValue];
     
-    [[NSUserDefaults standardUserDefaults] setObject:notification.object forKey:@"MoistureThreshold"];
+    [[NSUserDefaults standardUserDefaults] setObject:[threshold objectAtIndex:0] forKey:@"MoistureDryThreshold"];
+    [[NSUserDefaults standardUserDefaults] setObject:[threshold objectAtIndex:1] forKey:@"MoistureWetThreshold"];
     
     [self filterDataPoints];
     
