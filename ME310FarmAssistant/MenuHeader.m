@@ -7,11 +7,10 @@
 //
 
 #import "MenuHeader.h"
-
+#import "NMRangeSlider.h"
 
 @interface MenuHeader()<UITextFieldDelegate>
 
-@property (weak, nonatomic) IBOutlet UISlider *soilMoistureSlider;
 @property (weak, nonatomic) IBOutlet UISlider *transpirationSlider;
 
 @property (strong, nonatomic) NSDate *startDate;
@@ -23,8 +22,11 @@
 @property (weak, nonatomic) IBOutlet UIView *shadowView;
 @property (weak, nonatomic) IBOutlet UIActivityIndicatorView *indicator;
 
-@property (weak, nonatomic) IBOutlet UILabel *moistureLabel;
+@property (weak, nonatomic) IBOutlet UILabel *moistureLowerLabel;
+
+@property (weak, nonatomic) IBOutlet UILabel *moistureUpperLabel;
 @property (weak, nonatomic) IBOutlet UILabel *transpirationLabel;
+@property (strong, nonatomic) IBOutlet NMRangeSlider *rangeSlider;
 
 @end
 
@@ -37,6 +39,7 @@
     
     [self configureDatePicker];
     [self configureNotification];
+    [self configureSlider];
 }
 
 #pragma mark - Notification
@@ -50,6 +53,16 @@
 }
 
 #pragma mark - UI Configure
+- (void)configureSlider{
+    self.rangeSlider.minimumValue = 0;
+    self.rangeSlider.maximumValue = 100;
+    self.rangeSlider.lowerValue = 20;
+    self.rangeSlider.upperValue = 80;
+    self.moistureLowerLabel.text = [NSString stringWithFormat:@"%d",(int)self.rangeSlider.lowerValue];
+    self.moistureUpperLabel.text = [NSString stringWithFormat:@"%d",(int)self.rangeSlider.upperValue];
+    self.transpirationLabel.text = [NSString stringWithFormat:@"%d",(int)self.transpirationSlider.value];
+}
+
 - (void)configureDatePicker{
     UIDatePicker *startDatePicker = [[UIDatePicker alloc]init];
     startDatePicker.datePickerMode = UIDatePickerModeDateAndTime;
@@ -95,13 +108,22 @@
     }
     
 }
-- (IBAction)soilMoistureSliderTouchUpInside:(UISlider *)slider {
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"SoilMoisureSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
-    [self.moistureLabel setText:[NSString stringWithFormat:@"%d", (int)slider.value]];
+- (IBAction)rangeSliderTouchUpInside:(id)sender {
+    [[NSNotificationCenter defaultCenter]postNotificationName:@"SoilMoisureSliderValue" object:[NSArray arrayWithObjects:[NSNumber numberWithUnsignedInteger:self.rangeSlider.lowerValue],[NSNumber numberWithUnsignedInteger:self.rangeSlider.upperValue], nil]];
+    
 }
+- (IBAction)rangeSliderDragUpInside:(id)sender {
+
+    self.moistureLowerLabel.text = [NSString stringWithFormat:@"%d",(int)self.rangeSlider.lowerValue];
+    self.moistureUpperLabel.text = [NSString stringWithFormat:@"%d",(int)self.rangeSlider.upperValue];
+    
+}
+
 - (IBAction)transpirationSliderTouchUpInside:(UISlider *)slider {
     [[NSNotificationCenter defaultCenter]postNotificationName:@"TranspirationSliderValue" object:[NSNumber numberWithUnsignedInteger:slider.value]];
-    [self.transpirationLabel setText:[NSString stringWithFormat:@"%d", (int)slider.value]];
+}
+- (IBAction)transpirationSliderValueChanged:(id)sender {
+    self.transpirationLabel.text = [NSString stringWithFormat:@"%d",(int)self.transpirationSlider.value];
 }
 
 - (void)moistureHeatMapWillGenerate:(id)sender{
@@ -122,7 +144,7 @@
 - (void)openUserInteraction{
     dispatch_async(dispatch_get_main_queue(), ^{
         self.shadowView.hidden = YES;
-        self.soilMoistureSlider.userInteractionEnabled = YES;
+        self.rangeSlider.userInteractionEnabled = YES;
         self.transpirationSlider.userInteractionEnabled = YES;
         self.dateEndTextField.userInteractionEnabled = YES;
         self.dateStartTextField.userInteractionEnabled = YES;
@@ -133,7 +155,7 @@
 - (void)closeUserInteraction{
     dispatch_async(dispatch_get_main_queue(), ^{
         self.shadowView.hidden = NO;
-        self.soilMoistureSlider.userInteractionEnabled = NO;
+        self.rangeSlider.userInteractionEnabled = NO;
         self.transpirationSlider.userInteractionEnabled = NO;
         self.dateEndTextField.userInteractionEnabled = NO;
         self.dateStartTextField.userInteractionEnabled = NO;
