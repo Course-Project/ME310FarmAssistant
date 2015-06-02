@@ -15,14 +15,13 @@
 @interface FMMenuTableViewController ()
 
 @property (nonatomic, assign) BOOL isHistory;
-@property (nonatomic, assign) double moistureThreshold;
+@property (nonatomic, assign) double moistureDryThreshold;
+@property (nonatomic, assign) double moistureWetThreshold;
 @property (nonatomic, assign) double transpirationThreshold;
 
 @property (nonatomic, strong) NSArray *originalDataPoints;
 
 @property (nonatomic, strong) NSMutableArray *importantDataPoints;
-
-@property (nonatomic, strong) UIRefreshControl *refreshControl;
 
 @end
 
@@ -41,7 +40,8 @@
     [super viewDidLoad];
     
     self.isHistory = NO;
-    self.moistureThreshold = 20;
+    self.moistureWetThreshold = 20;
+    self.moistureDryThreshold = 80;
     self.transpirationThreshold = 30;
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:20.0f] forKey:@"MoistureThreshold"];
     [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:30.0f] forKey:@"TranspirationThreshold"];
@@ -119,7 +119,7 @@
         double moisture = [obj[@"moisture"] doubleValue];
         double transpiration = [obj[@"transpiration"] doubleValue];
         
-        if ((moisture >= _moistureThreshold) &&
+        if ((moisture >= _moistureWetThreshold && moisture <= _moistureDryThreshold) &&
             (transpiration >= _transpirationThreshold))
             continue; // Filter
         
@@ -190,7 +190,10 @@
     NSLog(@"Moisture Threshold Changed!");
     NSLog(@"Moisture Threshold: %@", notification.object);
     
-    self.moistureThreshold = [notification.object doubleValue];
+    NSArray *threshold = notification.object;
+
+    self.moistureDryThreshold = [[threshold objectAtIndex:0] doubleValue];
+    self.moistureWetThreshold = [[threshold objectAtIndex:1] doubleValue];
     
     [[NSUserDefaults standardUserDefaults] setObject:notification.object forKey:@"MoistureThreshold"];
     

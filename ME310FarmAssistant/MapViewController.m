@@ -35,7 +35,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 @interface MapViewController () <CLLocationManagerDelegate, UITextFieldDelegate>
 
 @property (nonatomic, assign) BOOL isHistory;
-@property (nonatomic, assign) double moistureThreshold;
+@property (nonatomic, assign) double moistureWetThreshold;
+@property (nonatomic, assign) double moistureDryThreshold;
 @property (nonatomic, assign) double transpirationThreshold;
 
 // Point Location for Annotations
@@ -99,7 +100,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     [super viewDidLoad];
     
     self.isHistory = NO;
-    self.moistureThreshold = 0.2f;
+    self.moistureWetThreshold = 0.2f;
+    self.moistureDryThreshold = 0.8f;
     self.transpirationThreshold = 0.2f;
     [self.moistureSwitch setEnabled:NO];
     [self.transpirationSwitch setEnabled:NO];
