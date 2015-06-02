@@ -9,13 +9,14 @@
 #import "FMRootViewController.h"
 #import "FAMenuHeaderViewController.h"
 
-@interface FMRootViewController ()
+@interface FMRootViewController ()<UIGestureRecognizerDelegate>
 
 @end
 
 @implementation FMRootViewController
 
 - (void)awakeFromNib {
+    self.panGestureRecognizer.delegate = self;
     self.contentViewController = [self.storyboard instantiateViewControllerWithIdentifier:@"contentController"];
     self.menuViewController = [[FAMenuHeaderViewController alloc]init];
     
@@ -30,4 +31,12 @@
     self.menuViewSize = size;
 }
 
+- (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch{
+    if([NSStringFromClass([touch.view class]) isEqualToString:@"NMRangeSlider"]) {
+        return NO;
+    }
+    else{
+        return YES;
+    }
+}
 @end
