@@ -218,6 +218,31 @@
     
     self.isHistory = YES;
     
+    NSArray *dateArray = notification.object;
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    dateFormatter.dateFormat = @"yyyy-MM-dd HH:mm";
+    NSDate *start = [dateArray objectAtIndex:0];
+    NSDate *end = [dateArray objectAtIndex:1];
+    
+    WEAKSELF_T weakSelf = self;
+    [SVProgressHUD showWithStatus:@"Loading..."];
+    [[AssistantClient sharedClient] getHistoryFrom:[dateFormatter stringFromDate:start] To:[dateFormatter stringFromDate:end] callback:^(NSDictionary *res, NSError *err) {
+        if (err) {
+            [SVProgressHUD showErrorWithStatus:@"Network Error!"];
+            return;
+        }
+        
+        NSArray *points = res[@"data"];
+        weakSelf.originalDataPoints = points;
+        
+        [weakSelf filterDataPoints];
+        
+        dispatch_async(dispatch_get_main_queue(), ^ {
+            [weakSelf.tableView reloadData];
+        });
+        
+        [SVProgressHUD showSuccessWithStatus:@"Success!"];
+    }];
 }
 
 @end

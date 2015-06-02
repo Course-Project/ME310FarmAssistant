@@ -74,18 +74,40 @@
                                     <constraint firstItem="Qch-V2-gga" firstAttribute="centerY" secondItem="YPS-ck-NC5" secondAttribute="centerY" constant="0.5" id="ycZ-a8-xC9"/>
                                 </constraints>
                             </view>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="x8C-FG-bVP">
+                                <rect key="frame" x="16" y="72" width="180" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="180" id="OPg-5H-C86"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="Standard"/>
+                                    <segment title="Satellite"/>
+                                    <segment title="Hybrid"/>
+                                </segments>
+                                <color key="tintColor" red="0.023529411764705882" green="0.48627450980392156" blue="0.70980392156862748" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="didChangeSegmentedControlValue:" destination="vXZ-lx-hvc" eventType="valueChanged" id="uZr-5Y-fbi"/>
+                                </connections>
+                            </segmentedControl>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="x8C-FG-bVP" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="8" id="AWb-vL-2fk"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="yxQ-e5-BIh" secondAttribute="bottom" id="OHB-77-Ho2"/>
                             <constraint firstItem="JoE-Iq-lZD" firstAttribute="trailing" secondItem="kh9-bI-dsS" secondAttribute="trailingMargin" id="PxV-0x-TzQ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="yxQ-e5-BIh" secondAttribute="trailing" constant="-16" id="Wiw-j4-Ujd"/>
                             <constraint firstItem="yxQ-e5-BIh" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="topMargin" id="YE5-bK-ed7"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="JoE-Iq-lZD" secondAttribute="bottom" constant="20" id="bcx-h3-E1H"/>
                             <constraint firstItem="yxQ-e5-BIh" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="-16" id="t6g-yg-g1W"/>
+                            <constraint firstItem="x8C-FG-bVP" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="z9U-do-iNC"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Map" id="qeC-Ft-qex">
+                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="a7I-hE-czF">
+                            <connections>
+                                <action selector="didClickRefreshButton:" destination="vXZ-lx-hvc" id="POI-Hw-rLK"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Menu" id="A7R-TJ-Xxx">
                             <connections>
                                 <action selector="didClickMenuButton:" destination="vXZ-lx-hvc" id="NVB-EI-rjf"/>
@@ -95,6 +117,7 @@
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <nil key="simulatedBottomBarMetrics"/>
                     <connections>
+                        <outlet property="mapTypeSegmentedControl" destination="x8C-FG-bVP" id="VHZ-wo-MNX"/>
                         <outlet property="mapView" destination="yxQ-e5-BIh" id="yGQ-oO-ia0"/>
                         <outlet property="moistureSwitch" destination="YPS-ck-NC5" id="LE3-ad-B6c"/>
                         <outlet property="switchView" destination="JoE-Iq-lZD" id="PXu-gl-BEZ"/>

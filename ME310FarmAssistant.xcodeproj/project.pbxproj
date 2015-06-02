@@ -74,7 +74,7 @@
 		207A20101B178A9800CEBFC7 /* FMRootNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMRootNavigationController.m; sourceTree = "<group>"; };
 		207A20121B178BD700CEBFC7 /* FMMenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FMMenuTableViewController.h; sourceTree = "<group>"; };
 		207A20131B178BD700CEBFC7 /* FMMenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FMMenuTableViewController.m; sourceTree = "<group>"; };
-		20CFBE891ACFE2EC00289A17 /* ME310FarmAssistant.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ME310FarmAssistant.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		20CFBE891ACFE2EC00289A17 /* Scout.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Scout.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		20CFBE8D1ACFE2EC00289A17 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		20CFBE8E1ACFE2EC00289A17 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		20CFBE901ACFE2EC00289A17 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -194,7 +194,7 @@
 		20CFBE8A1ACFE2EC00289A17 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				20CFBE891ACFE2EC00289A17 /* ME310FarmAssistant.app */,
+				20CFBE891ACFE2EC00289A17 /* Scout.app */,
 				20CFBEA21ACFE2ED00289A17 /* ME310FarmAssistantTests.xctest */,
 			);
 			name = Products;
@@ -285,7 +285,7 @@
 			);
 			name = ME310FarmAssistant;
 			productName = ME310FarmAssistant;
-			productReference = 20CFBE891ACFE2EC00289A17 /* ME310FarmAssistant.app */;
+			productReference = 20CFBE891ACFE2EC00289A17 /* Scout.app */;
 			productType = "com.apple.product-type.application";
 		};
 		20CFBEA11ACFE2ED00289A17 /* ME310FarmAssistantTests */ = {
@@ -572,7 +572,7 @@
 				GCC_PREFIX_HEADER = "ME310FarmAssistant/ME310FarmAssistant-Prefix.pch";
 				INFOPLIST_FILE = ME310FarmAssistant/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Scout;
 				PROVISIONING_PROFILE = "85cf34d6-6d56-4c59-845c-2969e2a72ea0";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -588,7 +588,7 @@
 				GCC_PREFIX_HEADER = "ME310FarmAssistant/ME310FarmAssistant-Prefix.pch";
 				INFOPLIST_FILE = ME310FarmAssistant/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = Scout;
 				PROVISIONING_PROFILE = "85cf34d6-6d56-4c59-845c-2969e2a72ea0";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
