@@ -619,6 +619,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Moisture Switch changed");
 //    [self updateOverlays];
     
+    [self updateDataFilterMode];
+    
+    if (self.isHistory) return;
+    
     if ([sender isOn]) {
         [self.transpirationSwitch setOn:NO animated:YES];
         [self.transpirationSwitch sendActionsForControlEvents:UIControlEventValueChanged];
@@ -632,6 +636,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 - (IBAction)didChangeTranspirationSwitch:(UISwitch *)sender {
     NSLog(@"Transpiration Switch changed");
 //    [self updateOverlays];
+    
+    [self updateDataFilterMode];
+    
+    if (self.isHistory) return;
     
     if ([sender isOn]) {
         [self.moistureSwitch setOn:NO animated:YES];
@@ -659,7 +667,12 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 - (IBAction)didClickRefreshButton:(UIBarButtonItem *)sender {
+    // Reset Map (including annotations & overlays)
     [self removeAnnotations];
+    
+    [self.moistureSwitch setOn:NO animated:YES];
+    [self.transpirationSwitch setOn:NO animated:YES];
+    [self removeHeatMapOverlays];
     
     [self.heatMapSwitchIndicatorView startAnimating];
     
@@ -671,11 +684,6 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         // Add Annotations
         [weakSelf configureAnnotations];
     }];
-    
-    [self.moistureSwitch setOn:NO animated:YES];
-    [self.transpirationSwitch setOn:NO animated:YES];
-    
-    [self removeHeatMapOverlays];
     
     [self configureMoistureHeatMap];
     [self configureTranspirationHeatMap];
@@ -697,6 +705,23 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
 }
 
 #pragma mark - Utils
+- (void)updateDataFilterMode {
+    FADataFilterMode dataFilterMode = FADataFilterModeBoth;
+    if ([self.transpirationSwitch isOn] && ![self.moistureSwitch isOn]) {
+        dataFilterMode = FADataFilterModeTranspiration;
+    } else if (![self.transpirationSwitch isOn] && [self.moistureSwitch isOn]) {
+        dataFilterMode = FADataFilterModeMoisture;
+    } else if (![self.transpirationSwitch isOn] && ![self.moistureSwitch isOn]) {
+        dataFilterMode = FADataFilterModeBoth;
+    }
+    
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithUnsignedInteger:dataFilterMode] forKey:@"DataFilterMode"]; // Set filter mode
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"DataFilterModeChanged" object:nil];
+    
+    [self updateAnnotations];
+}
+
 - (UIImage *)imageByCroppingImage:(UIImage *)image toSize:(CGSize)size {
     // not equivalent to image.size (which depends on the imageOrientation)!
     double refWidth = CGImageGetWidth(image.CGImage);
@@ -922,6 +947,11 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Date Range: %@", notification.object);
     
     self.isHistory = YES;
+    
+    // Remove & Disable Heat Map
+    [self.moistureSwitch setOn:NO animated:YES];
+    [self.transpirationSwitch setOn:NO animated:YES];
+    [self removeHeatMapOverlays];
     
     NSArray *dateArray = notification.object;
     NSDateFormatter *dateFormatter = [NSDateFormatter new];

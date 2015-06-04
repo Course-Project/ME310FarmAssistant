@@ -42,18 +42,22 @@
     [self configureSlider];
 }
 
+- (void)dealloc {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
 #pragma mark - Notification
 
 - (void)configureNotification{
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(moistureHeatMapWillGenerate:) name:@"WillGenerateMoistureHeatMap" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(moistureHeatMapDidGenerate:) name:@"DidGenerateMoistureHeatMap" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(transpirationHeatMapWillGenerate:) name:@"WillGenerateTranspirationHeatMap" object:nil];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(transpirationHeatMapDidGenerate:) name:@"DidGenerateTranspirationHeatMap" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moistureHeatMapWillGenerate:) name:@"WillGenerateMoistureHeatMap" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(moistureHeatMapDidGenerate:) name:@"DidGenerateMoistureHeatMap" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(transpirationHeatMapWillGenerate:) name:@"WillGenerateTranspirationHeatMap" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(transpirationHeatMapDidGenerate:) name:@"DidGenerateTranspirationHeatMap" object:nil];
     
 }
 
 #pragma mark - UI Configure
-- (void)configureSlider{
+- (void)configureSlider {
     self.rangeSlider.minimumValue = 0;
     self.rangeSlider.maximumValue = 100;
     self.rangeSlider.upperValue = 80.00;

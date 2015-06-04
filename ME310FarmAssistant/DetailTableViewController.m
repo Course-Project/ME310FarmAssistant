@@ -79,11 +79,11 @@
 }
 
 - (void)displayData:(DataPoint *)dataPoint {
-    [self.moistureLabel setText:[dataPoint.moisture stringValue]];
+    [self.moistureLabel setText:[NSString stringWithFormat:@"%zd", [dataPoint.moisture integerValue]]];
     [self.airTemperatureLabel setText:[dataPoint.airTemperature stringValue]];
     [self.leafTemperatureLabel setText:[dataPoint.leafTemperature stringValue]];
     [self.humidityLabel setText:[dataPoint.humidity stringValue]];
-    [self.transpirationLabel setText:[dataPoint.transpiration stringValue]];
+    [self.transpirationLabel setText:[NSString stringWithFormat:@"%zd", [dataPoint.transpiration integerValue]]];
     [self.dateLabel setText:dataPoint.time];
     
     // TODO: Update Color

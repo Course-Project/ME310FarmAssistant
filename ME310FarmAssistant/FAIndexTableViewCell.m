@@ -32,8 +32,8 @@
 - (void)configureWithDataPoint:(DataPoint *)dataPoint {
     _pointID = dataPoint.pointID;
     [self.pointIDLabel setText:[NSString stringWithFormat:@"%tu", dataPoint.pointID]];
-    [self.moistureLable setText:[dataPoint.moisture stringValue]];
-    [self.transpirationLable setText:[dataPoint.transpiration stringValue]];
+    [self.moistureLable setText:[NSString stringWithFormat:@"%zd", [dataPoint.moisture integerValue]]];
+    [self.transpirationLable setText:[NSString stringWithFormat:@"%zd", [dataPoint.transpiration integerValue]]];
 }
 
 @end

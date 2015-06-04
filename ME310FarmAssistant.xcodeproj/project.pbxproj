@@ -12,7 +12,6 @@
 		2008DD581AD3C71A002C13E5 /* DataPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = 2008DD571AD3C71A002C13E5 /* DataPoint.m */; };
 		200B01331AF64301008A52AB /* DataPointAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 200B01321AF64301008A52AB /* DataPointAnnotation.m */; };
 		20236F601AFF3C9500BB5ADA /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 20236F5F1AFF3C9500BB5ADA /* Foundation.framework */; };
-		202447201AED07C800BCD2B5 /* quake.plist in Resources */ = {isa = PBXBuildFile; fileRef = 2024471F1AED07C800BCD2B5 /* quake.plist */; };
 		202447261AED1AE800BCD2B5 /* MapViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 202447251AED1AE800BCD2B5 /* MapViewController.m */; };
 		202447281AED1EF400BCD2B5 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 202447271AED1EF400BCD2B5 /* MapKit.framework */; };
 		20634B531AFE4B4B005A06F1 /* FAIndexTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 20634B521AFE4B4B005A06F1 /* FAIndexTableViewCell.m */; };
@@ -57,7 +56,6 @@
 		200B01311AF64301008A52AB /* DataPointAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DataPointAnnotation.h; sourceTree = "<group>"; };
 		200B01321AF64301008A52AB /* DataPointAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DataPointAnnotation.m; sourceTree = "<group>"; };
 		20236F5F1AFF3C9500BB5ADA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		2024471F1AED07C800BCD2B5 /* quake.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = quake.plist; path = ME310FarmAssistant/quake.plist; sourceTree = "<group>"; };
 		202447241AED1AE800BCD2B5 /* MapViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MapViewController.h; sourceTree = "<group>"; };
 		202447251AED1AE800BCD2B5 /* MapViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MapViewController.m; sourceTree = "<group>"; };
 		202447271AED1EF400BCD2B5 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -87,6 +85,7 @@
 		20CFBEA81ACFE2ED00289A17 /* ME310FarmAssistantTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ME310FarmAssistantTests.m; sourceTree = "<group>"; };
 		20CFBEB21ACFEADA00289A17 /* ME310FarmAssistant-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "ME310FarmAssistant-Prefix.pch"; sourceTree = "<group>"; };
 		20D8AD8C1AF752AE0070483A /* API.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = API.h; sourceTree = "<group>"; };
+		20E148AF1B1EC64100C225DC /* GlobalConfig.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GlobalConfig.h; sourceTree = "<group>"; };
 		8D6DC3FF6990D0E36C8A4728 /* libPods-ME310FarmAssistant.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-ME310FarmAssistant.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D88898CA1AF7A1E9006620D8 /* FAMapOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FAMapOverlay.h; sourceTree = "<group>"; };
 		D88898CB1AF7A1E9006620D8 /* FAMapOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FAMapOverlay.m; sourceTree = "<group>"; };
@@ -182,7 +181,6 @@
 		20CFBE801ACFE2EC00289A17 = {
 			isa = PBXGroup;
 			children = (
-				2024471F1AED07C800BCD2B5 /* quake.plist */,
 				20CFBE8B1ACFE2EC00289A17 /* ME310FarmAssistant */,
 				20CFBEA51ACFE2ED00289A17 /* ME310FarmAssistantTests */,
 				20CFBE8A1ACFE2EC00289A17 /* Products */,
@@ -224,6 +222,7 @@
 				20CFBE8E1ACFE2EC00289A17 /* main.m */,
 				20CFBEB21ACFEADA00289A17 /* ME310FarmAssistant-Prefix.pch */,
 				20D8AD8C1AF752AE0070483A /* API.h */,
+				20E148AF1B1EC64100C225DC /* GlobalConfig.h */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -355,7 +354,6 @@
 			files = (
 				20CFBE981ACFE2EC00289A17 /* Main.storyboard in Resources */,
 				2079FE7A1AD262E700193190 /* PopupInfoView.xib in Resources */,
-				202447201AED07C800BCD2B5 /* quake.plist in Resources */,
 				D8954EF91B18DECA00E53467 /* MenuHeader.xib in Resources */,
 				20CFBE9D1ACFE2EC00289A17 /* LaunchScreen.xib in Resources */,
 				20CFBE9A1ACFE2EC00289A17 /* Images.xcassets in Resources */,

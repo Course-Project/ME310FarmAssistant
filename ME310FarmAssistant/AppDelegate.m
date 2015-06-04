@@ -41,6 +41,14 @@
     [[MZFormSheetBackgroundWindow appearance] setBlurRadius:5.0];
     [[MZFormSheetBackgroundWindow appearance] setBackgroundColor:[UIColor clearColor]];
     
+    // Data Filter Mode
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithUnsignedInteger:FADataFilterModeBoth] forKey:@"DataFilterMode"];
+    
+    // Threshold
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:20.0f] forKey:@"MoistureDryThreshold"];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:80.0f] forKey:@"MoistureWetThreshold"];
+    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:30.0f] forKey:@"TranspirationThreshold"];
+    
     return YES;
 }
 
