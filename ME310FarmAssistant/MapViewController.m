@@ -682,6 +682,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     [self.switchView setUserInteractionEnabled:NO];
     
+    self.isHistory = NO;
+    
     // Configure Data
     WEAKSELF_T weakSelf = self;
     [self configureDataPointWithCompletion:^{

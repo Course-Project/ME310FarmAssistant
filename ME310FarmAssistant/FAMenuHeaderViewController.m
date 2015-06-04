@@ -57,7 +57,6 @@ void *CusomHeaderInsetObserver = &CusomHeaderInsetObserver;
     [super observeValueForKeyPath:keyPath ofObject:object change:change context:context];
     if (context == CusomHeaderInsetObserver) {
         CGFloat inset = [change[NSKeyValueChangeNewKey] floatValue];
-        NSLog(@"inset is %f",inset);
         if (inset < 120) {
             if (!self.headerView.contentView.hidden) {
                 self.headerView.contentView.hidden = YES;
