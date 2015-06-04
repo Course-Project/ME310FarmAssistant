@@ -101,8 +101,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     [super viewDidLoad];
     
     self.isHistory = NO;
-    self.moistureWetThreshold = 0.2f;
-    self.moistureDryThreshold = 0.8f;
+    self.moistureDryThreshold = 0.2f;
+    self.moistureWetThreshold = 0.8f;
     self.transpirationThreshold = 0.2f;
     [self.moistureSwitch setEnabled:NO];
     [self.transpirationSwitch setEnabled:NO];
@@ -220,6 +220,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         weakSelf.maxMoistureValue = [res[@"max-z"] doubleValue];
         weakSelf.minMoistureValue = [res[@"min-z"] doubleValue];
         
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MaxMoistureValue" object:[NSNumber numberWithDouble:weakSelf.maxMoistureValue]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MinMoistureValue" object:[NSNumber numberWithDouble:weakSelf.minMoistureValue]];
+        
         [weakSelf generateMoistureHeatMapWithCompletion:^ {
             NSLog(@"Moisture heat map finished!");
             
@@ -256,6 +259,9 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         // Get Extreme Value
         weakSelf.maxTranspirationValue = [res[@"max-z"] doubleValue];
         weakSelf.minTranspirationValue = [res[@"min-z"] doubleValue];
+        
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MaxTranspirationValue" object:[NSNumber numberWithDouble:weakSelf.maxTranspirationValue]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MinTranspirationValue" object:[NSNumber numberWithDouble:weakSelf.minTranspirationValue]];
         
         [weakSelf generateTranspirationHeatMapWithCompletion:^ {
             NSLog(@"Transpiration heat map finished!");
@@ -873,8 +879,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     
     NSArray *threshold = notification.object;
     
-    self.moistureDryThreshold = [[threshold objectAtIndex:0] doubleValue] / 100.0f;
-    self.moistureWetThreshold = [[threshold objectAtIndex:1] doubleValue] / 100.0f;
+    self.moistureDryThreshold = ([[threshold objectAtIndex:0] doubleValue] - _minMoistureValue) / (_maxMoistureValue - _minMoistureValue);
+    self.moistureWetThreshold = ([[threshold objectAtIndex:1] doubleValue] - _minMoistureValue) / (_maxMoistureValue - _minMoistureValue);
     
     [self updateAnnotations];
     
@@ -910,7 +916,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSLog(@"Transpiration Threshold Changed!");
     NSLog(@"Transpiration Threshold: %@", notification.object);
     
-    self.transpirationThreshold = [notification.object doubleValue] / 100.0f;
+    self.transpirationThreshold = ([notification.object doubleValue] - _minTranspirationValue) / (_maxTranspirationValue - _minTranspirationValue);
     
     [self updateAnnotations];
     
