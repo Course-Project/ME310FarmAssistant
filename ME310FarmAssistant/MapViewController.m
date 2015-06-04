@@ -211,10 +211,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         weakSelf.moistureHeatMapBitArray = res[@"all-image"];
         
         // Get Top-right Point
-        weakSelf.topRightCoordinate = CLLocationCoordinate2DMake([res[@"max-x"] doubleValue], [res[@"max-y"] doubleValue]);
+        weakSelf.topRightCoordinate = CLLocationCoordinate2DMake([res[@"max-y"] doubleValue], [res[@"max-x"] doubleValue]);
         
         // Get Bottom-left Point
-        weakSelf.bottomLeftCoordinate = CLLocationCoordinate2DMake([res[@"min-x"] doubleValue], [res[@"min-y"] doubleValue]);
+        weakSelf.bottomLeftCoordinate = CLLocationCoordinate2DMake([res[@"min-y"] doubleValue], [res[@"min-x"] doubleValue]);
         
         // Get Extreme Value
         weakSelf.maxMoistureValue = [res[@"max-z"] doubleValue];
@@ -250,10 +250,10 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         weakSelf.transpirationHeatMapBitArray = res[@"all-image"];
         
         // Get Top-right Point
-        weakSelf.topRightCoordinate = CLLocationCoordinate2DMake([res[@"max-x"] doubleValue], [res[@"max-y"] doubleValue]);
+        weakSelf.topRightCoordinate = CLLocationCoordinate2DMake([res[@"max-y"] doubleValue], [res[@"max-x"] doubleValue]);
         
         // Get Bottom-left Point
-        weakSelf.bottomLeftCoordinate = CLLocationCoordinate2DMake([res[@"min-x"] doubleValue], [res[@"min-y"] doubleValue]);
+        weakSelf.bottomLeftCoordinate = CLLocationCoordinate2DMake([res[@"min-y"] doubleValue], [res[@"min-x"] doubleValue]);
         
         // Get Extreme Value
         weakSelf.maxTranspirationValue = [res[@"max-z"] doubleValue];
@@ -755,8 +755,8 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
     NSArray *colorRGBA;
     int i = 0;
     UInt32 indexOrigin;
-    for (int x = width - 1; x >= 0; x--) {
-        for (int y = 0; y < height; y++, i++) {
+    for (int y = height - 1; y >= 0; y--) {
+        for (int x = 0; x < width; x++, i++) {
             NSNumber *number = [[bitInfo objectAtIndex:y] objectAtIndex:x];
             if ([number isKindOfClass:[NSNull class]]) continue;
             double val = [number doubleValue];
