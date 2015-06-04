@@ -220,8 +220,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         weakSelf.maxMoistureValue = [res[@"max-z"] doubleValue];
         weakSelf.minMoistureValue = [res[@"min-z"] doubleValue];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MaxMoistureValue" object:[NSNumber numberWithDouble:weakSelf.maxMoistureValue]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MinMoistureValue" object:[NSNumber numberWithDouble:weakSelf.minMoistureValue]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MoistureValueRange" object:@[[NSNumber numberWithDouble:weakSelf.minMoistureValue], [NSNumber numberWithDouble:weakSelf.maxMoistureValue]]];
         
         [weakSelf generateMoistureHeatMapWithCompletion:^ {
             NSLog(@"Moisture heat map finished!");
@@ -260,8 +259,7 @@ typedef NS_ENUM(NSUInteger, TimeRange) {
         weakSelf.maxTranspirationValue = [res[@"max-z"] doubleValue];
         weakSelf.minTranspirationValue = [res[@"min-z"] doubleValue];
         
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MaxTranspirationValue" object:[NSNumber numberWithDouble:weakSelf.maxTranspirationValue]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MinTranspirationValue" object:[NSNumber numberWithDouble:weakSelf.minTranspirationValue]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"TranspirationValueRange" object:@[[NSNumber numberWithDouble:weakSelf.minTranspirationValue], [NSNumber numberWithDouble:weakSelf.maxTranspirationValue]]];
         
         [weakSelf generateTranspirationHeatMapWithCompletion:^ {
             NSLog(@"Transpiration heat map finished!");
