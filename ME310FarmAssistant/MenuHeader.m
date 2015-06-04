@@ -54,6 +54,9 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(transpirationHeatMapWillGenerate:) name:@"WillGenerateTranspirationHeatMap" object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(transpirationHeatMapDidGenerate:) name:@"DidGenerateTranspirationHeatMap" object:nil];
     
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getMoistureValueRange:) name:@"MoistureValueRange" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getTranspirationValueRange:) name:@"TranspirationValueRange" object:nil];
+    
 }
 
 #pragma mark - UI Configure
@@ -143,6 +146,26 @@
     [self openUserInteraction];
 }
 
+- (void)getMoistureValueRange:(NSNotification *)notification{
+    NSArray *moistureValueRange = notification.object;
+    float minValue = [[moistureValueRange firstObject] floatValue];
+    float maxValue = [[moistureValueRange lastObject] floatValue];
+    
+    self.rangeSlider.minimumValue = minValue;
+    self.rangeSlider.maximumValue = maxValue;
+    self.rangeSlider.lowerValue = (maxValue - minValue) * 0.2 + minValue;
+    self.rangeSlider.upperValue = maxValue - (maxValue - minValue) * 0.2;
+    
+}
+- (void)getTranspirationValueRange:(NSNotification *)notification{
+    NSArray *transpirationValueRange = notification.object;
+    float minValue = [[transpirationValueRange firstObject] floatValue];
+    float maxValue = [[transpirationValueRange lastObject] floatValue];
+    
+    self.transpirationSlider.minimumValue = minValue;
+    self.transpirationSlider.maximumValue = maxValue;
+    self.transpirationSlider.value = (maxValue - minValue) * 0.3 + minValue;
+}
 #pragma mark - Util
 
 - (void)openUserInteraction{
