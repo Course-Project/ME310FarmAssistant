@@ -97,7 +97,7 @@
     if (imagePath) {
         NSString *imageURLString = [photoBaseURL stringByAppendingString:imagePath];
         [self.photoImageView setImageWithURL:[NSURL URLWithString:imageURLString]];
-        [self.mediaFocusManager installOnView:self.photoImageView];
+//        [self.mediaFocusManager installOnView:self.photoImageView];
     }
 }
 
