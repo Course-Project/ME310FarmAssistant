@@ -8,13 +8,6 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSUInteger, FAHeatMapType) {
-    FAHeatMapTypeMoisture,
-    FAHeatMapTypeTranspiration,
-    FAHeatMapTypeMixed,
-    FAHeatMapTypeNone,
-};
-
 typedef void(^responseBlock)(id res, NSError *err);
 
 @class DataPoint;

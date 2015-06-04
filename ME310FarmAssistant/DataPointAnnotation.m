@@ -25,7 +25,7 @@
         _pointID = dataPoint.pointID;
         _coordinate = dataPoint.coordinate;
         _title = [NSString stringWithFormat:@"Point #%tu", dataPoint.pointID];
-        _subtitle = [NSString stringWithFormat:@"Moisture: %@  Transpiration: %@", [dataPoint.moisture stringValue], [dataPoint.transpiration stringValue]];
+        _subtitle = [NSString stringWithFormat:@"Moisture: %zd  Transpiration: %zd", [dataPoint.moisture integerValue], [dataPoint.transpiration integerValue]];
     }
     return self;
 }

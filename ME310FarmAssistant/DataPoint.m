@@ -33,8 +33,25 @@
     double moistureWetThreshold = [[[NSUserDefaults standardUserDefaults] objectForKey:@"MoistureWetThreshold"] doubleValue];
     double transpirationThreshold = [[[NSUserDefaults standardUserDefaults] objectForKey:@"TranspirationThreshold"] doubleValue];
 
-    return ((moisture >= moistureDryThreshold && moisture <= moistureWetThreshold) &&
-            (transpiration >= transpirationThreshold));
+    FADataFilterMode filterMode = [[[NSUserDefaults standardUserDefaults] objectForKey:@"DataFilterMode"] unsignedIntegerValue];
+    BOOL result;
+    switch (filterMode) {
+        case FADataFilterModeMoisture:
+            result = (moisture >= moistureDryThreshold && moisture <= moistureWetThreshold);
+            break;
+        case FADataFilterModeTranspiration:
+            result = (transpiration >= transpirationThreshold);
+            break;
+        case FADataFilterModeBoth:
+            result = ((moisture >= moistureDryThreshold && moisture <= moistureWetThreshold) &&
+                      (transpiration >= transpirationThreshold));
+            break;
+        default:
+            result = YES;
+            break;
+    }
+    
+    return result;
 }
 
 @end

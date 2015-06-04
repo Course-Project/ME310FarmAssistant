@@ -43,9 +43,6 @@
     self.moistureWetThreshold = 80;
     self.moistureDryThreshold = 20;
     self.transpirationThreshold = 30;
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:20.0f] forKey:@"MoistureDryThreshold"];
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:80.0f] forKey:@"MoistureWetThreshold"];
-    [[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithDouble:30.0f] forKey:@"TranspirationThreshold"];
     
     // Configure Refresh Control
     [self configureRefreshControl];
@@ -65,6 +62,10 @@
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(didReceiveDatePickerNotification:)
                                                  name:@"HistoryDateSelected"
+                                               object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didReceiveDataFilterModeChangedNotification:)
+                                                 name:@"DataFilterModeChanged"
                                                object:nil];
 }
 
@@ -117,14 +118,17 @@
     NSLog(@"Filtering...");
     [self.importantDataPoints removeAllObjects];
     for (id obj in self.originalDataPoints) {
-        double moisture = [obj[@"moisture"] doubleValue];
-        double transpiration = [obj[@"transpiration"] doubleValue];
-        
-        if ((moisture >= _moistureDryThreshold && moisture <= _moistureWetThreshold) &&
-            (transpiration >= _transpirationThreshold))
-            continue; // Filter
+//        double moisture = [obj[@"moisture"] doubleValue];
+//        double transpiration = [obj[@"transpiration"] doubleValue];
+//        
+//        if ((moisture >= _moistureDryThreshold && moisture <= _moistureWetThreshold) &&
+//            (transpiration >= _transpirationThreshold))
+//            continue; // Filter
         
         DataPoint *point = [[DataPoint alloc] initWithDictionary:obj];
+        
+        if (point.isNormal) continue; // Filter
+        
         [self.importantDataPoints addObject:point];
     }
 }
@@ -248,6 +252,12 @@
         
         [SVProgressHUD showSuccessWithStatus:@"Success!"];
     }];
+}
+
+- (void)didReceiveDataFilterModeChangedNotification:(NSNotification *)notification {
+    [self filterDataPoints];
+    
+    [self.tableView reloadData];
 }
 
 @end
