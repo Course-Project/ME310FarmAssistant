@@ -56,8 +56,8 @@
 - (void)configureSlider{
     self.rangeSlider.minimumValue = 0;
     self.rangeSlider.maximumValue = 100;
-    self.rangeSlider.lowerValue = 20;
-    self.rangeSlider.upperValue = 80;
+    self.rangeSlider.upperValue = 80.00;
+    self.rangeSlider.lowerValue = 20.00;
     self.moistureLowerLabel.text = [NSString stringWithFormat:@"%d",(int)self.rangeSlider.lowerValue];
     self.moistureUpperLabel.text = [NSString stringWithFormat:@"%d",(int)self.rangeSlider.upperValue];
     self.transpirationLabel.text = [NSString stringWithFormat:@"%d",(int)self.transpirationSlider.value];
